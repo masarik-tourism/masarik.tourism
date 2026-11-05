@@ -1,0 +1,8 @@
+{
+  "name": "مسارك للإنجاز السياحي",
+  "description": "وكالة مسارك للإنجاز السياحي - خدمات الحج والعمرة، تأشيرات السعودية (سياحة/عمل/علاج/زيارة)، حجز طيران وفنادق، وتسديد منصة إنجاز وتساهيل",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
