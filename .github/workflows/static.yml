@@ -1,35 +1,40 @@
-name: Build Android APK and Deploy Browser App
+# سير عمل نشر موقع مسارك للإنجاز السياحي على GitHub Pages
+name: Deploy static content to Pages
+
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  build-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
 
-    - name: Build Android APK
-      run: ./gradlew assembleDebug
-
-    - name: Upload APK Artifact (Download Link)
-      uses: actions/upload-artifact@v4
-      with:
-        name: MASARIK-TOURISM-APK
-        path: app/build/outputs/apk/debug/app-debug.apk
-
-    - name: Deploy Browser App to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: .
-        branch: gh-pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
