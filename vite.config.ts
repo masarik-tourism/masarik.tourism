@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://vitejs.dev
 export default defineConfig({
-  base: '/masarik.tourism-1/',
+  base: './',
   plugins: [react(), tailwindcss()],
   server: {
     host: '0.0.0.0',
