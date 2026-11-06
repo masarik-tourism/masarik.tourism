@@ -29,10 +29,8 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF9F6] text-[#132838] selection:bg-[#2A7688]/20">
-      {/* Top Navbar */}
       <Navbar currentTab={currentTab} onSelectTab={handleSelectTab} />
 
-      {/* Main Content View */}
       <main className="flex-1">
         {currentTab === 0 && (
           <HomeScreen
@@ -51,10 +49,8 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Official Footer */}
       <footer className="bg-[#0F2437] text-white pt-10 pb-20 md:pb-8 border-t-4 border-[#C6A052]">
         <div className="max-w-4xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-xs md:text-sm">
-          {/* Col 1 */}
           <div className="space-y-2">
             <h3 className="text-sm md:text-base font-black text-[#E5C887]">
               {TravelRepository.COMPANY_NAME_AR}
@@ -64,7 +60,6 @@ export const App: React.FC = () => {
             </p>
           </div>
 
-          {/* Col 2 */}
           <div className="space-y-2">
             <h3 className="text-sm md:text-base font-black text-[#E5C887]">
               بيانات التواصل الرسمية
@@ -91,7 +86,6 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          {/* Col 3 */}
           <div className="space-y-2">
             <h3 className="text-sm md:text-base font-black text-[#E5C887]">
               مواعيد العمل والفروع
@@ -114,10 +108,7 @@ export const App: React.FC = () => {
         </div>
       </footer>
 
-      {/* Floating Action WhatsApp */}
       <FloatingWhatsApp />
-
-      {/* Mobile Bottom Navigation */}
       <BottomNav currentTab={currentTab} onSelectTab={handleSelectTab} />
     </div>
   );

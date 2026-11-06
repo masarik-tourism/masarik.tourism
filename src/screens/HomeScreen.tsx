@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ShieldCheck,
   Phone,
@@ -10,9 +10,18 @@ import {
   Clock,
   ArrowLeft,
   Star,
+  Fingerprint,
+  CreditCard,
+  Compass,
+  Stethoscope,
+  Plane,
+  Award,
+  FileText,
 } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
+import masarikLogoImg from '../assets/images/masarik_logo.jpg';
+import masarikHeroBgImg from '../assets/images/masarik_hero_bg.jpg';
 
 interface HomeScreenProps {
   onNavigateToServices: () => void;
@@ -23,26 +32,52 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToServices,
   onNavigateToContact,
 }) => {
+  const [logoError, setLogoError] = useState(false);
+
+  const getBadgeIcon = (iconName?: string) => {
+    switch (iconName) {
+      case 'fingerprint':
+        return <Fingerprint className="w-4 h-4" />;
+      case 'credit-card':
+        return <CreditCard className="w-4 h-4" />;
+      case 'compass':
+        return <Compass className="w-4 h-4" />;
+      case 'stethoscope':
+        return <Stethoscope className="w-4 h-4" />;
+      case 'plane':
+        return <Plane className="w-4 h-4" />;
+      case 'shield-check':
+        return <Award className="w-4 h-4" />;
+      case 'file-text':
+        return <FileText className="w-4 h-4" />;
+      default:
+        return <ShieldCheck className="w-4 h-4" />;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FAF9F6] pb-24 md:pb-16">
-      {/* Hero Section */}
       <section className="relative overflow-hidden bg-[#FAF8F2] border-b border-[#E2DAC8]">
-        {/* Background Image with Scrim */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-25"
-          style={{ backgroundImage: "url('/images/masarik_hero_bg.jpg')" }}
+          className="absolute inset-0 bg-cover bg-center opacity-30"
+          style={{ backgroundImage: `url(${masarikHeroBgImg}), url('/images/masarik_hero_bg.jpg')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F2]/90 via-[#FAF8F2]/95 to-[#FAF8F2]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F2]/85 via-[#FAF8F2]/90 to-[#FAF8F2]" />
 
-        {/* Hero Content */}
         <div className="relative max-w-4xl mx-auto px-4 py-12 md:py-16 text-center flex flex-col items-center">
-          {/* Official Badge Logo */}
           <div className="relative mb-4">
-            <img
-              src="/images/masarik_logo.jpg"
-              alt="شعار مسارك للإنجاز السياحي"
-              className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-[#C6A052] shadow-lg object-cover bg-white"
-            />
+            {!logoError ? (
+              <img
+                src={masarikLogoImg}
+                onError={() => setLogoError(true)}
+                alt="شعار مسارك للإنجاز السياحي"
+                className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-[#C6A052] shadow-xl object-cover bg-white"
+              />
+            ) : (
+              <div className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-[#C6A052] bg-gradient-to-br from-[#17344F] to-[#0F2437] flex items-center justify-center text-[#E5C887] shadow-xl">
+                <Compass className="w-12 h-12 text-[#E5C887]" />
+              </div>
+            )}
             <div className="absolute -bottom-1 -left-1 bg-[#17344F] text-[#E5C887] p-1.5 rounded-full border-2 border-white shadow">
               <ShieldCheck className="w-4 h-4" />
             </div>
@@ -58,7 +93,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {TravelRepository.TAGLINE}
           </p>
 
-          {/* Quick Action Buttons */}
           <div className="flex flex-wrap justify-center gap-3">
             <button
               onClick={() => openWhatsApp()}
@@ -78,9 +112,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
       </section>
 
-      {/* Main Container */}
       <div className="max-w-4xl mx-auto px-4 -mt-4 relative z-10 space-y-6">
-        {/* Official Certification Card */}
         <div className="bg-[#FBF7EE] border-2 border-[#E5C887] rounded-2xl p-4 md:p-5 shadow-sm flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-[#C6A052]/20 flex items-center justify-center shrink-0 text-[#9E7B33]">
             <ShieldCheck className="w-7 h-7" />
@@ -95,7 +127,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
-        {/* Feature Badges Horizontal Row */}
         <div>
           <h2 className="text-base md:text-lg font-black text-[#0F2437] mb-3 px-1">
             أبرز المعاملات والخدمات المعتمدة
@@ -106,8 +137,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 key={idx}
                 className="bg-white border border-[#E2DAC8] rounded-xl p-3.5 min-w-[165px] md:min-w-[185px] shrink-0 shadow-sm hover:border-[#C6A052] transition-colors"
               >
-                <div className="w-7 h-7 rounded-lg bg-[#EAF4F6] text-[#2A7688] flex items-center justify-center mb-2 font-black text-xs">
-                  {idx + 1}
+                <div className="w-8 h-8 rounded-lg bg-[#EAF4F6] text-[#2A7688] flex items-center justify-center mb-2 font-bold shadow-xs">
+                  {getBadgeIcon(badge.icon)}
                 </div>
                 <h3 className="text-xs md:text-sm font-bold text-[#17344F] mb-1">
                   {badge.title}
@@ -120,7 +151,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
-        {/* Services Highlights Header */}
         <div>
           <div className="flex justify-between items-center mb-3 px-1">
             <h2 className="text-base md:text-lg font-black text-[#0F2437]">
@@ -135,7 +165,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </button>
           </div>
 
-          {/* Top 3 Services */}
           <div className="space-y-4">
             {TravelRepository.services.slice(0, 3).map((service) => (
               <div
@@ -173,7 +202,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
-        {/* About Us Card */}
         <div className="bg-[#FAF8F2] border-2 border-[#E5C887] rounded-2xl p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-2 text-[#9E7B33]">
             <Building className="w-5 h-5 shrink-0" />
@@ -208,7 +236,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         </div>
 
-        {/* Client Reviews Section */}
         <div>
           <h2 className="text-base md:text-lg font-black text-[#0F2437] mb-3 px-1">
             آراء العملاء

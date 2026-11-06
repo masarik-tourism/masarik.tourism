@@ -18,7 +18,6 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ onNavigateToCont
   return (
     <div className="min-h-screen bg-[#FAF9F6] pb-24 md:pb-16 pt-5">
       <div className="max-w-4xl mx-auto px-4 space-y-5">
-        {/* Header */}
         <div>
           <h1 className="text-xl md:text-2xl font-black text-[#0F2437]">
             دليل الخدمات والتأشيرات
@@ -28,7 +27,6 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ onNavigateToCont
           </p>
         </div>
 
-        {/* Category Filter Chips */}
         <div className="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
           {TravelRepository.categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
@@ -48,7 +46,6 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ onNavigateToCont
           })}
         </div>
 
-        {/* Services List */}
         <div className="space-y-4">
           {filteredServices.map((service) => (
             <div
@@ -77,7 +74,6 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ onNavigateToCont
                 </ul>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2.5 pt-2 border-t border-[#E2DAC8]/50">
                 <button
                   onClick={() => onNavigateToContact(service.title)}

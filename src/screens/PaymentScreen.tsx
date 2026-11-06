@@ -38,7 +38,6 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
   return (
     <div className="min-h-screen bg-[#FAF9F6] pb-24 md:pb-16 pt-5">
       <div className="max-w-4xl mx-auto px-4 space-y-5">
-        {/* Header */}
         <div>
           <h1 className="text-xl md:text-2xl font-black text-[#0F2437]">
             طرق السداد الآمنة
@@ -48,7 +47,6 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
           </p>
         </div>
 
-        {/* Method 1: Electronic Paymob */}
         <div className="bg-white border border-[#E2DAC8] rounded-2xl p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#EAF4F6] text-[#2A7688] flex items-center justify-center shrink-0">
@@ -81,7 +79,6 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
           </button>
         </div>
 
-        {/* Method 2: Bank transfer & WhatsApp */}
         <div className="bg-white border border-[#E2DAC8] rounded-2xl p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#25D366]/15 text-[#128C7E] flex items-center justify-center shrink-0">
@@ -115,7 +112,6 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
           </button>
         </div>
 
-        {/* Method 3: Cash at Branches */}
         <div className="bg-white border border-[#E2DAC8] rounded-2xl p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#FAF8F2] text-[#9E7B33] border border-[#E5C887] flex items-center justify-center shrink-0">
@@ -144,7 +140,6 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
           </button>
         </div>
 
-        {/* Policy Card */}
         <div className="bg-[#F7F4EB] border border-[#E2DAC8] rounded-xl p-4 space-y-2">
           <div className="flex items-center gap-2 text-[#0F2437] font-bold text-xs md:text-sm">
             <Info className="w-4 h-4 text-[#17344F]" />
@@ -158,7 +153,6 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
         </div>
       </div>
 
-      {/* Paymob Simulation Dialog Modal */}
       {showPaymobModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-[#E2DAC8] relative">

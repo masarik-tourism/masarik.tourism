@@ -23,4 +23,5 @@ export interface ClientReview {
 export interface FeatureBadge {
   title: string;
   subtitle: string;
+  icon?: string;
 }

@@ -16,13 +16,13 @@ export const TravelRepository = {
   WORKING_HOURS: 'خدمة عملاء متاحة 24 ساعة طوال أيام الأسبوع',
 
   featureBadges: [
-    { title: 'حجز مواعيد تساهيل', subtitle: 'VFS Tasheer المباشرة' },
-    { title: 'تسديد منصة إنجاز', subtitle: 'الرسوم والتأمين الطبي' },
-    { title: 'تأشيرة B2C عمرة', subtitle: 'حجز سكن وطيران وباركود' },
-    { title: 'كشف طبي جامكا', subtitle: 'معامل GAMCA / LAB' },
-    { title: 'أفضل خيارات الطيران', subtitle: 'أسعار مخفضة وتأكيد فوري' },
-    { title: 'شهادات التطعيمات', subtitle: 'المعتمدة لوزارة الصحة' },
-    { title: 'جميع التأشيرات', subtitle: 'عائلية • عمل • شخصية • زيارة' },
+    { title: 'حجز مواعيد تساهيل', subtitle: 'VFS Tasheer المباشرة', icon: 'fingerprint' },
+    { title: 'تسديد منصة إنجاز', subtitle: 'الرسوم والتأمين الطبي', icon: 'credit-card' },
+    { title: 'تأشيرة B2C عمرة', subtitle: 'حجز سكن وطيران وباركود', icon: 'compass' },
+    { title: 'كشف طبي جامكا', subtitle: 'معامل GAMCA / LAB', icon: 'stethoscope' },
+    { title: 'أفضل خيارات الطيران', subtitle: 'أسعار مخفضة وتأكيد فوري', icon: 'plane' },
+    { title: 'شهادات التطعيمات', subtitle: 'المعتمدة لوزارة الصحة', icon: 'shield-check' },
+    { title: 'جميع التأشيرات', subtitle: 'عائلية • عمل • شخصية • زيارة', icon: 'file-text' },
   ] as FeatureBadge[],
 
   categories: [

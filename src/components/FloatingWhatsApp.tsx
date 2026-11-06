@@ -7,7 +7,7 @@ export const FloatingWhatsApp: React.FC = () => {
     <button
       onClick={() => openWhatsApp()}
       aria-label="تواصل عبر واتساب"
-      className="fixed bottom-16 md:bottom-6 left-5 z-40 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+      className="fixed bottom-20 md:bottom-6 left-4 z-40 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer group"
       title="تواصل معنا عبر واتساب 01128440008"
     >
       <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full animate-ping" />

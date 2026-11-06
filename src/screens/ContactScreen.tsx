@@ -45,7 +45,6 @@ export const ContactScreen: React.FC<ContactScreenProps> = ({ initialService }) 
 
   useEffect(() => {
     if (initialService) {
-      // Find closest match or set directly
       const match = serviceOptions.find((opt) =>
         opt.includes(initialService) || initialService.includes(opt)
       );
@@ -108,7 +107,6 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
         throw new Error('Network error');
       }
     } catch {
-      // If direct ajax fetch encounters CORS or network block, trigger mailto fallback
       launchEmail(TravelRepository.OFFICIAL_EMAIL, subject, bodyText);
     } finally {
       setIsSending(false);
@@ -124,7 +122,6 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
   return (
     <div className="min-h-screen bg-[#FAF9F6] pb-24 md:pb-16 pt-5">
       <div className="max-w-4xl mx-auto px-4 space-y-5">
-        {/* Official Certification Reminder */}
         <div className="bg-[#FBF7EE] border border-[#E5C887] rounded-xl p-3.5 flex items-center gap-3">
           <ShieldCheck className="w-5 h-5 text-[#9E7B33] shrink-0" />
           <div>
@@ -137,7 +134,6 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
           </div>
         </div>
 
-        {/* Direct Email Header Card */}
         <div className="bg-[#FAF8F2] border-2 border-[#E5C887] rounded-2xl p-5 shadow-sm space-y-2.5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#C6A052]/20 text-[#9E7B33] flex items-center justify-center shrink-0">
@@ -157,7 +153,6 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
           </div>
         </div>
 
-        {/* Quick Direct Buttons */}
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => openWhatsApp()}
@@ -175,7 +170,6 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
           </button>
         </div>
 
-        {/* Contact & Booking Form */}
         <div className="bg-white border border-[#E2DAC8] rounded-2xl p-5 md:p-6 shadow-sm space-y-4">
           <div>
             <h2 className="text-base md:text-lg font-bold text-[#17344F]">
@@ -285,7 +279,6 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
             </button>
           </form>
 
-          {/* Secondary WhatsApp Forward Button */}
           <button
             type="button"
             onClick={handleWhatsAppForward}
@@ -296,7 +289,6 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
           </button>
         </div>
 
-        {/* Branches & Office Info */}
         <div className="bg-[#FAF8F2] border border-[#E2DAC8] rounded-xl p-4 space-y-2.5 text-xs md:text-sm">
           <h3 className="font-bold text-[#0F2437]">
             فروع ومقرات {TravelRepository.COMPANY_NAME_AR}
@@ -322,7 +314,6 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
         </div>
       </div>
 
-      {/* Success Confirmation Dialog Modal */}
       {showSuccessDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-[#E2DAC8] text-right space-y-4">

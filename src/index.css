@@ -29,7 +29,6 @@
   }
 }
 
-/* Custom smooth scrollbar for horizontal chip rows */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }

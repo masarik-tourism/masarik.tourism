@@ -1,7 +1,8 @@
-import React from 'react';
-import { Phone, MessageCircle, ShieldCheck } from 'lucide-react';
+import React, { useState } from 'react';
+import { Phone, MessageCircle, ShieldCheck, Compass } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
+import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 
 interface NavbarProps {
   currentTab: number;
@@ -9,6 +10,8 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
+  const [logoError, setLogoError] = useState(false);
+
   const tabs = [
     { label: 'الرئيسية', index: 0 },
     { label: 'الخدمات', index: 1 },
@@ -18,7 +21,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E2DAC8] shadow-sm">
-      {/* Top Notice Bar */}
       <div className="bg-gradient-to-r from-[#0F2437] to-[#17344F] text-white px-4 py-1.5 text-xs font-bold flex flex-wrap justify-between items-center gap-2">
         <div className="flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4 text-[#E5C887]" />
@@ -42,18 +44,23 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
         </div>
       </div>
 
-      {/* Main Navbar */}
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        {/* Brand / Logo */}
         <div
           onClick={() => onSelectTab(0)}
           className="flex items-center gap-3 cursor-pointer select-none group"
         >
-          <img
-            src="/images/masarik_logo.jpg"
-            alt="شعار مسارك للإنجاز السياحي"
-            className="w-12 h-12 rounded-full border-2 border-[#C6A052] object-cover shadow-sm group-hover:scale-105 transition-transform"
-          />
+          {!logoError ? (
+            <img
+              src={masarikLogoImg}
+              onError={() => setLogoError(true)}
+              alt="شعار مسارك للإنجاز السياحي"
+              className="w-12 h-12 rounded-full border-2 border-[#C6A052] object-cover shadow-sm group-hover:scale-105 transition-transform bg-white"
+            />
+          ) : (
+            <div className="w-12 h-12 rounded-full border-2 border-[#C6A052] bg-gradient-to-br from-[#17344F] to-[#0F2437] flex items-center justify-center text-[#E5C887] shadow-sm group-hover:scale-105 transition-transform">
+              <Compass className="w-6 h-6 text-[#E5C887]" />
+            </div>
+          )}
           <div className="flex flex-col">
             <h1 className="text-lg md:text-xl font-black text-[#17344F] leading-tight">
               {TravelRepository.COMPANY_NAME_AR}
@@ -64,7 +71,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
           </div>
         </div>
 
-        {/* Desktop Nav Items */}
         <nav className="hidden md:flex items-center gap-1 bg-[#FAF8F2] p-1.5 rounded-full border border-[#E2DAC8]">
           {tabs.map((tab) => (
             <button
@@ -81,7 +87,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
           ))}
         </nav>
 
-        {/* Quick Actions */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => openWhatsApp()}
