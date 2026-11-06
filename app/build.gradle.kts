@@ -1,3 +1,5 @@
+import java.util.Base64
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
@@ -25,7 +27,7 @@ android {
             } else {
                 val base64File = file("${rootDir}/debug.keystore.base64")
                 if (base64File.exists()) {
-                    val bytes = java.util.Base64.getDecoder().decode(base64File.readText().trim())
+                    val bytes = Base64.getDecoder().decode(base64File.readText().trim())
                     keystoreFile.writeBytes(bytes)
                     storeFile = keystoreFile
                 }
@@ -41,7 +43,7 @@ android {
             } else {
                 val base64File = file("${rootDir}/debug.keystore.base64")
                 if (base64File.exists()) {
-                    val bytes = java.util.Base64.getDecoder().decode(base64File.readText().trim())
+                    val bytes = Base64.getDecoder().decode(base64File.readText().trim())
                     keystoreFile.writeBytes(bytes)
                     storeFile = keystoreFile
                 }
