@@ -3,6 +3,7 @@ import { Phone, MessageCircle, ShieldCheck, Compass } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface NavbarProps {
   currentTab: number;
@@ -88,6 +89,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
         </nav>
 
         <div className="flex items-center gap-2">
+          <PWAInstallButton variant="navbar" className="hidden sm:flex" />
           <button
             onClick={() => openWhatsApp()}
             className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white text-xs md:text-sm font-black px-3.5 py-2 rounded-full flex items-center gap-1.5 shadow hover:shadow-md transition-all active:scale-95 cursor-pointer"

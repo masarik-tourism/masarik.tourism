@@ -9,6 +9,7 @@ import { ContactScreen } from './screens/ContactScreen';
 import { TravelRepository } from './data/travelData';
 import { dialPhoneNumber, openWhatsApp } from './utils/communication';
 import { Phone, MessageCircle, Mail, MapPin, Clock } from 'lucide-react';
+import { OfflineIndicator } from './components/OfflineIndicator';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -109,6 +110,7 @@ export const App: React.FC = () => {
       </footer>
 
       <FloatingWhatsApp />
+      <OfflineIndicator />
       <BottomNav currentTab={currentTab} onSelectTab={handleSelectTab} />
     </div>
   );

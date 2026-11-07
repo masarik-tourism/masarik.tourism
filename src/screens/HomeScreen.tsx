@@ -23,6 +23,7 @@ import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import masarikHeroBgImg from '../assets/images/masarik_hero_bg.jpg';
+import { PWAInstallButton } from '../components/PWAInstallButton';
 
 interface HomeScreenProps {
   onNavigateToServices: () => void;
@@ -129,6 +130,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </p>
           </div>
         </div>
+
+        <PWAInstallButton variant="banner" className="my-3" />
 
         <div>
           <h2 className="text-base md:text-lg font-black text-[#0F2437] mb-3 px-1">
