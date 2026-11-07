@@ -10,6 +10,10 @@ on:
 permissions:
   contents: read
 
+env:
+  JAVA_OPTS: "-Xmx3584m"
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=\"-Xmx3584m -XX:MaxMetaspaceSize=768m -Dfile.encoding=UTF-8\""
+
 jobs:
   build:
     name: Build Signed APK
@@ -44,7 +48,7 @@ jobs:
       - name: Ensure Gradle Wrapper Executable
         run: chmod +x ./gradlew
 
-      - name: Build Signed APK (Release & Debug)
+      - name: Build Signed APK (Debug & Release)
         run: ./gradlew assembleDebug assembleRelease --stacktrace
 
       - name: Upload Signed APK Artifact

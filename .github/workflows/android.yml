@@ -7,6 +7,10 @@ on:
 permissions:
   contents: read
 
+env:
+  JAVA_OPTS: "-Xmx3584m"
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=\"-Xmx3584m -XX:MaxMetaspaceSize=768m -Dfile.encoding=UTF-8\""
+
 jobs:
   build:
     name: Build Signed APK
