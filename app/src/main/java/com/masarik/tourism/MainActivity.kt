@@ -43,10 +43,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.masarik.tourism.R
 import com.masarik.tourism.data.TravelRepository
-import com.masarik.tourism.ui.theme.*
-import com.masarik.tourism.util.dialPhoneNumber
-import com.masarik.tourism.util.openWhatsApp
+import com.masarik.tourism.ui.theme.MasarikTourismTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +74,7 @@ fun MainWebViewScreen(
     var progress by remember { mutableFloatStateOf(0f) }
     var hasError by remember { mutableStateOf(false) }
 
-    // Intercept back button to navigate back within the web history if possible
+    // Navigate back in web history if possible, else finish activity
     BackHandler {
         if (webViewInstance?.canGoBack() == true) {
             webViewInstance?.goBack()
@@ -91,7 +90,6 @@ fun MainWebViewScreen(
             .navigationBarsPadding()
             .background(Color(0xFFFAF9F6))
     ) {
-        // Embedded Native Android WebView
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
@@ -120,28 +118,33 @@ fun MainWebViewScreen(
                         ): Boolean {
                             val url = request?.url?.toString() ?: return false
 
-                            // Handle WhatsApp direct intents
+                            // Handle WhatsApp intents
                             if (url.startsWith("https://wa.me/") || url.startsWith("whatsapp://") || url.contains("api.whatsapp.com")) {
-                                openWhatsApp(ctx, url)
+                                try {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                    ctx.startActivity(intent)
+                                } catch (_: Exception) {}
                                 return true
                             }
 
-                            // Handle Phone Calls
+                            // Handle Phone Call intents
                             if (url.startsWith("tel:")) {
-                                dialPhoneNumber(ctx, url)
+                                try {
+                                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse(url))
+                                    ctx.startActivity(intent)
+                                } catch (_: Exception) {}
                                 return true
                             }
 
-                            // Handle Emails
+                            // Handle Mail intents
                             if (url.startsWith("mailto:")) {
                                 try {
-                                    val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.parse(url))
-                                    ctx.startActivity(emailIntent)
-                                } catch (_: Exception) { }
+                                    val intent = Intent(Intent.ACTION_SENDTO, Uri.parse(url))
+                                    ctx.startActivity(intent)
+                                } catch (_: Exception) {}
                                 return true
                             }
 
-                            // Normal web navigation remains inside the WebView
                             return false
                         }
 
@@ -160,13 +163,12 @@ fun MainWebViewScreen(
                             view: WebView?,
                             request: WebResourceRequest?,
                             error: WebResourceError?
-                        ): Boolean {
-                            // Only show error screen for main frame failures
+                        ) {
+                            super.onReceivedError(view, request, error)
                             if (request?.isForMainFrame == true) {
                                 hasError = true
                                 isLoading = false
                             }
-                            return super.onReceivedError(view, request, error)
                         }
                     }
 
@@ -198,7 +200,7 @@ fun MainWebViewScreen(
                 .align(Alignment.TopCenter)
         ) {
             LinearProgressIndicator(
-                progress = { progress },
+                progress = progress,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(3.5.dp),
@@ -207,7 +209,7 @@ fun MainWebViewScreen(
             )
         }
 
-        // Elegant Offline Error Fallback
+        // Offline screen fallback if network is disconnected
         if (hasError) {
             Box(
                 modifier = Modifier
@@ -261,7 +263,7 @@ fun MainWebViewScreen(
                                 modifier = Modifier.size(20.dp)
                             )
                             Text(
-                                text = "تعذر الاتصال بالخادم، يرجى التحقق من اتصال الإنترنت",
+                                text = "تعذر الاتصال، يرجى التحقق من اتصال الإنترنت",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFFB45309)
@@ -296,7 +298,12 @@ fun MainWebViewScreen(
                             horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             Button(
-                                onClick = { openWhatsApp(context, TravelRepository.WHATSAPP_URL) },
+                                onClick = {
+                                    try {
+                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(TravelRepository.WHATSAPP_URL))
+                                        context.startActivity(intent)
+                                    } catch (_: Exception) {}
+                                },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF25D366)),
                                 shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier.weight(1f)
@@ -309,7 +316,12 @@ fun MainWebViewScreen(
                             }
 
                             OutlinedButton(
-                                onClick = { dialPhoneNumber(context, TravelRepository.PHONE_DIAL) },
+                                onClick = {
+                                    try {
+                                        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + TravelRepository.PHONE_DIAL))
+                                        context.startActivity(intent)
+                                    } catch (_: Exception) {}
+                                },
                                 shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier.weight(1f)
                             ) {
