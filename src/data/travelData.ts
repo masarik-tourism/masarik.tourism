@@ -17,12 +17,13 @@ export const TravelRepository = {
 
   featureBadges: [
     { title: 'حجز مواعيد تساهيل', subtitle: 'VFS Tasheer المباشرة', icon: 'fingerprint' },
-    { title: 'تسديد منصة إنجاز', subtitle: 'الرسوم والتأمين الطبي', icon: 'credit-card' },
-    { title: 'تأشيرة B2C عمرة', subtitle: 'حجز سكن وطيران وباركود', icon: 'compass' },
+    { title: 'تسديد طلب منصة إنجاز', subtitle: 'الرسوم والتأمين الطبي', icon: 'credit-card' },
+    { title: 'تأشيرة B2C (عمرة)', subtitle: 'حجز سكن وطيران وباركود', icon: 'compass' },
+    { title: 'إنشاء باركود الموعد', subtitle: 'الباركود الرسمي المعتمد', icon: 'qr-code' },
     { title: 'كشف طبي جامكا', subtitle: 'معامل GAMCA / LAB', icon: 'stethoscope' },
-    { title: 'أفضل خيارات الطيران', subtitle: 'أسعار مخفضة وتأكيد فوري', icon: 'plane' },
+    { title: 'حجز تذاكر الطيران', subtitle: 'أفضل الخيارات والأسعار', icon: 'plane' },
     { title: 'شهادات التطعيمات', subtitle: 'المعتمدة لوزارة الصحة', icon: 'shield-check' },
-    { title: 'جميع التأشيرات', subtitle: 'عائلية • عمل • شخصية • زيارة', icon: 'file-text' },
+    { title: 'جميع أنواع التأشيرات', subtitle: 'عائلية • عمل • شخصية • زيارات', icon: 'file-text' },
   ] as FeatureBadge[],
 
   categories: [

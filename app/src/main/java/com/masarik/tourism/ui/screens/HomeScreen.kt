@@ -55,7 +55,7 @@ fun HomeScreen(
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
-                    alpha = 0.25f
+                    alpha = 0.40f
                 )
 
                 Box(

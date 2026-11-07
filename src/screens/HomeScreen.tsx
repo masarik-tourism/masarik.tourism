@@ -17,6 +17,7 @@ import {
   Plane,
   Award,
   FileText,
+  QrCode,
 } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
@@ -42,6 +43,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         return <CreditCard className="w-4 h-4" />;
       case 'compass':
         return <Compass className="w-4 h-4" />;
+      case 'qr-code':
+        return <QrCode className="w-4 h-4" />;
       case 'stethoscope':
         return <Stethoscope className="w-4 h-4" />;
       case 'plane':
@@ -59,10 +62,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     <div className="min-h-screen bg-[#FAF9F6] pb-24 md:pb-16">
       <section className="relative overflow-hidden bg-[#FAF8F2] border-b border-[#E2DAC8]">
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-30"
-          style={{ backgroundImage: `url(${masarikHeroBgImg}), url('/images/masarik_hero_bg.jpg')` }}
+          className="absolute inset-0 bg-cover bg-center opacity-45"
+          style={{ backgroundImage: `url(${masarikHeroBgImg}), url('./images/masarik_hero_bg.jpg')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F2]/85 via-[#FAF8F2]/90 to-[#FAF8F2]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F2]/75 via-[#FAF8F2]/85 to-[#FAF8F2]" />
 
         <div className="relative max-w-4xl mx-auto px-4 py-12 md:py-16 text-center flex flex-col items-center">
           <div className="relative mb-4">

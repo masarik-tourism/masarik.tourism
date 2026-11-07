@@ -67,21 +67,15 @@ fun MainAppScaffold() {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Box(
+                        Image(
+                            painter = painterResource(id = R.drawable.masarik_logo),
+                            contentDescription = "شعار مسارك للإنجاز السياحي",
                             modifier = Modifier
                                 .size(44.dp)
                                 .clip(CircleShape)
-                                .background(NavyPrimary)
                                 .border(1.5.dp, GoldPrimary, CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "مسارك",
-                                color = GoldLight,
-                                fontWeight = FontWeight.Black,
-                                fontSize = 12.sp
-                            )
-                        }
+                            contentScale = ContentScale.Crop
+                        )
                         Column {
                             Text(
                                 text = TravelRepository.COMPANY_NAME_AR,
