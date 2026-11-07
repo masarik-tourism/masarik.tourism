@@ -12,7 +12,7 @@ object TravelRepository {
     const val PHONE_NUMBER = "01128440008"
     const val PHONE_DIAL = "+201128440008"
     const val WHATSAPP_URL = "https://wa.me/201128440008"
-    const val WEB_URL = "https://masarik-tourism.github.io/masarik.tourism-1/"
+    const val WEB_URL = "https://masarik-tourism.github.io/masarik.tourism/"
     const val OFFICIAL_EMAIL = "sabeeluk.lilssafar@gmail.com"
     const val COMMERCIAL_RECORD = "٧٨٣٩"
     const val COMMERCIAL_RECORD_AR = "٧٨٣٩"

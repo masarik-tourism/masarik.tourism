@@ -29,25 +29,25 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
   const [paySuccess, setPaySuccess] = useState(false);
   const [transactionId, setTransactionId] = useState('');
   const [selectedMethod, setSelectedMethod] = useState('card');
-  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
 
-  const handleCopyCode = async () => {
+  const handleCopyLink = async () => {
     try {
       if (navigator.clipboard) {
-        await navigator.clipboard.writeText(TravelRepository.INSTAPAY_CODE);
+        await navigator.clipboard.writeText(TravelRepository.INSTAPAY_URL);
       } else {
         const textarea = document.createElement('textarea');
-        textarea.value = TravelRepository.INSTAPAY_CODE;
+        textarea.value = TravelRepository.INSTAPAY_URL;
         document.body.appendChild(textarea);
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
       }
-      setCopiedCode(true);
-      setTimeout(() => setCopiedCode(false), 2500);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
     } catch {
-      setCopiedCode(true);
-      setTimeout(() => setCopiedCode(false), 2500);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
     }
   };
 
@@ -74,8 +74,8 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
           </p>
         </div>
 
-        {/* 1. InstaPay Card (Primary & Instant) */}
-        <div className="bg-gradient-to-br from-[#FAF8F2] via-white to-[#F6EFFC] border-2 border-[#7E22CE]/40 hover:border-[#7E22CE] rounded-2xl p-5 shadow-md space-y-4 transition-all">
+        {/* 1. InstaPay Card (Direct Link & Phone via WhatsApp) */}
+        <div className="bg-gradient-to-br from-[#FAF8F2] via-white to-[#F6EFFC] border-2 border-[#7E22CE]/50 hover:border-[#7E22CE] rounded-2xl p-5 shadow-md space-y-4 transition-all">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl bg-[#7E22CE]/15 text-[#7E22CE] border border-[#7E22CE]/30 flex items-center justify-center shrink-0">
@@ -87,7 +87,7 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
                     الدفع المباشر عبر إنستاباي (InstaPay)
                   </h2>
                   <span className="bg-[#7E22CE] text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">
-                    لحظي وسريع
+                    الخيار الأسرع والموصى به
                   </span>
                 </div>
                 <span className="text-[11px] md:text-xs text-[#678093]">
@@ -98,59 +98,100 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
           </div>
 
           <p className="text-xs md:text-sm text-[#324D61] leading-relaxed">
-            يمكنك السداد مباشرة وفورياً من خلال تطبيق إنستاباي عبر الرابط المباشر، أو باستخدام كود السداد السريع المخصص لحساب وكالة مسارك للإنجاز السياحي.
+            التحويل عبر الرابط هو الخيار الأفضل والأسرع، بمجرد الضغط على الرابط بالأسفل يتم تحويلك فوراً لتطبيق إنستاباي لإتمام الدفع بضغطة واحدة.
           </p>
 
-          {/* InstaPay Code Box */}
-          <div className="bg-white border-2 border-[#E9D5FF] rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
-            <div className="flex items-center gap-2.5 text-right w-full sm:w-auto">
-              <span className="text-xs font-bold text-[#678093]">كود السداد السريع (InstaPay Code):</span>
-              <span className="font-mono text-base font-black text-[#7E22CE] tracking-wider bg-[#F3E8FF] px-2.5 py-1 rounded-lg border border-[#D8B4FE]">
-                {TravelRepository.INSTAPAY_CODE}
-              </span>
+          {/* Primary CTA: Big Direct Link Button */}
+          <a
+            href={TravelRepository.INSTAPAY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full bg-gradient-to-r from-[#7E22CE] via-[#6B21A8] to-[#581C87] hover:from-[#6B21A8] hover:to-[#4C1D95] text-white py-3.5 px-5 rounded-xl text-sm md:text-base font-black shadow-lg hover:shadow-xl transition active:scale-[0.99] flex items-center justify-center gap-2.5 text-center group"
+          >
+            <Zap className="w-5 h-5 fill-white group-hover:scale-110 transition-transform" />
+            <span>اضغط هنا للتحويل المباشر عبر إنستاباي الآن</span>
+            <ExternalLink className="w-4 h-4" />
+          </a>
+
+          {/* Direct Link Display & Copy Box */}
+          <div className="bg-white border-2 border-[#E9D5FF] rounded-xl p-3 flex flex-col sm:flex-row items-center justify-between gap-2.5 shadow-xs">
+            <div className="flex flex-col text-right w-full sm:w-auto overflow-hidden">
+              <span className="text-[11px] font-bold text-[#678093]">رابط الدفع الكامل المباشر:</span>
+              <a
+                href={TravelRepository.INSTAPAY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                dir="ltr"
+                className="font-mono text-xs md:text-sm font-bold text-[#7E22CE] hover:underline truncate mt-0.5"
+              >
+                {TravelRepository.INSTAPAY_URL}
+              </a>
             </div>
 
-            <button
-              onClick={handleCopyCode}
-              className="w-full sm:w-auto bg-[#F3E8FF] hover:bg-[#E9D5FF] text-[#6B21A8] border border-[#D8B4FE] px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer"
-            >
-              {copiedCode ? (
-                <>
-                  <Check className="w-4 h-4 text-emerald-600" />
-                  <span className="text-emerald-700">تم نسخ الكود!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4" />
-                  <span>نسخ الكود</span>
-                </>
-              )}
-            </button>
+            <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+              <button
+                onClick={handleCopyLink}
+                className="flex-1 sm:flex-none bg-[#F3E8FF] hover:bg-[#E9D5FF] text-[#6B21A8] border border-[#D8B4FE] px-3 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer"
+              >
+                {copiedLink ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="text-emerald-700">تم نسخ الرابط!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>نسخ الرابط</span>
+                  </>
+                )}
+              </button>
+
+              <a
+                href={TravelRepository.INSTAPAY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#7E22CE] hover:bg-[#6B21A8] text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition cursor-pointer"
+              >
+                <span>فتح</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
           </div>
 
-          {/* Action Buttons for InstaPay */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-            <a
-              href={TravelRepository.INSTAPAY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gradient-to-r from-[#7E22CE] to-[#6B21A8] hover:from-[#6B21A8] hover:to-[#581C87] text-white py-2.5 px-4 rounded-xl text-xs md:text-sm font-black shadow-md hover:shadow-lg transition active:scale-[0.99] flex items-center justify-center gap-2 text-center"
-            >
-              <Zap className="w-4 h-4 fill-white" />
-              <span>فتح رابط الدفع في إنستاباي مباشرة</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+          {/* Option 2: Transfer via Phone Number via WhatsApp */}
+          <div className="bg-[#FAF8F2] border border-[#E2DAC8] rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-right">
+            <div>
+              <h4 className="text-xs md:text-sm font-black text-[#17344F] flex items-center gap-1.5">
+                <span>تفضل التحويل عن طريق رقم التليفون؟</span>
+              </h4>
+              <p className="text-[11px] md:text-xs text-[#678093] mt-0.5">
+                تواصل معنا عبر واتساب لتزويدك برقم الهاتف الخاص بحساب إنستاباي للتحويل فوراً.
+              </p>
+            </div>
 
-            <button
-              onClick={() => {
-                const text = `السلام عليكم، قمت بالتحويل عبر إنستاباي بكود (${TravelRepository.INSTAPAY_CODE})، وأرفق لكم إشعار التحويل لتأكيد إنجاز المعاملة.`;
-                openWhatsApp(text);
-              }}
-              className="bg-[#25D366] hover:bg-[#128C7E] text-white py-2.5 px-4 rounded-xl text-xs md:text-sm font-bold shadow-md hover:shadow-lg transition active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>إرسال إشعار التحويل عبر واتساب</span>
-            </button>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto shrink-0">
+              <button
+                onClick={() => {
+                  const text = 'السلام عليكم، أود الحصول على رقم التليفون المربوط بإنستاباي للتحويل من خلاله.';
+                  openWhatsApp(text);
+                }}
+                className="bg-[#17344F] hover:bg-[#0F2437] text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
+                <span>طلب رقم إنستاباي</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  const text = 'السلام عليكم، قمت بالتحويل عبر إنستاباي، وأرفق لكم إشعار السداد لتأكيد حجز المعاملة.';
+                  openWhatsApp(text);
+                }}
+                className="bg-[#25D366] hover:bg-[#128C7E] text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>إرسال إشعار السداد</span>
+              </button>
+            </div>
           </div>
         </div>
 
