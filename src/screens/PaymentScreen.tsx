@@ -3,12 +3,18 @@ import {
   CreditCard,
   MessageCircle,
   Store,
-  Lock,
   CheckCircle,
   X,
   Info,
   ShieldCheck,
   Send,
+  Copy,
+  Check,
+  ExternalLink,
+  Wrench,
+  AlertTriangle,
+  Zap,
+  Building2,
 } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { openWhatsApp } from '../utils/communication';
@@ -23,6 +29,27 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
   const [paySuccess, setPaySuccess] = useState(false);
   const [transactionId, setTransactionId] = useState('');
   const [selectedMethod, setSelectedMethod] = useState('card');
+  const [copiedCode, setCopiedCode] = useState(false);
+
+  const handleCopyCode = async () => {
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(TravelRepository.INSTAPAY_CODE);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = TravelRepository.INSTAPAY_CODE;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2500);
+    } catch {
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2500);
+    }
+  };
 
   const handleStartPayment = () => {
     const randomId = `MS-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -47,18 +74,107 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
           </p>
         </div>
 
-        <div className="bg-white border border-[#E2DAC8] rounded-2xl p-5 shadow-sm space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#EAF4F6] text-[#2A7688] flex items-center justify-center shrink-0">
-              <CreditCard className="w-5 h-5" />
+        {/* 1. InstaPay Card (Primary & Instant) */}
+        <div className="bg-gradient-to-br from-[#FAF8F2] via-white to-[#F6EFFC] border-2 border-[#7E22CE]/40 hover:border-[#7E22CE] rounded-2xl p-5 shadow-md space-y-4 transition-all">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-[#7E22CE]/15 text-[#7E22CE] border border-[#7E22CE]/30 flex items-center justify-center shrink-0">
+                <Zap className="w-6 h-6 fill-[#7E22CE]" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm md:text-base font-black text-[#17344F]">
+                    الدفع المباشر عبر إنستاباي (InstaPay)
+                  </h2>
+                  <span className="bg-[#7E22CE] text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">
+                    لحظي وسريع
+                  </span>
+                </div>
+                <span className="text-[11px] md:text-xs text-[#678093]">
+                  شبكة المدفوعات اللحظية IPN • معتمد من البنك المركزي المصري
+                </span>
+              </div>
             </div>
-            <div>
-              <h2 className="text-sm md:text-base font-bold text-[#17344F]">
-                الدفع الإلكتروني (Paymob)
-              </h2>
-              <span className="text-[11px] md:text-xs text-[#678093]">
-                بطاقات فيزا / ماستركارد ومحافظ كاش وإنستاباي
+          </div>
+
+          <p className="text-xs md:text-sm text-[#324D61] leading-relaxed">
+            يمكنك السداد مباشرة وفورياً من خلال تطبيق إنستاباي عبر الرابط المباشر، أو باستخدام كود السداد السريع المخصص لحساب وكالة مسارك للإنجاز السياحي.
+          </p>
+
+          {/* InstaPay Code Box */}
+          <div className="bg-white border-2 border-[#E9D5FF] rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-2.5 text-right w-full sm:w-auto">
+              <span className="text-xs font-bold text-[#678093]">كود السداد السريع (InstaPay Code):</span>
+              <span className="font-mono text-base font-black text-[#7E22CE] tracking-wider bg-[#F3E8FF] px-2.5 py-1 rounded-lg border border-[#D8B4FE]">
+                {TravelRepository.INSTAPAY_CODE}
               </span>
+            </div>
+
+            <button
+              onClick={handleCopyCode}
+              className="w-full sm:w-auto bg-[#F3E8FF] hover:bg-[#E9D5FF] text-[#6B21A8] border border-[#D8B4FE] px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 cursor-pointer"
+            >
+              {copiedCode ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span className="text-emerald-700">تم نسخ الكود!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>نسخ الكود</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Action Buttons for InstaPay */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+            <a
+              href={TravelRepository.INSTAPAY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gradient-to-r from-[#7E22CE] to-[#6B21A8] hover:from-[#6B21A8] hover:to-[#581C87] text-white py-2.5 px-4 rounded-xl text-xs md:text-sm font-black shadow-md hover:shadow-lg transition active:scale-[0.99] flex items-center justify-center gap-2 text-center"
+            >
+              <Zap className="w-4 h-4 fill-white" />
+              <span>فتح رابط الدفع في إنستاباي مباشرة</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+
+            <button
+              onClick={() => {
+                const text = `السلام عليكم، قمت بالتحويل عبر إنستاباي بكود (${TravelRepository.INSTAPAY_CODE})، وأرفق لكم إشعار التحويل لتأكيد إنجاز المعاملة.`;
+                openWhatsApp(text);
+              }}
+              className="bg-[#25D366] hover:bg-[#128C7E] text-white py-2.5 px-4 rounded-xl text-xs md:text-sm font-bold shadow-md hover:shadow-lg transition active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>إرسال إشعار التحويل عبر واتساب</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 2. Paymob Card (Under Maintenance) */}
+        <div className="bg-white border-2 border-amber-200 rounded-2xl p-5 shadow-sm space-y-3 relative overflow-hidden">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center shrink-0">
+                <CreditCard className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-sm md:text-base font-bold text-[#17344F]">
+                  الدفع الإلكتروني (Paymob)
+                </h2>
+                <span className="text-[11px] md:text-xs text-[#678093]">
+                  بطاقات فيزا / ماستركارد ومحافظ كاش
+                </span>
+              </div>
+            </div>
+
+            {/* Maintenance Badge */}
+            <div className="bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black px-3 py-1 rounded-full flex items-center gap-1.5 shadow-xs">
+              <Wrench className="w-3.5 h-3.5 text-amber-700 animate-spin" />
+              <span>الخدمة تحت الصيانة حالياً</span>
             </div>
           </div>
 
@@ -67,51 +183,64 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
             إيصال إلكتروني فوري.
           </p>
 
-          <button
-            onClick={() => {
-              setShowPaymobModal(true);
-              setPaySuccess(false);
-            }}
-            className="w-full bg-[#2A7688] hover:bg-[#1f5967] text-white py-2.5 px-4 rounded-xl text-xs md:text-sm font-bold shadow-sm transition active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <Lock className="w-4 h-4" />
-            <span>سداد عبر بوابة Paymob الآن</span>
-          </button>
+          {/* Maintenance Notice Box */}
+          <div className="bg-[#FFFBEB] border border-amber-200 rounded-xl p-3 text-xs text-amber-950 flex items-start gap-2.5">
+            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+            <p className="leading-relaxed">
+              <strong>تنبيه للمتعاملين:</strong> تخضع بوابة Paymob حالياً لأعمال الترقية والتحديث الدوري. يمكنك السداد الفوري عبر <strong>إنستاباي</strong> بالأعلى أو إرسال بيانات المعاملة عبر الواتساب لإنجاز السداد فوراً.
+            </p>
+          </div>
+
+          {/* WhatsApp Redirect Button requested by user */}
+          <div className="pt-1">
+            <button
+              onClick={() => {
+                const text = 'السلام عليكم، أود إرسال بيانات المعاملة لمتابعة السداد والإنجاز نظراً لأن الدفع الإلكتروني يخضع للصيانة.';
+                openWhatsApp(text);
+              }}
+              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-3 px-4 rounded-xl text-xs md:text-sm font-black shadow-md hover:shadow-lg transition active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>إرسال بيانات المعاملة عبر واتساب الآن</span>
+            </button>
+          </div>
         </div>
 
+        {/* 3. Bank Transfer Card */}
         <div className="bg-white border border-[#E2DAC8] rounded-2xl p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#25D366]/15 text-[#128C7E] flex items-center justify-center shrink-0">
-              <MessageCircle className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-[#EAF4F6] text-[#2A7688] flex items-center justify-center shrink-0">
+              <Building2 className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-sm md:text-base font-bold text-[#17344F]">
-                التحويل البنكي وإنستاباي
+                التحويل البنكي المباشر
               </h2>
               <span className="text-[11px] md:text-xs text-[#678093]">
-                واتساب: {TravelRepository.PHONE_NUMBER}
+                البنك الأهلي المصري • بنك مصر
               </span>
             </div>
           </div>
 
           <p className="text-xs md:text-sm text-[#324D61] leading-relaxed">
-            تواصل عبر الواتساب للحصول على الحساب البنكي (البنك الأهلي / بنك مصر) أو حساب إنستاباي
-            وإرسال إشعار التحويل لتأكيد الحجز فوراً.
+            تواصل عبر الواتساب للحصول على رقم الحساب البنكي الرسمي وتفاصيل التحويل الداخلي والدولي
+            لتأكيد الحجز فوراً.
           </p>
 
           <button
             onClick={() => {
               const text =
-                'السلام عليكم، أود الحصول على بيانات التحويل البنكي وإنستاباي لسداد المعاملة.';
+                'السلام عليكم، أود الحصول على بيانات الحسابات البنكية الرسمية (البنك الأهلي / بنك مصر) لسداد المعاملة.';
               openWhatsApp(text);
             }}
-            className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-2.5 px-4 rounded-xl text-xs md:text-sm font-bold shadow-sm transition active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-[#17344F] hover:bg-[#0F2437] text-white py-2.5 px-4 rounded-xl text-xs md:text-sm font-bold shadow-sm transition active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
           >
             <MessageCircle className="w-4 h-4" />
-            <span>طلب بيانات التحويل عبر واتساب</span>
+            <span>طلب الحسابات البنكية عبر واتساب</span>
           </button>
         </div>
 
+        {/* 4. Cash at Branch */}
         <div className="bg-white border border-[#E2DAC8] rounded-2xl p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#FAF8F2] text-[#9E7B33] border border-[#E5C887] flex items-center justify-center shrink-0">
@@ -122,14 +251,14 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
                 السداد نقداً في الفروع
               </h2>
               <span className="text-[11px] md:text-xs text-[#678093]">
-                القاهرة • الدقهلية
+                محافظة القاهرة • محافظة الدقهلية
               </span>
             </div>
           </div>
 
           <p className="text-xs md:text-sm text-[#324D61] leading-relaxed">
             تشريفنا في أحد مقراتنا الرسمية واستلام إيصال وعقد موثق ومعتمد بجميع المعاملات وباقات
-            السفر.
+            السفر الصادرة بسجل تجاري رقم {TravelRepository.COMMERCIAL_RECORD}.
           </p>
 
           <button
@@ -143,12 +272,13 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
         <div className="bg-[#F7F4EB] border border-[#E2DAC8] rounded-xl p-4 space-y-2">
           <div className="flex items-center gap-2 text-[#0F2437] font-bold text-xs md:text-sm">
             <Info className="w-4 h-4 text-[#17344F]" />
-            <span>سياسة السداد والضمان</span>
+            <span>سياسة السداد والضمان المالي</span>
           </div>
           <ul className="text-[11px] md:text-xs text-[#324D61] space-y-1 pr-4 list-disc">
             <li>جميع الرسوم موثقة بفواتير رسمية ومعتمدة بسجل تجاري رقم {TravelRepository.COMMERCIAL_RECORD}.</li>
+            <li>رابط إنستاباي المباشر: {TravelRepository.INSTAPAY_URL}</li>
             <li>البريد الرسمي للمتابعة المالية: {TravelRepository.OFFICIAL_EMAIL}</li>
-            <li>للاستفسارات والتحصيلات المالية: {TravelRepository.PHONE_NUMBER}</li>
+            <li>للاستفسارات والتحصيلات المالية والواتساب: {TravelRepository.PHONE_NUMBER}</li>
           </ul>
         </div>
       </div>
@@ -165,11 +295,21 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
 
             {!paySuccess ? (
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-[#17344F]">
-                  <CreditCard className="w-5 h-5 text-[#2A7688]" />
-                  <h3 className="text-base font-bold text-[#0F2437]">
-                    سداد المعاملة عبر Paymob
-                  </h3>
+                <div className="flex items-center justify-between gap-2 text-[#17344F]">
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="w-5 h-5 text-[#2A7688]" />
+                    <h3 className="text-base font-bold text-[#0F2437]">
+                      سداد المعاملة عبر Paymob
+                    </h3>
+                  </div>
+                  <span className="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    تحت الصيانة
+                  </span>
+                </div>
+
+                <div className="bg-[#FFFBEB] border border-amber-200 rounded-xl p-2.5 text-[11px] text-amber-950 flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <p>تخضع البوابة للصيانة حالياً؛ يمكنك السداد عبر إنستاباي أو إرسال بيانات المعاملة عبر واتساب مباشرة.</p>
                 </div>
 
                 <div>
