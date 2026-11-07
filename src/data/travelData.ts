@@ -11,6 +11,8 @@ export const TravelRepository = {
   INSTAPAY_URL: 'https://ipn.eg/S/lonely/instapay/0Dq6BN',
   INSTAPAY_CODE: '0Dq6BN',
   INSTAPAY_ACCOUNT: 'lonely',
+  APK_DOWNLOAD_URL: './downloads/masarik-tourism.apk',
+  APK_DRIVE_URL: '',
   COMMERCIAL_RECORD: '٧٨٣٩',
   COMMERCIAL_RECORD_AR: '٧٨٣٩',
   CERTIFICATION_TITLE: 'معتمدة وموثقة من الغرفة التجارية المصرية',
