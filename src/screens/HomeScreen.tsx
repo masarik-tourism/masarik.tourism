@@ -98,20 +98,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {TravelRepository.TAGLINE}
           </p>
 
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex justify-center items-center gap-3 sm:gap-4 my-2">
             <button
               onClick={() => openWhatsApp()}
-              className="bg-[#25D366] hover:bg-[#128C7E] text-white px-5 py-2.5 rounded-full text-xs md:text-sm font-black flex items-center gap-2 shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+              className="w-36 sm:w-44 h-11 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full text-sm font-black flex items-center justify-center gap-2.5 shadow-md transition-all active:scale-95 cursor-pointer animate-pulse-float-a"
+              title="تواصل عبر واتساب"
             >
-              <MessageCircle className="w-4 h-4" />
-              <span>واتساب ({TravelRepository.PHONE_NUMBER})</span>
+              <MessageCircle className="w-5 h-5 shrink-0" />
+              <span>واتساب</span>
             </button>
             <button
               onClick={() => dialPhoneNumber()}
-              className="bg-[#17344F] hover:bg-[#0F2437] text-white px-5 py-2.5 rounded-full text-xs md:text-sm font-black flex items-center gap-2 shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+              className="w-36 sm:w-44 h-11 bg-[#17344F] hover:bg-[#0F2437] text-white rounded-full text-sm font-black flex items-center justify-center gap-2.5 shadow-md transition-all active:scale-95 cursor-pointer animate-pulse-float-b"
+              title="اتصال هاتفي"
             >
-              <Phone className="w-4 h-4" />
-              <span>اتصل بنا ({TravelRepository.PHONE_NUMBER})</span>
+              <Phone className="w-5 h-5 shrink-0" />
+              <span>اتصل بنا</span>
             </button>
           </div>
         </div>

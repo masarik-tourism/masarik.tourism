@@ -36,3 +36,40 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@keyframes pulseFloatA {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    box-shadow: 0 4px 14px -2px rgba(37, 211, 102, 0.35);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 22px -2px rgba(37, 211, 102, 0.55);
+  }
+}
+
+@keyframes pulseFloatB {
+  0%, 100% {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 22px -2px rgba(23, 52, 79, 0.4);
+  }
+  50% {
+    transform: translateY(0px) scale(1);
+    box-shadow: 0 4px 14px -2px rgba(23, 52, 79, 0.25);
+  }
+}
+
+.animate-pulse-float-a {
+  animation: pulseFloatA 2.4s ease-in-out infinite;
+}
+
+.animate-pulse-float-b {
+  animation: pulseFloatB 2.4s ease-in-out infinite;
+}
+
+.animate-pulse-float-a:hover,
+.animate-pulse-float-b:hover {
+  animation-play-state: paused;
+  transform: translateY(-2px) scale(1.05);
+}
+

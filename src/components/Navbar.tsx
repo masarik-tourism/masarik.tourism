@@ -49,16 +49,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
           <button
             onClick={() => dialPhoneNumber()}
             className="hover:text-[#E5C887] transition flex items-center gap-1 cursor-pointer"
+            title="اتصال هاتفي"
           >
             <Phone className="w-3.5 h-3.5" />
-            <span>{TravelRepository.PHONE_NUMBER}</span>
+            <span>اتصال هاتفي</span>
           </button>
           <button
             onClick={() => openWhatsApp()}
-            className="text-[#E5C887] hover:underline transition flex items-center gap-1 cursor-pointer font-black"
+            className="text-[#E5C887] hover:underline transition flex items-center gap-1.5 cursor-pointer font-black"
+            title="محادثة واتساب"
           >
             <MessageCircle className="w-3.5 h-3.5" />
-            <span>واتساب مباشر</span>
+            <span>واتساب</span>
           </button>
         </div>
       </div>
@@ -119,26 +121,25 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
           )}
           <button
             onClick={() => openWhatsApp()}
-            className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white text-xs md:text-sm font-black px-3.5 py-2 rounded-full flex items-center gap-1.5 shadow hover:shadow-md transition-all active:scale-95 cursor-pointer"
+            className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white text-xs md:text-sm font-black px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow hover:shadow-md transition-all active:scale-95 cursor-pointer"
             title="تواصل معنا عبر واتساب"
           >
             <MessageCircle className="w-4 h-4" />
-            <span className="hidden sm:inline">واتساب:</span>
-            <span>{TravelRepository.PHONE_NUMBER}</span>
+            <span>واتساب</span>
           </button>
           <a
             href={TravelRepository.FACEBOOK_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 text-[#1877F2] hover:bg-[#1877F2]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0"
+            className="p-1.5 text-[#1877F2] hover:bg-[#1877F2]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs"
             title="صفحة مسارك للإنجاز السياحي على فيسبوك"
           >
             <FacebookIcon className="w-4 h-4 fill-[#1877F2]" />
           </a>
           <button
             onClick={() => dialPhoneNumber()}
-            className="p-2 text-[#17344F] hover:bg-[#FAF8F2] rounded-full border border-[#E2DAC8] transition cursor-pointer md:hidden"
-            title="اتصل بنا"
+            className="p-1.5 text-[#17344F] hover:bg-[#FAF8F2] rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0"
+            title="اتصال هاتفي"
           >
             <Phone className="w-4 h-4" />
           </button>
