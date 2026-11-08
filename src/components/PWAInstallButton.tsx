@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Smartphone, X, Share, ExternalLink, HardDrive } from 'lucide-react';
+import { Download, Smartphone, X, Share, ExternalLink } from 'lucide-react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { TravelRepository } from '../data/travelData';
 
@@ -200,7 +200,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
                 </button>
               </div>
 
-              {/* Option 2: Direct APK Download */}
+              {/* Option 2: Direct APK Download via GitHub Release */}
               <div className="bg-[#FBF7EE] border border-[#E5C887] rounded-2xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="font-black text-[#17344F] flex items-center gap-1.5 text-xs md:text-sm">
@@ -208,35 +208,31 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
                     <span>الخيار 2: تحميل ملف APK لأجهزة أندرويد</span>
                   </h4>
                   <span className="bg-[#C6A052] text-[#0F2437] text-[10px] font-black px-2 py-0.5 rounded-full">
-                    حزمة أندرويد
+                    {TravelRepository.APK_VERSION} • {TravelRepository.APK_SIZE}
                   </span>
                 </div>
                 <p className="text-[11px] text-[#678093] leading-relaxed">
-                  تحميل ملف التطبيق الموقّع بصيغة (APK) وتثبيته مباشرة على هاتفك الأندرويد.
+                  تحميل ملف التطبيق الموقّع بصيغة (APK) وتثبيته مباشرة على هاتفك الأندرويد من خوادم GitHub الرسمية.
                 </p>
 
                 <div className="flex flex-col gap-2 pt-1">
                   <a
                     href={TravelRepository.APK_DOWNLOAD_URL}
-                    download="masarik-tourism.apk"
-                    className="w-full bg-[#C6A052] hover:bg-[#d4b063] text-[#0F2437] py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-center cursor-pointer"
+                    className="w-full bg-[#C6A052] hover:bg-[#d4b063] text-[#0F2437] py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-center cursor-pointer"
                   >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>تحميل ملف APK المباشر (تنزيل فوري)</span>
+                    <Download className="w-4 h-4" />
+                    <span>تحميل ملف APK المباشر ({TravelRepository.APK_VERSION})</span>
                   </a>
 
-                  {TravelRepository.APK_DRIVE_URL && (
-                    <a
-                      href={TravelRepository.APK_DRIVE_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full bg-white hover:bg-gray-50 text-[#17344F] border border-[#E2DAC8] py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 text-center cursor-pointer"
-                    >
-                      <HardDrive className="w-3.5 h-3.5 text-[#2A7688]" />
-                      <span>تحميل عبر Google Drive</span>
-                      <ExternalLink className="w-3 h-3 text-gray-400" />
-                    </a>
-                  )}
+                  <a
+                    href={TravelRepository.APK_RELEASES_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-white hover:bg-gray-50 text-[#17344F] border border-[#E2DAC8] py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 text-center cursor-pointer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-[#2A7688]" />
+                    <span>عرض صفحة الإصدارات الرسمية (GitHub Releases)</span>
+                  </a>
                 </div>
               </div>
             </div>
