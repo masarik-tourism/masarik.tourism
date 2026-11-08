@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Phone, MessageCircle, ShieldCheck, Compass } from 'lucide-react';
+import { Phone, MessageCircle, ShieldCheck, Compass, Download } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
-import { PWAInstallButton } from './PWAInstallButton';
+import { FacebookIcon } from './FacebookIcon';
 
 interface NavbarProps {
   currentTab: number;
@@ -27,7 +27,19 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
           <ShieldCheck className="w-4 h-4 text-[#E5C887]" />
           <span>{TravelRepository.CERTIFICATION_TITLE} • س.ت: {TravelRepository.COMMERCIAL_RECORD}</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 md:gap-4">
+          <a
+            href={TravelRepository.FACEBOOK_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[#60A5FA] text-gray-200 transition flex items-center gap-1.5 cursor-pointer font-bold"
+            title="صفحتنا على فيسبوك"
+          >
+            <span className="w-4 h-4 bg-white rounded-full flex items-center justify-center shrink-0">
+              <FacebookIcon className="w-3.5 h-3.5 text-[#1877F2] fill-[#1877F2]" />
+            </span>
+            <span className="hidden sm:inline">فيسبوك</span>
+          </a>
           <button
             onClick={() => dialPhoneNumber()}
             className="hover:text-[#E5C887] transition flex items-center gap-1 cursor-pointer"
@@ -89,7 +101,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
         </nav>
 
         <div className="flex items-center gap-2">
-          <PWAInstallButton variant="navbar" className="hidden sm:flex" />
+          <a
+            href={TravelRepository.APK_DOWNLOAD_URL}
+            className="bg-gradient-to-r from-[#C6A052] to-[#E5C887] hover:from-[#d4b063] hover:to-[#f0d59a] text-[#0F2437] font-black text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
+            title="تحميل وتثبيت تطبيق مسارك المباشر (APK)"
+          >
+            <Download className="w-3.5 h-3.5 text-[#0F2437]" />
+            <span>تثبيت التطبيق</span>
+          </a>
           <button
             onClick={() => openWhatsApp()}
             className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white text-xs md:text-sm font-black px-3.5 py-2 rounded-full flex items-center gap-1.5 shadow hover:shadow-md transition-all active:scale-95 cursor-pointer"
@@ -99,6 +118,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
             <span className="hidden sm:inline">واتساب:</span>
             <span>{TravelRepository.PHONE_NUMBER}</span>
           </button>
+          <a
+            href={TravelRepository.FACEBOOK_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 text-[#1877F2] hover:bg-[#1877F2]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0"
+            title="صفحة مسارك للإنجاز السياحي على فيسبوك"
+          >
+            <FacebookIcon className="w-4 h-4 fill-[#1877F2]" />
+          </a>
           <button
             onClick={() => dialPhoneNumber()}
             className="p-2 text-[#17344F] hover:bg-[#FAF8F2] rounded-full border border-[#E2DAC8] transition cursor-pointer md:hidden"

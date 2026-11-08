@@ -10,6 +10,7 @@ import { TravelRepository } from './data/travelData';
 import { dialPhoneNumber, openWhatsApp } from './utils/communication';
 import { Phone, MessageCircle, Mail, MapPin, Clock } from 'lucide-react';
 import { OfflineIndicator } from './components/OfflineIndicator';
+import { FacebookIcon } from './components/FacebookIcon';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -84,6 +85,17 @@ export const App: React.FC = () => {
                 <Mail className="w-3.5 h-3.5" />
                 <span className="truncate">الإيميل: {TravelRepository.OFFICIAL_EMAIL}</span>
               </div>
+              <a
+                href={TravelRepository.FACEBOOK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-[#60A5FA] text-gray-200 transition cursor-pointer"
+              >
+                <span className="w-4 h-4 bg-white rounded-full flex items-center justify-center shrink-0">
+                  <FacebookIcon className="w-3 h-3 text-[#1877F2] fill-[#1877F2]" />
+                </span>
+                <span>فيسبوك: {TravelRepository.FACEBOOK_USERNAME}</span>
+              </a>
             </div>
           </div>
 

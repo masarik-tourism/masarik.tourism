@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp, launchEmail } from '../utils/communication';
+import { FacebookIcon } from '../components/FacebookIcon';
 
 interface ContactScreenProps {
   initialService?: string | null;
@@ -153,7 +154,7 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           <button
             onClick={() => openWhatsApp()}
             className="bg-[#25D366] hover:bg-[#128C7E] text-white py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition active:scale-[0.98] cursor-pointer"
@@ -161,6 +162,15 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
             <MessageCircle className="w-4 h-4" />
             <span>واتساب فوري</span>
           </button>
+          <a
+            href={TravelRepository.FACEBOOK_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#1877F2] hover:bg-[#166fe5] text-white py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition active:scale-[0.98] text-center"
+          >
+            <FacebookIcon className="w-4 h-4 fill-white" />
+            <span>صفحة فيسبوك</span>
+          </a>
           <button
             onClick={() => dialPhoneNumber()}
             className="bg-[#17344F] hover:bg-[#0F2437] text-white py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition active:scale-[0.98] cursor-pointer"

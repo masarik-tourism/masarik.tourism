@@ -8,6 +8,8 @@ export const TravelRepository = {
   PHONE_DIAL: '+201128440008',
   WHATSAPP_URL: 'https://wa.me/201128440008',
   OFFICIAL_EMAIL: 'sabeeluk.lilssafar@gmail.com',
+  FACEBOOK_URL: 'https://facebook.com/masarik.tourism',
+  FACEBOOK_USERNAME: 'masarik.tourism',
   INSTAPAY_URL: 'https://ipn.eg/S/lonely/instapay/0Dq6BN',
   INSTAPAY_CODE: '0Dq6BN',
   INSTAPAY_ACCOUNT: 'lonely',

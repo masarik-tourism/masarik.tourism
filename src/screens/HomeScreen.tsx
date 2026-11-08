@@ -18,12 +18,13 @@ import {
   Award,
   FileText,
   QrCode,
+  Download,
+  Smartphone,
 } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import masarikHeroBgImg from '../assets/images/masarik_hero_bg.jpg';
-import { PWAInstallButton } from '../components/PWAInstallButton';
 
 interface HomeScreenProps {
   onNavigateToServices: () => void;
@@ -130,8 +131,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </p>
           </div>
         </div>
-
-        <PWAInstallButton variant="banner" className="my-3" />
 
         <div>
           <h2 className="text-base md:text-lg font-black text-[#0F2437] mb-3 px-1">
@@ -271,6 +270,34 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </div>
             ))}
           </div>
+        </div>
+
+        {/* قسم تثبيت وتحديث التطبيق بأسفل الصفحة */}
+        <div className="bg-[#FAF8F2] border border-[#E2DAC8] rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3 text-right">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#17344F]/10 text-[#17344F] flex items-center justify-center shrink-0">
+              <Smartphone className="w-5 h-5 text-[#C6A052]" />
+            </div>
+            <div>
+              <h3 className="text-xs md:text-sm font-black text-[#17344F] flex items-center gap-1.5">
+                <span>تثبيت وتحديث التطبيق</span>
+                <span className="bg-[#17344F] text-[#E5C887] text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  {TravelRepository.APK_VERSION}
+                </span>
+              </h3>
+              <p className="text-[11px] text-[#678093]">
+                تحميل أحدث إصدار رسمي من تطبيق مسارك للأندرويد ({TravelRepository.APK_SIZE}).
+              </p>
+            </div>
+          </div>
+
+          <a
+            href={TravelRepository.APK_DOWNLOAD_URL}
+            className="w-full sm:w-auto bg-[#17344F] hover:bg-[#0F2437] text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-center cursor-pointer shrink-0"
+          >
+            <Download className="w-3.5 h-3.5 text-[#E5C887]" />
+            <span>تنزيل التحديث (APK)</span>
+          </a>
         </div>
       </div>
     </div>
