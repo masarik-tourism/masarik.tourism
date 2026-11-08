@@ -28,40 +28,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E2DAC8] shadow-sm">
-      <div className="bg-gradient-to-r from-[#0F2437] to-[#17344F] text-white px-4 py-1.5 text-xs font-bold flex flex-wrap justify-between items-center gap-2">
-        <div className="flex items-center gap-1.5">
-          <ShieldCheck className="w-4 h-4 text-[#E5C887]" />
+      <div className="bg-gradient-to-r from-[#0F2437] via-[#17344F] to-[#0F2437] text-white px-4 py-1.5 text-xs font-bold flex justify-center items-center text-center">
+        <div className="flex items-center justify-center gap-1.5">
+          <ShieldCheck className="w-4 h-4 text-[#E5C887] shrink-0" />
           <span>{TravelRepository.CERTIFICATION_TITLE} • س.ت: {TravelRepository.COMMERCIAL_RECORD}</span>
-        </div>
-        <div className="flex items-center gap-3 md:gap-4">
-          <a
-            href={TravelRepository.FACEBOOK_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#60A5FA] text-gray-200 transition flex items-center gap-1.5 cursor-pointer font-bold"
-            title="صفحتنا على فيسبوك"
-          >
-            <span className="w-4 h-4 bg-white rounded-full flex items-center justify-center shrink-0">
-              <FacebookIcon className="w-3.5 h-3.5 text-[#1877F2] fill-[#1877F2]" />
-            </span>
-            <span className="hidden sm:inline">فيسبوك</span>
-          </a>
-          <button
-            onClick={() => dialPhoneNumber()}
-            className="hover:text-[#E5C887] transition flex items-center gap-1 cursor-pointer"
-            title="اتصال هاتفي"
-          >
-            <Phone className="w-3.5 h-3.5" />
-            <span>اتصال هاتفي</span>
-          </button>
-          <button
-            onClick={() => openWhatsApp()}
-            className="text-[#E5C887] hover:underline transition flex items-center gap-1.5 cursor-pointer font-black"
-            title="محادثة واتساب"
-          >
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span>واتساب</span>
-          </button>
         </div>
       </div>
 
