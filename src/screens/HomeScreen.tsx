@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   ShieldCheck,
   Phone,
-  MessageCircle,
   Check,
   Building,
   Mail,
@@ -23,6 +22,7 @@ import {
 } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
+import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import masarikHeroBgImg from '../assets/images/masarik_hero_bg.jpg';
 
@@ -104,7 +104,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               className="w-36 sm:w-44 h-11 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full text-sm font-black flex items-center justify-center gap-2.5 shadow-md transition-all active:scale-95 cursor-pointer animate-pulse-float-a"
               title="تواصل عبر واتساب"
             >
-              <MessageCircle className="w-5 h-5 shrink-0" />
+              <WhatsAppIcon className="w-5 h-5 shrink-0" variant="white" />
               <span>واتساب</span>
             </button>
             <button

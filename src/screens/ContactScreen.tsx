@@ -14,6 +14,7 @@ import {
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp, launchEmail } from '../utils/communication';
 import { FacebookIcon } from '../components/FacebookIcon';
+import { WhatsAppIcon } from '../components/WhatsAppIcon';
 
 interface ContactScreenProps {
   initialService?: string | null;
@@ -159,7 +160,7 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
             onClick={() => openWhatsApp()}
             className="bg-[#25D366] hover:bg-[#128C7E] text-white py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition active:scale-[0.98] cursor-pointer"
           >
-            <MessageCircle className="w-4 h-4" />
+            <WhatsAppIcon className="w-4 h-4" variant="white" />
             <span>واتساب فوري</span>
           </button>
           <a

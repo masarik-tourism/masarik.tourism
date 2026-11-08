@@ -1,6 +1,6 @@
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
 import { openWhatsApp } from '../utils/communication';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 export const FloatingWhatsApp: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ export const FloatingWhatsApp: React.FC = () => {
     >
       <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full animate-ping" />
       <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full" />
-      <MessageCircle className="w-7 h-7 fill-white/20 stroke-[2.5]" />
+      <WhatsAppIcon className="w-8 h-8" variant="white" />
     </button>
   );
 };

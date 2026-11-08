@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, MessageCircle, ShieldCheck, Compass, Download } from 'lucide-react';
+import { Phone, ShieldCheck, Compass, Download } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import { FacebookIcon } from './FacebookIcon';
+import { WhatsAppIcon } from './WhatsAppIcon';
 import { isRunningInApp } from '../utils/appEnvironment';
 
 interface NavbarProps {
@@ -52,11 +53,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
               <Compass className="w-6 h-6 text-[#E5C887]" />
             </div>
           )}
-          <div className="flex flex-col">
-            <h1 className="text-lg md:text-xl font-black text-[#17344F] leading-tight">
+          <div className="flex flex-col min-w-0">
+            <h1 className="text-base sm:text-lg md:text-xl font-black text-[#17344F] leading-tight whitespace-nowrap">
               {TravelRepository.COMPANY_NAME_AR}
             </h1>
-            <span className="text-xs font-bold text-[#2A7688] tracking-wide">
+            <span className="text-[10px] sm:text-xs font-bold text-[#2A7688] tracking-wide whitespace-nowrap">
               {TravelRepository.COMPANY_NAME_EN}
             </span>
           </div>
@@ -78,37 +79,37 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {!isApp && (
             <a
               href={TravelRepository.APK_DOWNLOAD_URL}
-              className="bg-gradient-to-r from-[#C6A052] to-[#E5C887] hover:from-[#d4b063] hover:to-[#f0d59a] text-[#0F2437] font-black text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
+              className="bg-gradient-to-r from-[#C6A052] to-[#E5C887] hover:from-[#d4b063] hover:to-[#f0d59a] text-[#0F2437] font-black text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full flex items-center gap-1 sm:gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer whitespace-nowrap"
               title="تحميل وتثبيت تطبيق مسارك المباشر (APK)"
             >
               <Download className="w-3.5 h-3.5 text-[#0F2437]" />
-              <span>تثبيت التطبيق</span>
+              <span className="hidden xs:inline">تثبيت التطبيق</span>
+              <span className="xs:hidden">تثبيت</span>
             </a>
           )}
           <button
             onClick={() => openWhatsApp()}
-            className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white text-xs md:text-sm font-black px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow hover:shadow-md transition-all active:scale-95 cursor-pointer"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95 hover:scale-105"
             title="تواصل معنا عبر واتساب"
           >
-            <MessageCircle className="w-4 h-4" />
-            <span>واتساب</span>
+            <WhatsAppIcon className="w-full h-full" variant="colored" />
           </button>
           <a
             href={TravelRepository.FACEBOOK_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1.5 text-[#1877F2] hover:bg-[#1877F2]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs"
+            className="w-8 h-8 sm:w-9 sm:h-9 text-[#1877F2] hover:bg-[#1877F2]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
             title="صفحة مسارك للإنجاز السياحي على فيسبوك"
           >
             <FacebookIcon className="w-4 h-4 fill-[#1877F2]" />
           </a>
           <button
             onClick={() => dialPhoneNumber()}
-            className="p-1.5 text-[#17344F] hover:bg-[#FAF8F2] rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0"
+            className="w-8 h-8 sm:w-9 sm:h-9 text-[#17344F] hover:bg-[#FAF8F2] rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
             title="اتصال هاتفي"
           >
             <Phone className="w-4 h-4" />
