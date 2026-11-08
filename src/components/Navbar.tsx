@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, MessageCircle, ShieldCheck, Compass, Download } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import { FacebookIcon } from './FacebookIcon';
+import { isRunningInApp } from '../utils/appEnvironment';
 
 interface NavbarProps {
   currentTab: number;
@@ -12,6 +13,11 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
   const [logoError, setLogoError] = useState(false);
+  const [isApp, setIsApp] = useState(false);
+
+  useEffect(() => {
+    setIsApp(isRunningInApp());
+  }, []);
 
   const tabs = [
     { label: 'الرئيسية', index: 0 },
@@ -101,14 +107,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
         </nav>
 
         <div className="flex items-center gap-2">
-          <a
-            href={TravelRepository.APK_DOWNLOAD_URL}
-            className="bg-gradient-to-r from-[#C6A052] to-[#E5C887] hover:from-[#d4b063] hover:to-[#f0d59a] text-[#0F2437] font-black text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
-            title="تحميل وتثبيت تطبيق مسارك المباشر (APK)"
-          >
-            <Download className="w-3.5 h-3.5 text-[#0F2437]" />
-            <span>تثبيت التطبيق</span>
-          </a>
+          {!isApp && (
+            <a
+              href={TravelRepository.APK_DOWNLOAD_URL}
+              className="bg-gradient-to-r from-[#C6A052] to-[#E5C887] hover:from-[#d4b063] hover:to-[#f0d59a] text-[#0F2437] font-black text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
+              title="تحميل وتثبيت تطبيق مسارك المباشر (APK)"
+            >
+              <Download className="w-3.5 h-3.5 text-[#0F2437]" />
+              <span>تثبيت التطبيق</span>
+            </a>
+          )}
           <button
             onClick={() => openWhatsApp()}
             className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white text-xs md:text-sm font-black px-3.5 py-2 rounded-full flex items-center gap-1.5 shadow hover:shadow-md transition-all active:scale-95 cursor-pointer"

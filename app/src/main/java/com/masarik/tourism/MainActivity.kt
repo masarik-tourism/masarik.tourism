@@ -53,8 +53,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MasarikTourismTheme {
+                val finalUrl = if (TravelRepository.WEB_URL.contains("?")) "${TravelRepository.WEB_URL}&app=1" else "${TravelRepository.WEB_URL}?app=1"
                 MainWebViewScreen(
-                    targetUrl = TravelRepository.WEB_URL,
+                    targetUrl = finalUrl,
                     onFinishActivity = { finish() }
                 )
             }
@@ -109,6 +110,7 @@ fun MainWebViewScreen(
                         displayZoomControls = false
                         cacheMode = WebSettings.LOAD_DEFAULT
                         mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                        userAgentString = "${userAgentString} MasarikApp/1.1"
                     }
 
                     webViewClient = object : WebViewClient() {
