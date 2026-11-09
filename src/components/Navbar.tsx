@@ -93,23 +93,23 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
           )}
           <button
             onClick={() => openWhatsApp()}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95 hover:scale-105"
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-white hover:bg-[#25D366]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
             title="تواصل معنا عبر واتساب"
           >
-            <WhatsAppIcon className="w-full h-full" variant="colored" />
+            <WhatsAppIcon className="w-4.5 h-4.5" variant="colored" />
           </button>
           <a
             href={TravelRepository.FACEBOOK_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-8 h-8 sm:w-9 sm:h-9 text-[#1877F2] hover:bg-[#1877F2]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-white text-[#1877F2] hover:bg-[#1877F2]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
             title="صفحة مسارك للإنجاز السياحي على فيسبوك"
           >
             <FacebookIcon className="w-4 h-4 fill-[#1877F2]" />
           </a>
           <button
             onClick={() => dialPhoneNumber()}
-            className="w-8 h-8 sm:w-9 sm:h-9 text-[#17344F] hover:bg-[#FAF8F2] rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-white text-[#17344F] hover:bg-[#FAF8F2] rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
             title="اتصال هاتفي"
           >
             <Phone className="w-4 h-4" />
