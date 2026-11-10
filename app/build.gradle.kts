@@ -15,19 +15,16 @@ val versionPropsFile = file("${rootDir}/version.properties")
 
 fun loadVersionProps(): Properties {
     val props = Properties()
-    if (!versionPropsFile.exists()) {
-        props["VERSION_CODE"] = "34"
-        props["VERSION_NAME"] = "3.3.4"
-        versionPropsFile.createNewFile()
-        FileOutputStream(versionPropsFile).use { props.store(it, "Initial Version Config") }
-    } else {
-        FileInputStream(versionPropsFile).use { props.load(it) }
+    if (versionPropsFile.exists()) {
+        try {
+            FileInputStream(versionPropsFile).use { props.load(it) }
+        } catch (_: Exception) {}
     }
     return props
 }
 
 val currentProps = loadVersionProps()
-val baseVersionCode = currentProps.getProperty("VERSION_CODE", "34").toInt()
+val baseVersionCode = currentProps.getProperty("VERSION_CODE", "34").toIntOrNull() ?: 34
 val baseVersionName = currentProps.getProperty("VERSION_NAME", "3.3.4")
 
 // In GitHub Actions, add GITHUB_RUN_NUMBER to ensure strictly monotonic increase
@@ -118,24 +115,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-}
-
-// ---------------------------------------------------------
-// Subproject Task: incrementVersionCode
-// ---------------------------------------------------------
-tasks.register("incrementVersionCode") {
-    description = "Automatically increments the VERSION_CODE in version.properties"
-    group = "versioning"
-    doLast {
-        val props = loadVersionProps()
-        val currentCode = props.getProperty("VERSION_CODE", "34").toInt()
-        val nextCode = currentCode + 1
-        props["VERSION_CODE"] = nextCode.toString()
-        FileOutputStream(versionPropsFile).use {
-            props.store(it, "Automated Version Increment")
-        }
-        println("==> [Version Auto-Increment] Successfully bumped VERSION_CODE: $currentCode -> $nextCode")
     }
 }
 

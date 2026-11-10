@@ -55,6 +55,20 @@ jobs:
 
           ls -la *.keystore
 
+      - name: Auto-increment Version Code in version.properties
+        run: |
+          if [ -f "version.properties" ]; then
+            OLD_CODE=$(grep 'VERSION_CODE=' version.properties | cut -d'=' -f2)
+            NEW_CODE=$((OLD_CODE + 1))
+            sed -i "s/VERSION_CODE=.*/VERSION_CODE=$NEW_CODE/" version.properties
+            echo "Auto-incremented VERSION_CODE: $OLD_CODE -> $NEW_CODE"
+          else
+            echo "VERSION_CODE=35" > version.properties
+            echo "VERSION_NAME=3.3.4" >> version.properties
+            echo "Initialized version.properties with VERSION_CODE=35"
+          fi
+          cat version.properties
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -63,29 +77,25 @@ jobs:
       - name: Ensure Gradle Wrapper Executable
         run: chmod +x ./gradlew
 
-      - name: Auto-increment Version Code
-        run: |
-          ./gradlew incrementVersionCode --stacktrace
-
       - name: Build Official Signed Release APK Only
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'android' }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS || 'androiddebugkey' }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD || 'android' }}
         run: |
-          ./gradlew assembleRelease --stacktrace
+          ./gradlew :app:assembleRelease --stacktrace
 
       - name: Guarantee Output APK is Named Masarik-Tourism.apk
         run: |
           mkdir -p app/build/outputs/apk/release
           cd app/build/outputs/apk/release
-          echo "Listing generated APK files:"
+          echo "Listing generated APK files in release folder:"
           ls -la
-          # If output is not already named Masarik-Tourism.apk, copy the first release apk to it
+          # If output is not already named Masarik-Tourism.apk, copy generated release apk to it
           FIRST_APK=$(ls *.apk 2>/dev/null | head -n 1)
           if [ -n "$FIRST_APK" ] && [ "$FIRST_APK" != "Masarik-Tourism.apk" ]; then
             cp "$FIRST_APK" Masarik-Tourism.apk
-            echo "Successfully created Masarik-Tourism.apk from $FIRST_APK"
+            echo "Successfully guaranteed Masarik-Tourism.apk from $FIRST_APK"
           fi
           ls -la Masarik-Tourism.apk
 
