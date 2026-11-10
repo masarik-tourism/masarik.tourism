@@ -1,4 +1,6 @@
 import java.util.Base64
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
@@ -9,9 +11,9 @@ plugins {
 // Automated Versioning: reads version.properties or increments with GitHub Actions
 // ---------------------------------------------------------
 val versionPropsFile = file("${rootDir}/version.properties")
-val versionProps = java.util.Properties().apply {
+val versionProps = Properties().apply {
     if (versionPropsFile.exists()) {
-        versionPropsFile.inputStream().use { load(it) }
+        FileInputStream(versionPropsFile).use { load(it) }
     }
 }
 val propVersionCode = versionProps.getProperty("VERSION_CODE")?.toIntOrNull()
