@@ -1,8 +1,41 @@
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.Base64
+import java.util.Properties
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
+}
+
+// ---------------------------------------------------------
+// 1. Automated Versioning Logic (Reads from version.properties)
+// ---------------------------------------------------------
+val versionPropsFile = file("${rootDir}/version.properties")
+
+fun loadVersionProps(): Properties {
+    val props = Properties()
+    if (!versionPropsFile.exists()) {
+        props["VERSION_CODE"] = "34"
+        props["VERSION_NAME"] = "3.3.4"
+        versionPropsFile.createNewFile()
+        FileOutputStream(versionPropsFile).use { props.store(it, "Initial Version Config") }
+    } else {
+        FileInputStream(versionPropsFile).use { props.load(it) }
+    }
+    return props
+}
+
+val currentProps = loadVersionProps()
+val baseVersionCode = currentProps.getProperty("VERSION_CODE", "34").toInt()
+val baseVersionName = currentProps.getProperty("VERSION_NAME", "3.3.4")
+
+// In GitHub Actions, add GITHUB_RUN_NUMBER to ensure strictly monotonic increase
+val ciRunNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0
+val resolvedVersionCode = if (ciRunNumber > 0) {
+    baseVersionCode + ciRunNumber
+} else {
+    baseVersionCode
 }
 
 android {
@@ -13,51 +46,53 @@ android {
         applicationId = "com.masarik.tourism"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = resolvedVersionCode
+        versionName = baseVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // ---------------------------------------------------------
+    // Release Build Only: Disable Debug & Test variants
+    // ---------------------------------------------------------
+    variantFilter {
+        if (buildType.name != "release") {
+            ignore = true
+        }
+    }
+
     signingConfigs {
         create("release") {
-            val keystoreFile = file("${rootDir}/debug.keystore")
-            if (keystoreFile.exists()) {
-                storeFile = keystoreFile
-            } else {
-                val base64File = file("${rootDir}/debug.keystore.base64")
-                if (base64File.exists()) {
-                    val bytes = Base64.getDecoder().decode(base64File.readText().trim())
-                    keystoreFile.writeBytes(bytes)
-                    storeFile = keystoreFile
+            val releaseKeystore = file("${rootDir}/release.keystore")
+            if (!releaseKeystore.exists()) {
+                val releaseBase64 = System.getenv("RELEASE_KEYSTORE_BASE64")
+                if (!releaseBase64.isNullOrBlank()) {
+                    val bytes = Base64.getDecoder().decode(releaseBase64.trim())
+                    releaseKeystore.writeBytes(bytes)
+                } else {
+                    val base64File = file("${rootDir}/release.keystore.base64")
+                    val fallbackDebug = file("${rootDir}/debug.keystore.base64")
+                    if (base64File.exists()) {
+                        val bytes = Base64.getDecoder().decode(base64File.readText().trim())
+                        releaseKeystore.writeBytes(bytes)
+                    } else if (fallbackDebug.exists()) {
+                        val bytes = Base64.getDecoder().decode(fallbackDebug.readText().trim())
+                        releaseKeystore.writeBytes(bytes)
+                    }
                 }
             }
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-        }
-        getByName("debug") {
-            val keystoreFile = file("${rootDir}/debug.keystore")
-            if (keystoreFile.exists()) {
-                storeFile = keystoreFile
-            } else {
-                val base64File = file("${rootDir}/debug.keystore.base64")
-                if (base64File.exists()) {
-                    val bytes = Base64.getDecoder().decode(base64File.readText().trim())
-                    keystoreFile.writeBytes(bytes)
-                    storeFile = keystoreFile
-                }
-            }
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
+
+            storeFile = releaseKeystore
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "android"
+            keyAlias = System.getenv("KEY_ALIAS") ?: "androiddebugkey"
+            keyPassword = System.getenv("KEY_PASSWORD") ?: "android"
+
+            enableV1Signing = true
+            enableV2Signing = true
         }
     }
 
     buildTypes {
-        debug {
-            signingConfig = signingConfigs.getByName("debug")
-        }
         release {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
@@ -68,6 +103,20 @@ android {
         }
     }
 
+    // ---------------------------------------------------------
+    // Fixed APK Output Filename: Strictly Masarik-Tourism.apk
+    // ---------------------------------------------------------
+    applicationVariants.all {
+        outputs.all {
+            try {
+                val setMethod = this.javaClass.getMethod("setOutputFileName", String::class.java)
+                setMethod.invoke(this, "Masarik-Tourism.apk")
+            } catch (_: Exception) {
+                // Fallback handled by ensureFixedApkName task
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
@@ -75,6 +124,44 @@ android {
 
     buildFeatures {
         compose = true
+    }
+}
+
+// ---------------------------------------------------------
+// Helper Task: Ensure output APK is always named Masarik-Tourism.apk
+// ---------------------------------------------------------
+tasks.register("ensureFixedApkName") {
+    description = "Guarantees that the release APK is named exactly Masarik-Tourism.apk"
+    group = "build"
+    doLast {
+        val apkDir = layout.buildDirectory.dir("outputs/apk/release").get().asFile
+        if (apkDir.exists()) {
+            apkDir.listFiles { _, name -> name.endsWith(".apk") }?.forEach { file ->
+                if (file.name != "Masarik-Tourism.apk") {
+                    val target = file.resolveSibling("Masarik-Tourism.apk")
+                    file.copyTo(target, overwrite = true)
+                    println("==> Guaranteed fixed filename: ${target.name}")
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// Gradle Task to automatically increment versionCode by 1
+// ---------------------------------------------------------
+tasks.register("incrementVersionCode") {
+    description = "Automatically increments the VERSION_CODE in version.properties"
+    group = "versioning"
+    doLast {
+        val props = loadVersionProps()
+        val currentCode = props.getProperty("VERSION_CODE", "34").toInt()
+        val nextCode = currentCode + 1
+        props["VERSION_CODE"] = nextCode.toString()
+        FileOutputStream(versionPropsFile).use {
+            props.store(it, "Automated Version Increment")
+        }
+        println("==> [Version Auto-Increment] Successfully bumped VERSION_CODE: $currentCode -> $nextCode")
     }
 }
 
@@ -91,7 +178,4 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.8.1")
     implementation("io.coil-kt:coil-compose:2.7.0")
-
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
