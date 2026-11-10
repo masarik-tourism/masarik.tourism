@@ -52,15 +52,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // ---------------------------------------------------------
-    // Release Build Only: Disable Debug & Test variants
-    // ---------------------------------------------------------
-    variantFilter {
-        if (buildType.name != "release") {
-            ignore = true
-        }
-    }
-
     signingConfigs {
         create("release") {
             val releaseKeystore = file("${rootDir}/release.keystore")
@@ -93,6 +84,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("release")
+        }
         release {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
@@ -112,7 +106,7 @@ android {
                 val setMethod = this.javaClass.getMethod("setOutputFileName", String::class.java)
                 setMethod.invoke(this, "Masarik-Tourism.apk")
             } catch (_: Exception) {
-                // Fallback handled by ensureFixedApkName task
+                // Handled in workflow post-build
             }
         }
     }
@@ -128,27 +122,7 @@ android {
 }
 
 // ---------------------------------------------------------
-// Helper Task: Ensure output APK is always named Masarik-Tourism.apk
-// ---------------------------------------------------------
-tasks.register("ensureFixedApkName") {
-    description = "Guarantees that the release APK is named exactly Masarik-Tourism.apk"
-    group = "build"
-    doLast {
-        val apkDir = layout.buildDirectory.dir("outputs/apk/release").get().asFile
-        if (apkDir.exists()) {
-            apkDir.listFiles { _, name -> name.endsWith(".apk") }?.forEach { file ->
-                if (file.name != "Masarik-Tourism.apk") {
-                    val target = file.resolveSibling("Masarik-Tourism.apk")
-                    file.copyTo(target, overwrite = true)
-                    println("==> Guaranteed fixed filename: ${target.name}")
-                }
-            }
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// Gradle Task to automatically increment versionCode by 1
+// Subproject Task: incrementVersionCode
 // ---------------------------------------------------------
 tasks.register("incrementVersionCode") {
     description = "Automatically increments the VERSION_CODE in version.properties"
