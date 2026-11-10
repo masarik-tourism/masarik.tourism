@@ -1,7 +1,4 @@
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.util.Base64
-import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -9,31 +6,18 @@ plugins {
 }
 
 // ---------------------------------------------------------
-// 1. Automated Versioning Logic (Reads from version.properties)
+// Automated Versioning: reads version.properties or increments with GitHub Actions
 // ---------------------------------------------------------
 val versionPropsFile = file("${rootDir}/version.properties")
-
-fun loadVersionProps(): Properties {
-    val props = Properties()
+val versionProps = java.util.Properties().apply {
     if (versionPropsFile.exists()) {
-        try {
-            FileInputStream(versionPropsFile).use { props.load(it) }
-        } catch (_: Exception) {}
+        versionPropsFile.inputStream().use { load(it) }
     }
-    return props
 }
-
-val currentProps = loadVersionProps()
-val baseVersionCode = currentProps.getProperty("VERSION_CODE", "34").toIntOrNull() ?: 34
-val baseVersionName = currentProps.getProperty("VERSION_NAME", "3.3.4")
-
-// In GitHub Actions, add GITHUB_RUN_NUMBER to ensure strictly monotonic increase
+val propVersionCode = versionProps.getProperty("VERSION_CODE")?.toIntOrNull()
 val ciRunNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0
-val resolvedVersionCode = if (ciRunNumber > 0) {
-    baseVersionCode + ciRunNumber
-} else {
-    baseVersionCode
-}
+val autoVersionCode = propVersionCode ?: (34 + ciRunNumber)
+val autoVersionName = versionProps.getProperty("VERSION_NAME") ?: "3.3.4"
 
 android {
     namespace = "com.masarik.tourism"
@@ -43,40 +27,33 @@ android {
         applicationId = "com.masarik.tourism"
         minSdk = 26
         targetSdk = 35
-        versionCode = resolvedVersionCode
-        versionName = baseVersionName
+        versionCode = autoVersionCode
+        versionName = autoVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         create("release") {
-            val releaseKeystore = file("${rootDir}/release.keystore")
-            if (!releaseKeystore.exists()) {
-                val releaseBase64 = System.getenv("RELEASE_KEYSTORE_BASE64")
-                if (!releaseBase64.isNullOrBlank()) {
-                    val bytes = Base64.getDecoder().decode(releaseBase64.trim())
-                    releaseKeystore.writeBytes(bytes)
-                } else {
-                    val base64File = file("${rootDir}/release.keystore.base64")
-                    val fallbackDebug = file("${rootDir}/debug.keystore.base64")
-                    if (base64File.exists()) {
-                        val bytes = Base64.getDecoder().decode(base64File.readText().trim())
-                        releaseKeystore.writeBytes(bytes)
-                    } else if (fallbackDebug.exists()) {
-                        val bytes = Base64.getDecoder().decode(fallbackDebug.readText().trim())
-                        releaseKeystore.writeBytes(bytes)
-                    }
+            val keystoreFile = file("${rootDir}/release.keystore")
+            val base64File = file("${rootDir}/release.keystore.base64")
+            val fallbackDebugBase64 = file("${rootDir}/debug.keystore.base64")
+
+            if (!keystoreFile.exists()) {
+                val customB64 = System.getenv("RELEASE_KEYSTORE_BASE64")
+                if (!customB64.isNullOrBlank()) {
+                    keystoreFile.writeBytes(Base64.getDecoder().decode(customB64.trim()))
+                } else if (base64File.exists()) {
+                    keystoreFile.writeBytes(Base64.getDecoder().decode(base64File.readText().trim()))
+                } else if (fallbackDebugBase64.exists()) {
+                    keystoreFile.writeBytes(Base64.getDecoder().decode(fallbackDebugBase64.readText().trim()))
                 }
             }
 
-            storeFile = releaseKeystore
+            storeFile = if (keystoreFile.exists()) keystoreFile else file("${rootDir}/debug.keystore")
             storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "android"
             keyAlias = System.getenv("KEY_ALIAS") ?: "androiddebugkey"
             keyPassword = System.getenv("KEY_PASSWORD") ?: "android"
-
-            enableV1Signing = true
-            enableV2Signing = true
         }
     }
 
@@ -91,20 +68,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-    }
-
-    // ---------------------------------------------------------
-    // Fixed APK Output Filename: Strictly Masarik-Tourism.apk
-    // ---------------------------------------------------------
-    applicationVariants.all {
-        outputs.all {
-            try {
-                val setMethod = this.javaClass.getMethod("setOutputFileName", String::class.java)
-                setMethod.invoke(this, "Masarik-Tourism.apk")
-            } catch (_: Exception) {
-                // Handled in workflow post-build
-            }
         }
     }
 
