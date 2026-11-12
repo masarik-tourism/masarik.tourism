@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Download, Smartphone, X, Share, ExternalLink } from 'lucide-react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
+import { useLatestApkUrl } from '../hooks/useLatestApkUrl';
 import { TravelRepository } from '../data/travelData';
 
 interface PWAInstallButtonProps {
@@ -15,6 +16,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const latestApkUrl = useLatestApkUrl();
 
   // If already installed as standalone PWA, suppress in-app prompt
   if (isInstalled) {
@@ -208,20 +210,20 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
                     <span>الخيار 2: تحميل ملف APK لأجهزة أندرويد</span>
                   </h4>
                   <span className="bg-[#C6A052] text-[#0F2437] text-[10px] font-black px-2 py-0.5 rounded-full">
-                    {TravelRepository.APK_VERSION} • {TravelRepository.APK_SIZE}
+                    أحدث إصدار رسمي
                   </span>
                 </div>
                 <p className="text-[11px] text-[#678093] leading-relaxed">
-                  تحميل ملف التطبيق الموقّع بصيغة (APK) وتثبيته مباشرة على هاتفك الأندرويد من خوادم GitHub الرسمية.
+                  تحميل أحدث ملف موقّع للتطبيق بصيغة (APK) وتثبيته مباشرة على هاتفك الأندرويد من خوادم GitHub الرسمية.
                 </p>
 
                 <div className="flex flex-col gap-2 pt-1">
                   <a
-                    href={TravelRepository.APK_DOWNLOAD_URL}
-                    className="w-full bg-[#C6A052] hover:bg-[#d4b063] text-[#0F2437] py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-center cursor-pointer"
+                    href={latestApkUrl}
+                    className="w-full bg-[#C6A052] hover:bg-[#d4b063] text-[#0F2438] py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-center cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
-                    <span>تحميل ملف APK المباشر ({TravelRepository.APK_VERSION})</span>
+                    <span>تحميل ملف APK المباشر (أحدث إصدار)</span>
                   </a>
 
                   <a

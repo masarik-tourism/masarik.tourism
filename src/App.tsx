@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { BottomNav } from './components/BottomNav';
-import { FloatingWhatsApp } from './components/FloatingWhatsApp';
+import { DualFloatingButtons } from './components/DualFloatingButtons';
 import { HomeScreen } from './screens/HomeScreen';
 import { ServicesScreen } from './screens/ServicesScreen';
 import { PaymentScreen } from './screens/PaymentScreen';
 import { ContactScreen } from './screens/ContactScreen';
 import { TravelRepository } from './data/travelData';
 import { dialPhoneNumber, openWhatsApp } from './utils/communication';
-import { Phone, MessageCircle, Mail, MapPin, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, ShieldCheck, ArrowUpRight } from 'lucide-react';
 import { OfflineIndicator } from './components/OfflineIndicator';
 import { FacebookIcon } from './components/FacebookIcon';
+import { WhatsAppIcon } from './components/WhatsAppIcon';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -29,10 +30,22 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-[#FAF9F6] text-[#132838] selection:bg-[#2A7688]/20">
-      <Navbar currentTab={currentTab} onSelectTab={handleSelectTab} />
+  const handleSelectServiceFromNavbar = (serviceTitle: string) => {
+    setSelectedServiceForContact(serviceTitle);
+    setCurrentTab(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
+  return (
+    <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F2438] selection:bg-[#0284C7]/20">
+      {/* Organized Navigation Bar */}
+      <Navbar
+        currentTab={currentTab}
+        onSelectTab={handleSelectTab}
+        onSelectService={handleSelectServiceFromNavbar}
+      />
+
+      {/* Main Content Viewport */}
       <main className="flex-1">
         {currentTab === 0 && (
           <HomeScreen
@@ -51,78 +64,133 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      <footer className="bg-[#0F2437] text-white pt-10 pb-20 md:pb-8 border-t-4 border-[#C6A052]">
-        <div className="max-w-4xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-xs md:text-sm">
-          <div className="space-y-2">
-            <h3 className="text-sm md:text-base font-black text-[#E5C887]">
-              {TravelRepository.COMPANY_NAME_AR}
-            </h3>
-            <p className="text-gray-300 leading-relaxed">
-              وكالة معتمدة وموثقة من الغرفة التجارية المصرية تحمل السجل التجاري رقم {TravelRepository.COMMERCIAL_RECORD}. إنجاز جميع معاملات التأشيرات والسفر والسياحة الدينية بأعلى احترافية.
+      {/* Professional Portal Footer */}
+      <footer className="bg-[#0A1926] text-white pt-12 pb-24 md:pb-10 border-t-2 border-[#C6A052]">
+        <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-10 text-xs sm:text-sm">
+          {/* Col 1: Bio & Licensing */}
+          <div className="space-y-3 md:col-span-2">
+            <div className="flex items-center gap-2">
+              <span className="text-base sm:text-lg font-black text-white">
+                {TravelRepository.COMPANY_NAME_AR}
+              </span>
+              <span className="text-xs text-[#C6A052] font-bold">
+                ({TravelRepository.COMPANY_NAME_EN})
+              </span>
+            </div>
+            <p className="text-slate-300 leading-relaxed max-w-md">
+              شباكك الواحد وبوابتك المعتمدة رسمياً لإنجاز كافة معاملات التأشيرات وحجز مواعيد تساهيل VFS، تسديد منصة إنجاز والتأمين الصحي، حجز تذاكر الطيران وتوثيق الأوراق الحكومية.
             </p>
+            <div className="flex items-center gap-2 text-xs text-[#E5C887] font-semibold pt-1">
+              <ShieldCheck className="w-4 h-4 shrink-0 text-[#C6A052]" />
+              <span>سجل تجاري رقم: {TravelRepository.COMMERCIAL_RECORD} • موثقة بغرفة التجارة المصرية</span>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <h3 className="text-sm md:text-base font-black text-[#E5C887]">
-              بيانات التواصل الرسمية
+          {/* Col 2: Quick Links */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-bold text-[#E5C887] uppercase tracking-wider">
+              أقسام المنصة
             </h3>
-            <div className="space-y-1.5 text-gray-300">
+            <ul className="space-y-2 text-slate-300">
+              <li>
+                <button
+                  onClick={() => handleSelectTab(0)}
+                  className="hover:text-white transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>الرئيسية والدليل التفاعلي</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleSelectTab(1)}
+                  className="hover:text-white transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>دليل الخدمات والتأشيرات</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleSelectTab(2)}
+                  className="hover:text-white transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>طرق الدفع المعتمدة (InstaPay)</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleSelectTab(3)}
+                  className="hover:text-white transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>بيانات الاتصال ومقر الفروع</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 3: Direct Contact */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-bold text-[#E5C887] uppercase tracking-wider">
+              التواصل المباشر
+            </h3>
+            <div className="space-y-2 text-slate-300">
               <button
                 onClick={() => dialPhoneNumber()}
-                className="flex items-center gap-2 hover:text-[#E5C887] transition cursor-pointer"
+                className="flex items-center gap-2 hover:text-[#E5C887] transition cursor-pointer text-right w-full"
               >
-                <Phone className="w-3.5 h-3.5" />
+                <Phone className="w-4 h-4 text-[#C6A052] shrink-0" />
                 <span>الهاتف: {TravelRepository.PHONE_NUMBER}</span>
               </button>
+
               <button
                 onClick={() => openWhatsApp()}
-                className="flex items-center gap-2 hover:text-[#E5C887] transition cursor-pointer"
+                className="flex items-center gap-2 hover:text-[#25D366] transition cursor-pointer text-right w-full"
               >
-                <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
-                <span>الواتساب: {TravelRepository.PHONE_NUMBER}</span>
+                <WhatsAppIcon className="w-4 h-4 shrink-0" variant="colored" />
+                <span>واتساب: {TravelRepository.PHONE_NUMBER}</span>
               </button>
-              <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5" />
-                <span className="truncate">الإيميل: {TravelRepository.OFFICIAL_EMAIL}</span>
+
+              <div className="flex items-center gap-2 text-slate-300">
+                <Mail className="w-4 h-4 text-[#C6A052] shrink-0" />
+                <span className="truncate">البريد: {TravelRepository.OFFICIAL_EMAIL}</span>
               </div>
+
+              <div className="flex items-center gap-2 text-slate-300">
+                <Clock className="w-4 h-4 text-[#C6A052] shrink-0" />
+                <span>{TravelRepository.WORKING_HOURS}</span>
+              </div>
+
+              <div className="flex items-center gap-2 text-slate-300">
+                <MapPin className="w-4 h-4 text-[#C6A052] shrink-0" />
+                <span>فروعنا: محافظة القاهرة • محافظة الدقهلية</span>
+              </div>
+
               <a
                 href={TravelRepository.FACEBOOK_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:text-[#60A5FA] text-gray-200 transition cursor-pointer"
+                className="flex items-center gap-2 hover:text-[#60A5FA] text-slate-200 transition cursor-pointer pt-1"
               >
-                <span className="w-4 h-4 bg-white rounded-full flex items-center justify-center shrink-0">
-                  <FacebookIcon className="w-3 h-3 text-[#1877F2] fill-[#1877F2]" />
-                </span>
-                <span>فيسبوك: {TravelRepository.FACEBOOK_USERNAME}</span>
+                <FacebookIcon className="w-4 h-4 fill-[#1877F2]" />
+                <span>صفحة مسارك على فيسبوك</span>
+                <ArrowUpRight className="w-3 h-3 text-slate-400" />
               </a>
             </div>
           </div>
-
-          <div className="space-y-2">
-            <h3 className="text-sm md:text-base font-black text-[#E5C887]">
-              مواعيد العمل والفروع
-            </h3>
-            <div className="space-y-1.5 text-gray-300">
-              <div className="flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5" />
-                <span>{TravelRepository.WORKING_HOURS}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5" />
-                <span>فروعنا: محافظة القاهرة • محافظة الدقهلية</span>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div className="border-t border-white/10 pt-4 text-center text-[11px] text-gray-400">
-          جميع الحقوق محفوظة © 2026 {TravelRepository.COMPANY_NAME_AR} ({TravelRepository.COMPANY_NAME_EN}) • سجل تجاري رقم {TravelRepository.COMMERCIAL_RECORD}
+        {/* Legal notice bottom */}
+        <div className="border-t border-white/10 pt-5 text-center text-xs text-slate-400 max-w-5xl mx-auto px-4">
+          جميع الحقوق محفوظة © 2026 {TravelRepository.COMPANY_NAME_AR} ({TravelRepository.COMPANY_NAME_EN}) • ترخيص وسجل تجاري رقم {TravelRepository.COMMERCIAL_RECORD}
         </div>
       </footer>
 
-      <FloatingWhatsApp />
+      {/* Floating Call & WhatsApp Buttons */}
+      <DualFloatingButtons />
+
+      {/* Offline Mode Alert */}
       <OfflineIndicator />
+
+      {/* Mobile Bottom Navigation Bar */}
       <BottomNav currentTab={currentTab} onSelectTab={handleSelectTab} />
     </div>
   );

@@ -2,30 +2,28 @@
 
 @layer base {
   :root {
-    --cream-light: #FAF8F2;
-    --cream-parchment: #F7F4EB;
-    --cream-dark: #ECE6D4;
+    --canvas-bg: #F8FAFC;
     --surface-white: #FFFFFF;
-    --navy-primary: #17344F;
-    --navy-dark: #0F2437;
-    --teal-primary: #2A7688;
-    --teal-soft: #EAF4F6;
+    --navy-dark: #0A1926;
+    --navy-primary: #0F2438;
+    --royal-blue: #163B65;
     --gold-primary: #C6A052;
     --gold-light: #E5C887;
-    --gold-dark: #9E7B33;
-    --gold-soft: #FBF7EE;
+    --turquoise-primary: #0284C7;
+    --turquoise-light: #0EA5E9;
     --whatsapp-green: #25D366;
-    --whatsapp-dark: #128C7E;
-    --text-dark: #132838;
-    --text-medium: #324D61;
-    --text-muted: #678093;
-    --border-color: #E2DAC8;
+    --text-primary: #0F2438;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
+    --border-light: #E2E8F0;
   }
 
   body {
-    font-family: 'Tajawal', sans-serif;
+    font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     direction: rtl;
     text-align: right;
+    background-color: var(--canvas-bg);
+    color: var(--text-primary);
   }
 }
 

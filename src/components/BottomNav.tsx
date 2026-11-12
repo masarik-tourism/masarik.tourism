@@ -15,8 +15,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onSelectTab })
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E2DAC8] shadow-lg">
-      <div className="flex items-center justify-around py-1.5 px-2">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg">
+      <div className="flex items-center justify-around py-1.5 px-2 max-w-md mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isSelected = currentTab === tab.index;
@@ -24,22 +24,22 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onSelectTab })
             <button
               key={tab.index}
               onClick={() => onSelectTab(tab.index)}
-              className={`flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-xl transition-all cursor-pointer ${
+              className={`flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-xl transition-all cursor-pointer min-h-[44px] ${
                 isSelected
-                  ? 'text-[#17344F]'
-                  : 'text-[#678093] hover:text-[#17344F]'
+                  ? 'text-[#0F2438]'
+                  : 'text-slate-500 hover:text-[#0F2438]'
               }`}
             >
               <div
-                className={`p-1 rounded-xl transition-all ${
-                  isSelected ? 'bg-[#EAF4F6] text-[#17344F]' : ''
+                className={`p-1.5 rounded-xl transition-all ${
+                  isSelected ? 'bg-slate-100 text-[#0F2438]' : ''
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isSelected ? 'stroke-[2.5]' : 'stroke-2'}`} />
+                <Icon className={`w-5 h-5 ${isSelected ? 'stroke-[2.5] text-[#0F2438]' : 'stroke-2'}`} />
               </div>
               <span
                 className={`text-[11px] mt-0.5 leading-tight ${
-                  isSelected ? 'font-bold text-[#17344F]' : 'font-medium'
+                  isSelected ? 'font-bold text-[#0F2438]' : 'font-medium'
                 }`}
               >
                 {tab.label}

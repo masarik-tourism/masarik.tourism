@@ -1,44 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { Phone, ShieldCheck, Compass, Download } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Phone, ShieldCheck, Compass, Download, Menu, X, ChevronDown } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import { FacebookIcon } from './FacebookIcon';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { isRunningInApp } from '../utils/appEnvironment';
+import { useLatestApkUrl } from '../hooks/useLatestApkUrl';
 
 interface NavbarProps {
   currentTab: number;
   onSelectTab: (tab: number) => void;
+  onSelectService?: (serviceTitle: string) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelectService }) => {
   const [logoError, setLogoError] = useState(false);
   const [isApp, setIsApp] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const latestApkUrl = useLatestApkUrl();
 
   useEffect(() => {
     setIsApp(isRunningInApp());
   }, []);
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setServicesDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const tabs = [
     { label: 'الرئيسية', index: 0 },
-    { label: 'الخدمات', index: 1 },
-    { label: 'طرق الدفع', index: 2 },
-    { label: 'اتصل بنا', index: 3 },
+    { label: 'دليل الخدمات', index: 1, hasDropdown: true },
+    { label: 'طرق الدفع المعتمدة', index: 2 },
+    { label: 'تواصل معنا', index: 3 },
   ];
 
+  const handleTabClick = (index: number) => {
+    onSelectTab(index);
+    setMobileMenuOpen(false);
+    setServicesDropdownOpen(false);
+  };
+
+  const handleServiceSelect = (title: string) => {
+    if (onSelectService) {
+      onSelectService(title);
+    }
+    setServicesDropdownOpen(false);
+    setMobileMenuOpen(false);
+  };
+
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E2DAC8] shadow-sm">
-      <div className="bg-gradient-to-r from-[#0F2437] via-[#17344F] to-[#0F2437] text-white px-4 py-1.5 text-xs font-bold flex justify-center items-center text-center">
-        <div className="flex items-center justify-center gap-1.5">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+      {/* Official Top Bar */}
+      <div className="bg-[#0A1926] text-white px-4 py-1.5 text-xs font-semibold flex justify-center items-center text-center border-b border-[#C6A052]/40">
+        <div className="flex items-center justify-center gap-2">
           <ShieldCheck className="w-4 h-4 text-[#E5C887] shrink-0" />
-          <span>{TravelRepository.CERTIFICATION_TITLE} • س.ت: {TravelRepository.COMMERCIAL_RECORD}</span>
+          <span className="text-[11px] sm:text-xs">
+            {TravelRepository.CERTIFICATION_TITLE} • سجل تجاري رقم: {TravelRepository.COMMERCIAL_RECORD}
+          </span>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      {/* Main Navbar */}
+      <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
+        {/* Brand Zone */}
         <div
-          onClick={() => onSelectTab(0)}
+          onClick={() => handleTabClick(0)}
           className="flex items-center gap-3 cursor-pointer select-none group"
         >
           {!logoError ? (
@@ -46,76 +82,164 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab }) => {
               src={masarikLogoImg}
               onError={() => setLogoError(true)}
               alt="شعار مسارك للإنجاز السياحي"
-              className="w-12 h-12 rounded-full border-2 border-[#C6A052] object-cover shadow-sm group-hover:scale-105 transition-transform bg-white"
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] object-cover shadow-xs group-hover:scale-105 transition-transform bg-white"
             />
           ) : (
-            <div className="w-12 h-12 rounded-full border-2 border-[#C6A052] bg-gradient-to-br from-[#17344F] to-[#0F2437] flex items-center justify-center text-[#E5C887] shadow-sm group-hover:scale-105 transition-transform">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] bg-[#0F2438] flex items-center justify-center text-[#E5C887] shadow-xs group-hover:scale-105 transition-transform">
               <Compass className="w-6 h-6 text-[#E5C887]" />
             </div>
           )}
           <div className="flex flex-col min-w-0">
-            <h1 className="text-base sm:text-lg md:text-xl font-black text-[#17344F] leading-tight whitespace-nowrap">
+            <span className="text-base sm:text-lg font-black text-[#0F2438] leading-tight whitespace-nowrap">
               {TravelRepository.COMPANY_NAME_AR}
-            </h1>
-            <span className="text-[10px] sm:text-xs font-bold text-[#2A7688] tracking-wide whitespace-nowrap">
+            </span>
+            <span className="text-[10px] font-bold text-[#0284C7] tracking-wider uppercase whitespace-nowrap">
               {TravelRepository.COMPANY_NAME_EN}
             </span>
           </div>
         </div>
 
-        <nav className="hidden md:flex items-center gap-1 bg-[#FAF8F2] p-1.5 rounded-full border border-[#E2DAC8]">
-          {tabs.map((tab) => (
-            <button
-              key={tab.index}
-              onClick={() => onSelectTab(tab.index)}
-              className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all cursor-pointer ${
-                currentTab === tab.index
-                  ? 'bg-[#17344F] text-white shadow-sm'
-                  : 'text-[#17344F] hover:text-[#2A7688] hover:bg-white/60'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        {/* Desktop Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200 text-xs sm:text-sm font-bold">
+          {tabs.map((tab) => {
+            if (tab.hasDropdown) {
+              return (
+                <div key={tab.index} className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setServicesDropdownOpen(!servicesDropdownOpen)}
+                    className={`px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1 cursor-pointer ${
+                      currentTab === tab.index
+                        ? 'bg-[#0F2438] text-white shadow-xs'
+                        : 'text-slate-700 hover:text-[#0F2438] hover:bg-white'
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {servicesDropdownOpen && (
+                    <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in duration-150">
+                      <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 border-b border-slate-100">
+                        الخدمات المعتمدة الرسمية
+                      </div>
+                      {TravelRepository.services.map((svc) => (
+                        <button
+                          key={svc.id}
+                          onClick={() => handleServiceSelect(svc.title)}
+                          className="w-full text-right px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-[#0284C7] transition flex items-center justify-between"
+                        >
+                          <span className="truncate">{svc.title}</span>
+                          {svc.badge && (
+                            <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded-md font-medium shrink-0">
+                              {svc.badge}
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                      <div className="border-t border-slate-100 mt-1 pt-1 px-3">
+                        <button
+                          onClick={() => handleTabClick(1)}
+                          className="w-full text-center py-1.5 text-xs font-bold text-[#0284C7] hover:underline"
+                        >
+                          عرض كل الخدمات بالتفصيل
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return (
+              <button
+                key={tab.index}
+                onClick={() => handleTabClick(tab.index)}
+                className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
+                  currentTab === tab.index
+                    ? 'bg-[#0F2438] text-white shadow-xs'
+                    : 'text-slate-700 hover:text-[#0F2438] hover:bg-white'
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
         </nav>
 
+        {/* Quick Contact & Action Buttons */}
         <div className="flex items-center gap-1.5 sm:gap-2">
           {!isApp && (
             <a
-              href={TravelRepository.APK_DOWNLOAD_URL}
-              className="bg-gradient-to-r from-[#C6A052] to-[#E5C887] hover:from-[#d4b063] hover:to-[#f0d59a] text-[#0F2437] font-black text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full flex items-center gap-1 sm:gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer whitespace-nowrap"
-              title="تحميل وتثبيت تطبيق مسارك المباشر (APK)"
+              href={latestApkUrl}
+              className="bg-[#0F2438] hover:bg-[#163B65] text-[#E5C887] font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full flex items-center gap-1 sm:gap-1.5 shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap border border-[#C6A052]/40"
+              title="تحميل وتحديث تطبيق مسارك الرسمي (APK)"
             >
-              <Download className="w-3.5 h-3.5 text-[#0F2437]" />
-              <span className="hidden xs:inline">تثبيت التطبيق</span>
-              <span className="xs:hidden">تثبيت</span>
+              <Download className="w-3.5 h-3.5 text-[#E5C887]" />
+              <span className="hidden xs:inline">تطبيق أندرويد</span>
+              <span className="xs:hidden">التطبيق</span>
             </a>
           )}
+
           <button
             onClick={() => openWhatsApp()}
-            className="w-8 h-8 sm:w-9 sm:h-9 bg-white hover:bg-[#25D366]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
-            title="تواصل معنا عبر واتساب"
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 hover:bg-[#25D366]/10 text-[#25D366] rounded-full border border-slate-200 transition cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
+            title="تواصل معنا عبر واتساب 01128440008"
           >
             <WhatsAppIcon className="w-4.5 h-4.5" variant="colored" />
           </button>
+
           <a
             href={TravelRepository.FACEBOOK_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-8 h-8 sm:w-9 sm:h-9 bg-white text-[#1877F2] hover:bg-[#1877F2]/10 rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 hover:bg-[#1877F2]/10 text-[#1877F2] rounded-full border border-slate-200 transition cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
             title="صفحة مسارك للإنجاز السياحي على فيسبوك"
           >
             <FacebookIcon className="w-4 h-4 fill-[#1877F2]" />
           </a>
+
           <button
             onClick={() => dialPhoneNumber()}
-            className="w-8 h-8 sm:w-9 sm:h-9 bg-white text-[#17344F] hover:bg-[#FAF8F2] rounded-full border border-[#E2DAC8] transition cursor-pointer flex items-center justify-center shrink-0 shadow-xs active:scale-95"
-            title="اتصال هاتفي"
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 text-[#0F2438] hover:bg-slate-100 rounded-full border border-slate-200 transition cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
+            title="اتصال هاتفي مباشر"
           >
             <Phone className="w-4 h-4" />
           </button>
+
+          {/* Mobile Menu Hamburger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 bg-slate-100 hover:bg-slate-200 text-[#0F2438] rounded-full flex items-center justify-center shrink-0 transition"
+            aria-label="القائمة"
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-white border-t border-slate-200 px-4 py-3 space-y-2 animate-in slide-in-from-top duration-150 shadow-md">
+          {tabs.map((tab) => (
+            <button
+              key={tab.index}
+              onClick={() => handleTabClick(tab.index)}
+              className={`w-full text-right px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-between ${
+                currentTab === tab.index
+                  ? 'bg-[#0F2438] text-white'
+                  : 'text-slate-700 hover:bg-slate-50'
+              }`}
+            >
+              <span>{tab.label}</span>
+            </button>
+          ))}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>خدمة العملاء: {TravelRepository.PHONE_NUMBER}</span>
+            <span className="text-[#0284C7] font-semibold">متاح 24 ساعة</span>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

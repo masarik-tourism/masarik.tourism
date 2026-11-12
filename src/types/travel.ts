@@ -25,3 +25,15 @@ export interface FeatureBadge {
   subtitle: string;
   icon?: string;
 }
+
+export interface WhyChooseItem {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
