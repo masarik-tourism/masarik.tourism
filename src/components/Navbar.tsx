@@ -71,29 +71,29 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2 sm:gap-4">
         {/* Brand Zone */}
         <div
           onClick={() => handleTabClick(0)}
-          className="flex items-center gap-3 cursor-pointer select-none group"
+          className="flex items-center gap-2 sm:gap-3 cursor-pointer select-none group min-w-0"
         >
           {!logoError ? (
             <img
               src={masarikLogoImg}
               onError={() => setLogoError(true)}
               alt="شعار مسارك للإنجاز السياحي"
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] object-cover shadow-xs group-hover:scale-105 transition-transform bg-white"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] object-cover shadow-xs group-hover:scale-105 transition-transform bg-white shrink-0"
             />
           ) : (
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] bg-[#0F2438] flex items-center justify-center text-[#E5C887] shadow-xs group-hover:scale-105 transition-transform">
-              <Compass className="w-6 h-6 text-[#E5C887]" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] bg-[#0F2438] flex items-center justify-center text-[#E5C887] shadow-xs group-hover:scale-105 transition-transform shrink-0">
+              <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-[#E5C887]" />
             </div>
           )}
           <div className="flex flex-col min-w-0">
-            <span className="text-base sm:text-lg font-black text-[#0F2438] leading-tight whitespace-nowrap">
-              {TravelRepository.COMPANY_NAME_AR}
+            <span className="text-sm sm:text-base md:text-lg font-black text-[#0F2438] leading-tight whitespace-nowrap">
+              مسارك للإنجاز السياحي
             </span>
-            <span className="text-[10px] font-bold text-[#0284C7] tracking-wider uppercase whitespace-nowrap">
+            <span className="text-[9px] sm:text-[10px] font-bold text-[#0284C7] tracking-wider uppercase whitespace-nowrap">
               {TravelRepository.COMPANY_NAME_EN}
             </span>
           </div>
@@ -168,7 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
         </nav>
 
         {/* Quick Contact & Action Buttons */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {!isApp && (
             <a
               href={latestApkUrl}
