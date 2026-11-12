@@ -6,7 +6,7 @@ import com.masarik.tourism.model.ServiceCategory
 import com.masarik.tourism.model.TravelService
 
 object TravelRepository {
-    const val COMPANY_NAME_AR = "مسارك للإنجاز السياحي"
+    const val COMPANY_NAME_AR = "مسارك للإنجاز السياحي (ذ.م.م)"
     const val COMPANY_NAME_EN = "MASARIK TOURISM"
     const val TAGLINE = "خدمات التأشيرات والسفر – إنجاز معاملاتك بسرعة واحترافية"
     const val PHONE_NUMBER = "01128440008"
@@ -14,12 +14,17 @@ object TravelRepository {
     const val WHATSAPP_URL = "https://wa.me/201128440008"
     const val WEB_URL = "https://masarik-tourism.github.io/masarik.tourism/"
     const val OFFICIAL_EMAIL = "sabeeluk.lilssafar@gmail.com"
-    const val COMMERCIAL_RECORD = "٧٨٣٩"
-    const val COMMERCIAL_RECORD_AR = "٧٨٣٩"
+    const val COMMERCIAL_RECORD = "7839"
+    const val COMMERCIAL_RECORD_AR = "7839"
+    const val UNIFIED_NUMBER = "110900100007839"
+    const val FOUNDING_YEAR = "2022"
+    const val EXPERIENCE_TEXT = "خبرة مستمرة منذ عام 2022"
+    const val ADDRESS = "الحجايزة - مركز السنبلاوين - محافظة الدقهلية"
     const val CERTIFICATION_TITLE = "معتمدة وموثقة من الغرفة التجارية المصرية"
-    const val COMMERCIAL_RECORD_STATEMENT = "تحمل السجل التجاري رقم ٧٨٣٩"
-    const val CERTIFICATION = "معتمدة وموثقة من الغرفة التجارية المصرية\nتحمل السجل التجاري رقم ٧٨٣٩"
+    const val COMMERCIAL_RECORD_STATEMENT = "سجل تجاري رقم 7839 • الرقم الموحد: 110900100007839"
+    const val CERTIFICATION = "معتمدة وموثقة من الغرفة التجارية المصرية\nسجل تجاري رقم 7839 • الرقم الموحد: 110900100007839"
     const val WORKING_HOURS = "خدمة عملاء متاحة 24 ساعة طوال أيام الأسبوع"
+    const val COPYRIGHT = "مسارك للإنجاز السياحي (2022) © جميع الحقوق محفوظة"
 
     val featureBadges = listOf(
         FeatureBadge("حجز مواعيد تساهيل", "VFS Tasheer المباشرة"),

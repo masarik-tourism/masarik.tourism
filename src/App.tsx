@@ -78,11 +78,14 @@ export const App: React.FC = () => {
               </span>
             </div>
             <p className="text-slate-300 leading-relaxed max-w-md">
-              شباكك الواحد وبوابتك المعتمدة رسمياً لإنجاز كافة معاملات التأشيرات وحجز مواعيد تساهيل VFS، تسديد منصة إنجاز والتأمين الصحي، حجز تذاكر الطيران وتوثيق الأوراق الحكومية.
+              شباكك الواحد وبوابتك المعتمدة رسمياً لإنجاز كافة معاملات التأشيرات وحجز مواعيد تساهيل VFS، تسديد منصة إنجاز والتأمين الصحي، حجز تذاكر الطيران وتوثيق الأوراق الحكومية – بخبرة رائدة ومستمرة منذ عام 2022.
             </p>
-            <div className="flex items-center gap-2 text-xs text-[#E5C887] font-semibold pt-1">
-              <ShieldCheck className="w-4 h-4 shrink-0 text-[#C6A052]" />
-              <span>سجل تجاري رقم: {TravelRepository.COMMERCIAL_RECORD} • موثقة بغرفة التجارة المصرية</span>
+            <div className="flex flex-col gap-1 text-xs text-[#E5C887] font-semibold pt-1">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 shrink-0 text-[#C6A052]" />
+                <span>سجل تجاري رقم: {TravelRepository.COMMERCIAL_RECORD} • الرقم الموحد: {TravelRepository.UNIFIED_NUMBER}</span>
+              </div>
+              <span className="text-slate-400 text-[11px] pr-6">شركة معتمدة وموثقة من الغرفة التجارية المصرية</span>
             </div>
           </div>
 
@@ -130,7 +133,7 @@ export const App: React.FC = () => {
           {/* Col 3: Direct Contact */}
           <div className="space-y-3">
             <h3 className="text-sm font-bold text-[#E5C887] uppercase tracking-wider">
-              التواصل المباشر
+              التواصل والمقر الرسمي
             </h3>
             <div className="space-y-2 text-slate-300">
               <button
@@ -159,9 +162,9 @@ export const App: React.FC = () => {
                 <span>{TravelRepository.WORKING_HOURS}</span>
               </div>
 
-              <div className="flex items-center gap-2 text-slate-300">
-                <MapPin className="w-4 h-4 text-[#C6A052] shrink-0" />
-                <span>فروعنا: محافظة القاهرة • محافظة الدقهلية</span>
+              <div className="flex items-start gap-2 text-slate-300">
+                <MapPin className="w-4 h-4 text-[#C6A052] shrink-0 mt-0.5" />
+                <span>العنوان: {TravelRepository.ADDRESS}</span>
               </div>
 
               <a
@@ -179,8 +182,10 @@ export const App: React.FC = () => {
         </div>
 
         {/* Legal notice bottom */}
-        <div className="border-t border-white/10 pt-5 text-center text-xs text-slate-400 max-w-5xl mx-auto px-4">
-          جميع الحقوق محفوظة © 2026 {TravelRepository.COMPANY_NAME_AR} ({TravelRepository.COMPANY_NAME_EN}) • ترخيص وسجل تجاري رقم {TravelRepository.COMMERCIAL_RECORD}
+        <div className="border-t border-white/10 pt-6 pb-2 text-center max-w-5xl mx-auto px-4">
+          <p className="text-xs md:text-sm text-slate-300 font-medium tracking-wide">
+            مسارك للإنجاز السياحي (2022) © جميع الحقوق محفوظة
+          </p>
         </div>
       </footer>
 

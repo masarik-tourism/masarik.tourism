@@ -299,24 +299,20 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
 
         <div className="bg-[#FAF8F2] border border-[#E2DAC8] rounded-xl p-4 space-y-2.5 text-xs md:text-sm">
           <h3 className="font-bold text-[#0F2437]">
-            فروع ومقرات {TravelRepository.COMPANY_NAME_AR}
+            بيانات اعتماد ومقر {TravelRepository.COMPANY_NAME_AR}
           </h3>
           <div className="space-y-1.5 text-[#324D61]">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-[#C6A052] shrink-0" />
-              <span>سجل تجاري معتمد رقم: {TravelRepository.COMMERCIAL_RECORD}</span>
+              <span>سجل تجاري رقم: {TravelRepository.COMMERCIAL_RECORD} • الرقم الموحد: {TravelRepository.UNIFIED_NUMBER}</span>
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-[#2A7688] shrink-0" />
-              <span>الفرع الرئيسي: محافظة القاهرة، جمهورية مصر العربية</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#2A7688] shrink-0" />
-              <span>فرع الدلتا: محافظة الدقهلية، جمهورية مصر العربية</span>
+              <span>المقر الرئيسي: {TravelRepository.ADDRESS}</span>
             </div>
             <div className="flex items-center gap-2 text-[#678093]">
               <Clock className="w-4 h-4 shrink-0" />
-              <span>{TravelRepository.WORKING_HOURS}</span>
+              <span>{TravelRepository.WORKING_HOURS} • {TravelRepository.EXPERIENCE_TEXT}</span>
             </div>
           </div>
         </div>

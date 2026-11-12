@@ -1,9 +1,9 @@
 import { ServiceCategory, TravelService, ClientReview, FeatureBadge } from '../types/travel';
 
 export const TravelRepository = {
-  COMPANY_NAME_AR: 'مسارك للإنجاز السياحي',
-  COMPANY_NAME_EN: 'MASARIK TOURISM',
-  TAGLINE: 'خدمات التأشيرات والسفر – إنجاز معاملاتك بسرعة واحترافية',
+  COMPANY_NAME_AR: 'مسارك للإنجاز السياحي (ذ.م.م)',
+  COMPANY_NAME_EN: 'MASARIK TOURISM L.L.C',
+  TAGLINE: 'شباكك الواحد لجميع خدمات التأشيرات والسفر – خبرة موثوقة منذ عام 2022',
   PHONE_NUMBER: '01128440008',
   PHONE_DIAL: '+201128440008',
   WHATSAPP_URL: 'https://wa.me/201128440008',
@@ -18,12 +18,17 @@ export const TravelRepository = {
   APK_RELEASES_URL: 'https://github.com/masarik-tourism/masarik.tourism/releases',
   APK_VERSION: 'أحدث إصدار',
   APK_SIZE: 'رسمي وموقّع',
-  COMMERCIAL_RECORD: '٧٨٣٩',
-  COMMERCIAL_RECORD_AR: '٧٨٣٩',
+  COMMERCIAL_RECORD: '7839',
+  COMMERCIAL_RECORD_AR: '7839',
+  UNIFIED_NUMBER: '110900100007839',
+  FOUNDING_YEAR: '2022',
+  EXPERIENCE_TEXT: 'خبرة مستمرة منذ عام 2022',
+  ADDRESS: 'الحجايزة - مركز السنبلاوين - محافظة الدقهلية',
   CERTIFICATION_TITLE: 'معتمدة وموثقة من الغرفة التجارية المصرية',
-  COMMERCIAL_RECORD_STATEMENT: 'تحمل السجل التجاري رقم ٧٨٣٩',
-  CERTIFICATION: 'معتمدة وموثقة من الغرفة التجارية المصرية\nتحمل السجل التجاري رقم ٧٨٣٩',
+  COMMERCIAL_RECORD_STATEMENT: 'سجل تجاري رقم 7839 • الرقم الموحد: 110900100007839',
+  CERTIFICATION: 'معتمدة وموثقة من الغرفة التجارية المصرية\nسجل تجاري رقم 7839 • الرقم الموحد: 110900100007839',
   WORKING_HOURS: 'خدمة عملاء متاحة 24 ساعة طوال أيام الأسبوع',
+  COPYRIGHT: 'مسارك للإنجاز السياحي (2022) © جميع الحقوق محفوظة',
 
   featureBadges: [
     { title: 'حجز مواعيد تساهيل', subtitle: 'VFS Tasheer المباشرة', icon: 'fingerprint' },
@@ -140,7 +145,7 @@ export const TravelRepository = {
     {
       id: 'licensed-company',
       title: 'شركة مسجلة ومرخصة رسمياً',
-      description: 'وكالة معتمدة وموثقة من الغرفة التجارية المصرية بسجل تجاري رسمي رقم ٧٨٣٩ لضمان حقوقك.',
+      description: 'شركة مسجلة ومرخصة رسمياً (ذ.م.م) من الغرفة التجارية المصرية بسجل تجاري رقم 7839 ورقم موحد 110900100007839، بخبرة موثوقة منذ عام 2022.',
       icon: 'award-check',
     },
   ],
@@ -164,7 +169,7 @@ export const TravelRepository = {
     },
     {
       question: 'هل مسارك للإنجاز السياحي جهة موثقة رسمياً؟',
-      answer: 'نعم، وكالة مسارك للإنجاز السياحي مرخصة وموثقة رسمياً من الغرفة التجارية المصرية وتحمل السجل التجاري رقم ٧٨٣٩، ويمكن التحقق من صحة القيد التجاري.',
+      answer: 'نعم، شركة مسارك للإنجاز السياحي (ذ.م.م) معتمدة ومرخصة رسمياً من الغرفة التجارية المصرية بسجل تجاري رقم 7839 ورقم موحد 110900100007839، ومقرها الرئيسي: الحجايزة - مركز السنبلاوين - محافظة الدقهلية، وتعمل بخبرة متخصصة ومستمرة منذ عام 2022.',
     },
   ],
 
@@ -173,7 +178,7 @@ export const TravelRepository = {
       id: '1',
       author: 'أحمد محمود العوضي',
       tripType: 'تأشيرة وتساهيل VFS',
-      year: '2024',
+      year: '2023',
       comment:
         'مكتب مسارك للإنجاز السياحي أنقذ موقفي في حجز موعد تساهيل وتسديد إنجاز في وقت قياسي. دقة عالية وسرعة في الرد عبر الواتساب والمتابعة حتى استلام الجواز.',
       rating: 5,
@@ -191,7 +196,7 @@ export const TravelRepository = {
       id: '3',
       author: 'المهندس طارق منصور',
       tripType: 'توثيق مستندات وعقود',
-      year: '2024',
+      year: '2025',
       comment:
         'تعامل راقي جداً من فريق مسارك، أنهوا كل إجراءات التصديقات الرسمية وعقود العمل وحجز الطيران دون أي تعقيد. أنصح الجميع بالتعامل معهم.',
       rating: 5,
@@ -200,7 +205,7 @@ export const TravelRepository = {
       id: '4',
       author: 'محمود كمال البدري',
       tripType: 'تسديد إنجاز وتأمين طبي',
-      year: '2024',
+      year: '2026',
       comment:
         'تم تسديد رسوم إنجاز وإصدار التأمين الطبي الإلزامي في غضون ربع ساعة فقط، وتسلمت الإيصالات والباركود على الواتساب مباشرة. سرعة وأمانة يشكرون عليها.',
       rating: 5,

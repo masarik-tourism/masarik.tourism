@@ -60,6 +60,8 @@ jobs:
           CALC_CODE=$((34 + ${GITHUB_RUN_NUMBER:-1}))
           echo "VERSION_CODE=$CALC_CODE" > version.properties
           echo "VERSION_NAME=3.3.4" >> version.properties
+          echo "VERSION_CODE=$CALC_CODE" >> "$GITHUB_ENV"
+          echo "VERSION_NAME=3.3.4" >> "$GITHUB_ENV"
           echo "Automated Versioning: VERSION_CODE=$CALC_CODE, VERSION_NAME=3.3.4"
           cat version.properties
 
@@ -73,9 +75,9 @@ jobs:
 
       - name: Build Official Signed Release APK Only
         env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'android' }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS || 'androiddebugkey' }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD || 'android' }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           ./gradlew :app:assembleRelease --no-daemon --stacktrace
 
@@ -85,13 +87,17 @@ jobs:
           cd app/build/outputs/apk/release
           echo "Listing generated APK files in release folder:"
           ls -la
-          APK_FILE=$(find . -maxdepth 2 -name "*.apk" | head -n 1)
-          if [ -n "$APK_FILE" ]; then
-            cp "$APK_FILE" ./Masarik-Tourism.apk
-            echo "Successfully generated Masarik-Tourism.apk from $APK_FILE"
+          if [ -f "Masarik-Tourism.apk" ]; then
+            echo "Masarik-Tourism.apk is already generated."
           else
-            echo "Error: No APK file generated!"
-            exit 1
+            APK_FILE=$(find . -maxdepth 2 -name "*.apk" | head -n 1)
+            if [ -n "$APK_FILE" ]; then
+              cp "$APK_FILE" ./Masarik-Tourism.apk
+              echo "Successfully copied $APK_FILE to Masarik-Tourism.apk"
+            else
+              echo "Error: No APK file generated!"
+              exit 1
+            fi
           fi
           ls -lh Masarik-Tourism.apk
 

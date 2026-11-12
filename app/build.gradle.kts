@@ -4,6 +4,7 @@ import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
+    id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
@@ -53,16 +54,13 @@ android {
             }
 
             storeFile = if (keystoreFile.exists()) keystoreFile else file("${rootDir}/debug.keystore")
-            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "android"
-            keyAlias = System.getenv("KEY_ALIAS") ?: "androiddebugkey"
-            keyPassword = System.getenv("KEY_PASSWORD") ?: "android"
+            storePassword = System.getenv("KEYSTORE_PASSWORD")?.takeIf { it.isNotBlank() } ?: "android"
+            keyAlias = System.getenv("KEY_ALIAS")?.takeIf { it.isNotBlank() } ?: "androiddebugkey"
+            keyPassword = System.getenv("KEY_PASSWORD")?.takeIf { it.isNotBlank() } ?: "android"
         }
     }
 
     buildTypes {
-        debug {
-            signingConfig = signingConfigs.getByName("release")
-        }
         release {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
@@ -71,6 +69,17 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    // Disable debug & test build variants to strictly produce the official release APK only
+    variantFilter {
+        if (buildType.name != "release") {
+            ignore = true
+        }
+    }
+
+    base {
+        archivesName.set("Masarik-Tourism")
     }
 
     compileOptions {
