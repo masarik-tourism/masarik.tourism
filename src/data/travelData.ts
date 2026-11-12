@@ -3,7 +3,7 @@ import { ServiceCategory, TravelService, ClientReview, FeatureBadge } from '../t
 export const TravelRepository = {
   COMPANY_NAME_AR: 'مسارك للإنجاز السياحي (ذ.م.م)',
   COMPANY_NAME_EN: 'MASARIK TOURISM L.L.C',
-  TAGLINE: 'شباكك الواحد لجميع خدمات التأشيرات والسفر – خبرة موثوقة منذ عام 2022',
+  TAGLINE: 'منصتك لجميع إجراءات التأشيرات والسفر للسعودية',
   PHONE_NUMBER: '01128440008',
   PHONE_DIAL: '+201128440008',
   WHATSAPP_URL: 'https://wa.me/201128440008',

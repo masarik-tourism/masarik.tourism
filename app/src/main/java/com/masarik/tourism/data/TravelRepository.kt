@@ -8,7 +8,7 @@ import com.masarik.tourism.model.TravelService
 object TravelRepository {
     const val COMPANY_NAME_AR = "مسارك للإنجاز السياحي (ذ.م.م)"
     const val COMPANY_NAME_EN = "MASARIK TOURISM"
-    const val TAGLINE = "خدمات التأشيرات والسفر – إنجاز معاملاتك بسرعة واحترافية"
+    const val TAGLINE = "منصتك لجميع إجراءات التأشيرات والسفر للسعودية"
     const val PHONE_NUMBER = "01128440008"
     const val PHONE_DIAL = "+201128440008"
     const val WHATSAPP_URL = "https://wa.me/201128440008"

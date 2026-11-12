@@ -123,14 +123,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <span>موثقة من الغرفة التجارية</span>
           </div>
 
-          {/* Main Title */}
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-white tracking-tight leading-tight max-w-3xl mx-auto mb-4">
-            مسارك للإنجاز السياحي — شباكك الواحد لجميع خدمات التأشيرات والسفر
+          {/* Main Title: 2 lines with clear typographic scale */}
+          <h1 className="flex flex-col items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto mb-5 text-center">
+            <span className="block text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+              مسارك للإنجاز السياحي
+            </span>
+            <span className="block text-sm sm:text-lg md:text-2xl font-medium text-[#E5C887] sm:text-slate-100/95 leading-snug max-w-2xl">
+              منصتك لجميع إجراءات التأشيرات والسفر للسعودية
+            </span>
           </h1>
 
           {/* Description */}
           <p className="text-xs sm:text-sm md:text-base font-normal text-slate-200 max-w-2xl mx-auto mb-8 leading-relaxed">
-            منصتك المعتمدة والشاملة لإنهاء كافة معاملات التأشيرات وحجز مواعيد تساهيل VFS، تسديد منصة إنجاز، حجز تذاكر الطيران، وتوثيق المستندات الرسمية بأعلى سرعة وأمان وأنت في مكانك.
+            الخدمة المعتمدة والشاملة لإنهاء كافة معاملات التأشيرات وحجز مواعيد تساهيل VFS، تسديد منصة إنجاز، حجز تذاكر الطيران، وتوثيق المستندات الرسمية بأعلى سرعة وأمان وأنت في مكانك.
           </p>
 
           {/* Action Buttons: 2 Side by Side */}
