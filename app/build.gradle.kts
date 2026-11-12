@@ -4,7 +4,6 @@ import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
@@ -71,13 +70,6 @@ android {
         }
     }
 
-    // Disable debug & test build variants to strictly produce the official release APK only
-    variantFilter {
-        if (buildType.name != "release") {
-            ignore = true
-        }
-    }
-
     base {
         archivesName.set("Masarik-Tourism")
     }
@@ -105,4 +97,12 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.8.1")
     implementation("io.coil-kt:coil-compose:2.7.0")
+}
+
+androidComponents {
+    beforeVariants { variantBuilder ->
+        if (variantBuilder.buildType != "release") {
+            variantBuilder.enable = false
+        }
+    }
 }

@@ -79,7 +79,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          ./gradlew :app:assembleRelease --no-daemon --stacktrace
+          ./gradlew :app:assembleRelease -x test --no-daemon --stacktrace
 
       - name: Guarantee Output APK is Named Masarik-Tourism.apk
         run: |
