@@ -281,7 +281,7 @@ ${message.trim() ? message.trim() : 'لا توجد ملاحظات إضافية'}
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  <span>إرسال إلى الإيميل ({TravelRepository.OFFICIAL_EMAIL})</span>
+                  <span>إرسال الطلب عبر الإيميل</span>
                 </>
               )}
             </button>

@@ -298,7 +298,7 @@ export const PaymentScreen: React.FC<PaymentScreenProps> = ({ onNavigateToContac
           </div>
 
           <p className="text-xs md:text-sm text-[#324D61] leading-relaxed">
-            تشريفنا في مقرنا الرسمي واستلام إيصال وعقد موثق ومعتمد بجميع المعاملات وباقات
+            شرّفنا في مقرنا الرسمي واستلم إيصالاً وعقداً موثقاً ومعتمداً بجميع المعاملات وباقات
             السفر الصادرة بسجل تجاري رقم {TravelRepository.COMMERCIAL_RECORD} والرقم الموحد {TravelRepository.UNIFIED_NUMBER}.
           </p>
 

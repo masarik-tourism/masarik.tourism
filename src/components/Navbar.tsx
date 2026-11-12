@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, ShieldCheck, Compass, Download, Menu, X, ChevronDown } from 'lucide-react';
+import { Phone, ShieldCheck, Compass, Download, Menu, X, ChevronDown, RotateCw } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
@@ -19,8 +19,38 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
   const [isApp, setIsApp] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showRefreshToast, setShowRefreshToast] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const latestApkUrl = useLatestApkUrl();
+
+  const handleHardRefresh = () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    setShowRefreshToast(true);
+
+    // Clear caches in ServiceWorker / CacheStorage if supported
+    if ('caches' in window) {
+      try {
+        caches.keys().then((names) => {
+          names.forEach((name) => {
+            caches.delete(name);
+          });
+        }).catch(() => {});
+      } catch {}
+    }
+
+    // Force cache-busting reload
+    setTimeout(() => {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set('t', Date.now().toString());
+        window.location.href = url.toString();
+      } catch {
+        window.location.reload();
+      }
+    }, 600);
+  };
 
   useEffect(() => {
     setIsApp(isRunningInApp());
@@ -172,15 +202,26 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
           {!isApp && (
             <a
               href={latestApkUrl}
-              className="bg-[#0F2438] hover:bg-[#163B65] text-[#E5C887] font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full flex items-center gap-1 sm:gap-1.5 shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap border border-[#C6A052]/40"
+              className="hidden sm:flex bg-[#0F2438] hover:bg-[#163B65] text-[#E5C887] font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full items-center gap-1 sm:gap-1.5 shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap border border-[#C6A052]/40"
               title="تحميل وتحديث تطبيق مسارك الرسمي (APK)"
             >
               <Download className="w-3.5 h-3.5 text-[#E5C887]" />
-              <span className="hidden xs:inline">تطبيق أندرويد</span>
-              <span className="xs:hidden">التطبيق</span>
+              <span>تطبيق أندرويد</span>
             </a>
           )}
 
+          {/* Refresh / Reload Button */}
+          <button
+            onClick={handleHardRefresh}
+            disabled={isRefreshing}
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 hover:bg-[#0F2438] text-[#0F2438] hover:text-[#E5C887] rounded-full border border-slate-200 transition cursor-pointer flex items-center justify-center shrink-0 active:scale-95 disabled:opacity-80"
+            title="تحديث البيانات وإعادة تحميل الصفحة"
+            aria-label="تحديث البيانات"
+          >
+            <RotateCw className={`w-4 h-4 transition-transform ${isRefreshing ? 'animate-spin text-[#0284C7]' : ''}`} />
+          </button>
+
+          {/* WhatsApp Button */}
           <button
             onClick={() => openWhatsApp()}
             className="w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 hover:bg-[#25D366]/10 text-[#25D366] rounded-full border border-slate-200 transition cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
@@ -189,16 +230,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
             <WhatsAppIcon className="w-4.5 h-4.5" variant="colored" />
           </button>
 
+          {/* Facebook Link */}
           <a
             href={TravelRepository.FACEBOOK_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 hover:bg-[#1877F2]/10 text-[#1877F2] rounded-full border border-slate-200 transition cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
+            className="hidden md:flex w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 hover:bg-[#1877F2]/10 text-[#1877F2] rounded-full border border-slate-200 transition cursor-pointer items-center justify-center shrink-0 active:scale-95"
             title="صفحة مسارك للإنجاز السياحي على فيسبوك"
           >
             <FacebookIcon className="w-4 h-4 fill-[#1877F2]" />
           </a>
 
+          {/* Phone Call */}
           <button
             onClick={() => dialPhoneNumber()}
             className="w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 text-[#0F2438] hover:bg-slate-100 rounded-full border border-slate-200 transition cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
@@ -218,6 +261,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
         </div>
       </div>
 
+      {/* Floating Refresh Toast */}
+      {showRefreshToast && (
+        <div className="fixed top-14 sm:top-16 left-1/2 -translate-x-1/2 z-50 bg-[#0F2438] text-white text-xs font-bold px-4 py-2 rounded-full shadow-2xl border border-[#C6A052]/50 flex items-center gap-2 animate-in fade-in slide-in-from-top duration-200 pointer-events-none">
+          <RotateCw className="w-3.5 h-3.5 text-[#E5C887] animate-spin" />
+          <span>جاري تحديث البيانات...</span>
+        </div>
+      )}
+
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-slate-200 px-4 py-3 space-y-2 animate-in slide-in-from-top duration-150 shadow-md">
@@ -234,6 +285,20 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
               <span>{tab.label}</span>
             </button>
           ))}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              handleHardRefresh();
+            }}
+            className="w-full text-right px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 transition flex items-center justify-between border border-dashed border-slate-200"
+          >
+            <span className="flex items-center gap-2">
+              <RotateCw className="w-3.5 h-3.5 text-[#0F2438]" />
+              <span>تحديث البيانات والصفحة</span>
+            </span>
+            <span className="text-[10px] text-slate-400">فوري</span>
+          </button>
+
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
             <span>خدمة العملاء: {TravelRepository.PHONE_NUMBER}</span>
             <span className="text-[#0284C7] font-semibold">متاح 24 ساعة</span>

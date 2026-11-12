@@ -131,10 +131,11 @@ ${notes.trim() ? `📝 *تفاصيل إضافية:* ${notes.trim()}` : ''}
                 <input
                   type="tel"
                   required
+                  dir="rtl"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="مثال: 01xxxxxxxxx"
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs md:text-sm text-[#0F2438] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:border-transparent transition"
+                  placeholder="مثال: 01000000000"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs md:text-sm text-[#0F2438] placeholder:text-slate-400 placeholder:text-right text-right focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:border-transparent transition"
                 />
               </div>
             </div>
