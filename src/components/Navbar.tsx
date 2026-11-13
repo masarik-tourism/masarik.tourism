@@ -112,18 +112,26 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
           onClick={() => handleTabClick(0)}
           className="flex items-center gap-2 sm:gap-3 cursor-pointer select-none group min-w-0"
         >
-          {!logoError ? (
-            <img
-              src={masarikLogoImg}
-              onError={() => setLogoError(true)}
-              alt="شعار مسارك للإنجاز السياحي"
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] object-cover shadow-xs group-hover:scale-105 transition-transform bg-white shrink-0"
-            />
-          ) : (
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] bg-[#0F2438] flex items-center justify-center text-[#E5C887] shadow-xs group-hover:scale-105 transition-transform shrink-0">
-              <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-[#E5C887]" />
-            </div>
-          )}
+          <div className="relative shrink-0">
+            {!logoError ? (
+              <img
+                src={masarikLogoImg}
+                onError={() => setLogoError(true)}
+                alt="شعار مسارك للإنجاز السياحي"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] object-cover shadow-xs group-hover:scale-105 transition-transform bg-white"
+              />
+            ) : (
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#C6A052] bg-[#0F2438] flex items-center justify-center text-[#E5C887] shadow-xs group-hover:scale-105 transition-transform">
+                <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-[#E5C887]" />
+              </div>
+            )}
+            <span
+              className="absolute -bottom-0.5 -left-0.5 bg-[#0F2438] text-[#E5C887] p-0.5 sm:p-1 rounded-full border-[1.5px] border-white shadow-sm flex items-center justify-center"
+              title="شركة معتمدة وموثقة - س.ت 7839"
+            >
+              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#E5C887] stroke-[2.25]" />
+            </span>
+          </div>
           <div className="flex flex-col min-w-0">
             <span className="text-sm sm:text-base md:text-lg font-black text-[#0F2438] leading-tight whitespace-nowrap">
               مسارك للإنجاز السياحي

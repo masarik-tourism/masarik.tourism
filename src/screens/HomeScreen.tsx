@@ -109,8 +109,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <ShieldCheck className="w-10 h-10 sm:w-12 sm:h-12 text-[#E5C887]" />
               </div>
             )}
-            <div className="absolute -bottom-1 -left-1 bg-[#C6A052] text-[#0F2438] p-1.5 rounded-full border-2 border-white shadow-md">
-              <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[3]" />
+            <div
+              className="absolute -bottom-1 -left-1 bg-[#0F2438] text-[#E5C887] p-1.5 sm:p-2 rounded-full border-2 border-white ring-1 ring-[#C6A052]/70 shadow-lg flex items-center justify-center"
+              title="شركة معتمدة وموثقة - سجل تجاري 7839"
+            >
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#E5C887] stroke-[2.25]" />
             </div>
           </div>
 
