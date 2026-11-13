@@ -7,7 +7,7 @@ import { TravelRepository } from '../data/travelData';
 export const DualFloatingButtons: React.FC = () => {
   return (
     <div
-      className="fixed bottom-20 md:bottom-6 left-4 z-40 flex flex-col items-center gap-2.5"
+      className="fixed bottom-20 md:bottom-6 left-4 z-40 flex flex-col items-start gap-2.5"
       dir="ltr"
     >
       {/* Direct Phone Call Button */}
@@ -15,19 +15,26 @@ export const DualFloatingButtons: React.FC = () => {
         onClick={() => dialPhoneNumber()}
         aria-label="اتصال هاتفي مباشر"
         title={`اتصال هاتفي مباشر: ${TravelRepository.PHONE_NUMBER}`}
-        className="w-12 h-12 rounded-full bg-[#0F2438] hover:bg-[#163B65] text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer border-2 border-white"
+        className="w-12 h-12 rounded-full bg-[#0F2438] hover:bg-[#163B65] text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer border-2 border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C6A052] focus-visible:ring-offset-2"
       >
         <Phone className="w-5 h-5 text-[#E5C887]" />
       </button>
 
-      {/* WhatsApp Button */}
+      {/* Fixed WhatsApp Floating Button */}
       <button
-        onClick={() => openWhatsApp()}
+        onClick={() =>
+          openWhatsApp(
+            'السلام عليكم، أود الاستفسار عن البرامج السياحية وخدمات التأشيرات من شركة مسارك للإنجاز السياحي.'
+          )
+        }
         aria-label="تواصل فوري عبر واتساب"
         title={`تواصل معنا عبر واتساب: ${TravelRepository.PHONE_NUMBER}`}
-        className="w-13 h-13 rounded-full bg-[#25D366] hover:bg-[#128C7E] text-white flex items-center justify-center shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer border-2 border-white"
+        className="group flex items-center gap-2 rounded-full bg-[#25D366] hover:bg-[#128C7E] text-white p-3 sm:px-4 sm:py-3 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer border-2 border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F2438] focus-visible:ring-offset-2 animate-pulse-float-a"
       >
-        <WhatsAppIcon className="w-7 h-7" variant="white" />
+        <WhatsAppIcon className="w-7 h-7 shrink-0" variant="white" />
+        <span className="hidden md:inline text-xs font-black tracking-wide whitespace-nowrap" dir="rtl">
+          تواصل واتساب
+        </span>
       </button>
     </div>
   );

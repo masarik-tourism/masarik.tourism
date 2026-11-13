@@ -1,4 +1,4 @@
-import { ServiceCategory, TravelService, ClientReview, FeatureBadge } from '../types/travel';
+import { ServiceCategory, TravelService, ClientReview, FeatureBadge, TourProgram } from '../types/travel';
 
 export const TravelRepository = {
   COMPANY_NAME_AR: 'مسارك للإنجاز السياحي (ذ.م.م)',
@@ -211,4 +211,52 @@ export const TravelRepository = {
       rating: 5,
     },
   ] as ClientReview[],
+
+  tourPrograms: [
+    {
+      id: 'umrah-makkah-madinah',
+      title: 'برنامج عمرة المقام المبارك',
+      destination: 'مكة المكرمة والمدينة المنورة',
+      durationDays: '10 أيام / 9 ليالٍ',
+      startingPrice: '28,500',
+      currency: 'ج.م',
+      imageKey: 'makkah',
+      features: [
+        'إصدار تأشيرة العمرة B2C والباركود النظامي المعتمد',
+        'إقامة فندقية قريبة ومطلة على ساحة الحرمين الشريفين',
+        'تذاكر طيران ذهاب وعودة مباشرة مع حقائب كاملة',
+        'انتقالات حديثة ومكيفة وإشراف ديني وإداري متواصل',
+      ],
+    },
+    {
+      id: 'riyadh-season-tour',
+      title: 'برنامج الرياض وبوليفارد وورلد',
+      destination: 'الرياض، المملكة العربية السعودية',
+      durationDays: '5 أيام / 4 ليالٍ',
+      startingPrice: '22,900',
+      currency: 'ج.م',
+      imageKey: 'riyadh',
+      features: [
+        'استخراج التأشيرة السياحية السعودية والتأمين الطبي',
+        'إقامة فندقية 4 أو 5 نجوم في قلب الرياض شاملة الإفطار',
+        'برنامج زيارات يشمل بوليفارد وورلد والدرعية التاريخية',
+        'استقبال وتوديع خاص من وإلى مطار الملك خالد الدولي',
+      ],
+    },
+    {
+      id: 'alula-redsea-escape',
+      title: 'برنامج العلا والبحر الأحمر الفاخرة',
+      destination: 'العلا وجدة والبحر الأحمر',
+      durationDays: '7 أيام / 6 ليالٍ',
+      startingPrice: '34,000',
+      currency: 'ج.م',
+      imageKey: 'alula',
+      features: [
+        'تجهيز ملف التأشيرة وحجز مواعيد تساهيل VFS إن لزم',
+        'إقامة منتجعات مختارة بين طبيعة العلا وشواطئ البحر الأحمر',
+        'تذاكر طيران دولي وداخلي وتنقلات خاصة مكيفة',
+        'خدمة عملاء ومرافقة سياحية طوال أيام الرحلة 24/7',
+      ],
+    },
+  ] as TourProgram[],
 };

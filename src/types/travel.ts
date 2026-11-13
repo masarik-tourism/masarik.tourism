@@ -37,3 +37,14 @@ export interface FaqItem {
   question: string;
   answer: string;
 }
+
+export interface TourProgram {
+  id: string;
+  title: string;
+  destination: string;
+  durationDays: string;
+  startingPrice: string;
+  currency: string;
+  imageKey: 'makkah' | 'riyadh' | 'alula';
+  features: string[];
+}

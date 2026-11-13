@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 @layer base {
   :root {
     --canvas-bg: #F8FAFC;
@@ -18,13 +22,31 @@
     --border-light: #E2E8F0;
   }
 
-  body {
+  html {
     font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    direction: rtl;
+    scroll-behavior: smooth;
+  }
+
+  body, button, input, textarea, select {
+    font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  body {
     direction: rtl;
     text-align: right;
     background-color: var(--canvas-bg);
     color: var(--text-primary);
+    overflow-x: hidden;
   }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.text-balance {
+  text-wrap: balance;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -71,3 +93,12 @@
   transform: translateY(-2px) scale(1.05);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-pulse-float-a,
+  .animate-pulse-float-b {
+    animation: none;
+  }
+}

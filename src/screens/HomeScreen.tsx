@@ -19,6 +19,9 @@ import {
   CheckCircle2,
   FileCheck2,
   ArrowLeft,
+  MapPin,
+  CalendarDays,
+  Compass,
 } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
@@ -28,6 +31,9 @@ import { FAQAccordion } from '../components/FAQAccordion';
 import { ServiceRequestModal } from '../components/ServiceRequestModal';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import masarikHeroBgImg from '../assets/images/masarik_hero_bg.jpg';
+import makkahProgramImg from '../assets/images/program_makkah_madinah_1794567628573.jpg';
+import riyadhProgramImg from '../assets/images/program_riyadh_skyline_1794567629576.jpg';
+import alulaProgramImg from '../assets/images/program_alula_redsea_1794567629723.jpg';
 import { useLatestApkUrl } from '../hooks/useLatestApkUrl';
 
 interface HomeScreenProps {
@@ -35,11 +41,18 @@ interface HomeScreenProps {
   onNavigateToContact: (serviceTitle?: string) => void;
 }
 
+const PROGRAM_IMAGES: Record<'makkah' | 'riyadh' | 'alula', string> = {
+  makkah: makkahProgramImg,
+  riyadh: riyadhProgramImg,
+  alula: alulaProgramImg,
+};
+
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToServices,
   onNavigateToContact,
 }) => {
   const [logoError, setLogoError] = useState(false);
+  const [failedProgramImages, setFailedProgramImages] = useState<Record<string, boolean>>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalServiceTitle, setModalServiceTitle] = useState<string | undefined>(undefined);
   const latestApkUrl = useLatestApkUrl();
@@ -47,6 +60,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const handleOpenModal = (serviceTitle?: string) => {
     setModalServiceTitle(serviceTitle);
     setModalOpen(true);
+  };
+
+  const handleProgramImageError = (id: string) => {
+    setFailedProgramImages((prev) => ({ ...prev, [id]: true }));
   };
 
   const getServiceIcon = (id: string) => {
@@ -85,16 +102,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24 md:pb-16 text-[#0F2438]">
       {/* ------------------------------------------------------------- */}
-      {/* 1. Hero Section (One-Stop Portal) */}
+      {/* 1. Mobile-First Hero Section */}
       {/* ------------------------------------------------------------- */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[#0F2438] via-[#163B65] to-[#0A1926] text-white border-b border-[#C6A052]/40">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-20 mix-blend-luminosity"
           style={{ backgroundImage: `url(${masarikHeroBgImg}), url('./images/masarik_hero_bg.jpg')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1926] via-transparent to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1926] via-[#0F2438]/60 to-black/35" />
 
-        <div className="relative max-w-5xl mx-auto px-4 py-12 md:py-16 text-center flex flex-col items-center">
+        <div className="relative max-w-5xl mx-auto px-4 pt-10 pb-14 sm:py-14 md:py-20 text-center flex flex-col items-center">
           {/* Logo with verified seal */}
           <div className="relative mb-5">
             {!logoError ? (
@@ -102,47 +119,48 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 src={masarikLogoImg}
                 onError={() => setLogoError(true)}
                 alt="شعار مسارك للإنجاز السياحي"
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-[#C6A052] shadow-2xl object-cover bg-white"
+                referrerPolicy="no-referrer"
+                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full border-4 border-[#C6A052] shadow-2xl object-cover bg-white"
               />
             ) : (
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-[#C6A052] bg-[#0F2438] flex items-center justify-center text-[#E5C887] shadow-2xl">
-                <ShieldCheck className="w-12 h-12 text-[#E5C887]" />
+              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full border-4 border-[#C6A052] bg-[#0F2438] flex items-center justify-center text-[#E5C887] shadow-2xl">
+                <ShieldCheck className="w-10 h-10 sm:w-12 sm:h-12 text-[#E5C887]" />
               </div>
             )}
             <div className="absolute -bottom-1 -left-1 bg-[#C6A052] text-[#0F2438] p-1.5 rounded-full border-2 border-white shadow-md">
-              <Check className="w-4 h-4 stroke-[3]" />
+              <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[3]" />
             </div>
           </div>
 
           {/* Subtitle kicker without pill box */}
-          <div className="flex items-center gap-2 text-xs md:text-sm font-bold text-[#E5C887] mb-2 tracking-wide">
-            <span>وكالة معتمدة</span>
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] sm:text-xs md:text-sm font-bold text-[#E5C887] mb-3 tracking-wide">
+            <span>شركة سياحية معتمدة</span>
             <span aria-hidden="true">·</span>
             <span>سجل تجاري رقم {TravelRepository.COMMERCIAL_RECORD}</span>
             <span aria-hidden="true">·</span>
-            <span>موثقة من الغرفة التجارية</span>
+            <span>خبرة منذ عام {TravelRepository.FOUNDING_YEAR}</span>
           </div>
 
           {/* Main Title: 2 lines with clear typographic scale */}
-          <h1 className="flex flex-col items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto mb-5 text-center">
-            <span className="block text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+          <h1 className="flex flex-col items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto mb-4 text-center text-balance">
+            <span className="block text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
               مسارك للإنجاز السياحي
             </span>
-            <span className="block text-sm sm:text-lg md:text-2xl font-medium text-[#E5C887] sm:text-slate-100/95 leading-snug max-w-2xl">
+            <span className="block text-sm sm:text-lg md:text-2xl font-medium text-[#E5C887] leading-snug max-w-2xl">
               منصتك لجميع إجراءات التأشيرات والسفر للسعودية
             </span>
           </h1>
 
           {/* Description */}
-          <p className="text-xs sm:text-sm md:text-base font-normal text-slate-200 max-w-2xl mx-auto mb-8 leading-relaxed">
-            الخدمة المعتمدة والشاملة لإنهاء كافة معاملات التأشيرات وحجز مواعيد تساهيل VFS، تسديد منصة إنجاز، حجز تذاكر الطيران، وتوثيق المستندات الرسمية بأعلى سرعة وأمان وأنت في مكانك.
+          <p className="text-xs sm:text-sm md:text-base font-normal text-slate-200 max-w-2xl mx-auto mb-7 sm:mb-9 leading-relaxed px-2">
+            الخدمة المعتمدة والشاملة لحجز البرامج السياحية والعمرة، إنهاء كافة معاملات التأشيرات، حجز مواعيد تساهيل VFS، تسديد منصة إنجاز، وحجز تذاكر الطيران بأعلى سرعة وأمان.
           </p>
 
-          {/* Action Buttons: 2 Side by Side */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full max-w-md mx-auto mb-10">
+          {/* Action Buttons: Mobile-first full-width 48px touch targets */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full max-w-md mx-auto mb-9 sm:mb-11">
             <button
               onClick={() => handleOpenModal()}
-              className="w-full sm:flex-1 h-12 bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all active:scale-98 cursor-pointer"
+              className="w-full sm:flex-1 min-h-[48px] px-6 bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] cursor-pointer whitespace-nowrap"
             >
               <span>ابدأ طلبك الآن</span>
               <ArrowLeft className="w-4 h-4 text-[#0A1926]" />
@@ -150,7 +168,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
             <button
               onClick={() => openWhatsApp()}
-              className="w-full sm:flex-1 h-12 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all active:scale-98 cursor-pointer"
+              className="w-full sm:flex-1 min-h-[48px] px-6 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] cursor-pointer whitespace-nowrap"
               title="تواصل مباشر عبر واتساب"
             >
               <WhatsAppIcon className="w-5 h-5 shrink-0" variant="white" />
@@ -181,10 +199,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </section>
 
       {/* Main Content Body */}
-      <div className="max-w-5xl mx-auto px-4 -mt-4 relative z-10 space-y-10">
+      <div className="max-w-5xl mx-auto px-4 -mt-5 relative z-10 space-y-11">
         {/* Commercial Registration Trust Card */}
-        <div className="bg-white border-2 border-[#C6A052]/50 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3 text-right">
+        <div className="bg-white border border-[#C6A052]/60 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-right w-full sm:w-auto">
             <div className="w-12 h-12 rounded-xl bg-[#C6A052]/15 text-[#C6A052] flex items-center justify-center shrink-0">
               <ShieldCheck className="w-7 h-7" />
             </div>
@@ -192,8 +210,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <h2 className="text-sm sm:text-base font-black text-[#0F2438]">
                 {TravelRepository.CERTIFICATION_TITLE}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-                {TravelRepository.COMMERCIAL_RECORD_STATEMENT} • خدمة عملاء ومتابعة مستمرة طوال الأسبوع
+              <p className="text-xs sm:text-sm text-slate-600 mt-0.5 tabular-nums">
+                {TravelRepository.COMMERCIAL_RECORD_STATEMENT} • خدمة عملاء متواصلة طوال الأسبوع
               </p>
             </div>
           </div>
@@ -201,13 +219,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <div className="flex items-center gap-2 self-stretch sm:self-auto shrink-0">
             <button
               onClick={() => onNavigateToContact()}
-              className="flex-1 sm:flex-none py-2 px-3.5 bg-[#0F2438] hover:bg-[#163B65] text-white rounded-xl text-xs font-bold transition cursor-pointer"
+              className="flex-1 sm:flex-none min-h-[44px] py-2 px-4 bg-[#0F2438] hover:bg-[#163B65] text-white rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap"
             >
-              <span>مقر الفروع ومراسلتنا</span>
+              <span>مقر الشركة ومراسلتنا</span>
             </button>
             <button
               onClick={() => dialPhoneNumber()}
-              className="flex-1 sm:flex-none py-2 px-3.5 bg-slate-100 hover:bg-slate-200 text-[#0F2438] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+              className="flex-1 sm:flex-none min-h-[44px] py-2 px-4 bg-slate-100 hover:bg-slate-200 text-[#0F2438] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer tabular-nums whitespace-nowrap"
             >
               <Phone className="w-3.5 h-3.5" />
               <span>{TravelRepository.PHONE_NUMBER}</span>
@@ -216,12 +234,144 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         {/* ------------------------------------------------------------- */}
-        {/* 2. Interactive Guide ("محتار تبدأ منين؟") */}
+        {/* 2. Featured Tourism Programs (بطاقات البرامج السياحية) */}
+        {/* ------------------------------------------------------------- */}
+        <section className="space-y-5" aria-labelledby="tourism-programs-heading">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-200 pb-3">
+            <div>
+              <h2 id="tourism-programs-heading" className="text-lg sm:text-2xl font-black text-[#0F2438]">
+                البرامج السياحية والعمرة المختارة
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                باقات سفر متكاملة تشمل التأشيرة، الإقامة الفندقية، والطيران بأسعار تنافسية واضحة
+              </p>
+            </div>
+            <button
+              onClick={() =>
+                openWhatsApp(
+                  'السلام عليكم، أود الاستفسار عن عروض البرامج السياحية المتاحة وتفاصيل الحجز.'
+                )
+              }
+              className="text-xs sm:text-sm font-bold text-[#0284C7] hover:text-[#0F2438] flex items-center gap-1 self-start sm:self-auto cursor-pointer whitespace-nowrap"
+            >
+              <span>طلب برنامج سياحي مخصص</span>
+              <ArrowLeft className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {TravelRepository.tourPrograms.map((program) => {
+              const imgFailed = failedProgramImages[program.id];
+              return (
+                <article
+                  key={program.id}
+                  className="bg-white border border-slate-200 hover:border-[#C6A052] rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    {/* Program Visual Header (4:3) with Destination Overlay */}
+                    <div className="relative aspect-[4/3] w-full bg-[#0F2438] overflow-hidden">
+                      {!imgFailed ? (
+                        <img
+                          src={PROGRAM_IMAGES[program.imageKey]}
+                          alt={`${program.title} - ${program.destination}`}
+                          referrerPolicy="no-referrer"
+                          onError={() => handleProgramImageError(program.id)}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[#0F2438] via-[#163B65] to-[#0A1926] flex flex-col items-center justify-center gap-2 p-4 text-center">
+                          <Compass className="w-10 h-10 text-[#E5C887]" />
+                          <span className="text-xs font-bold text-white/90">{program.destination}</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+
+                      {/* Destination text anchored cleanly on bottom of image */}
+                      <div className="absolute bottom-3 right-3 left-3 flex items-center gap-1.5 text-white">
+                        <MapPin className="w-4 h-4 text-[#E5C887] shrink-0" />
+                        <span className="text-xs sm:text-sm font-bold truncate">
+                          {program.destination}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Card Content */}
+                    <div className="p-5 space-y-4">
+                      <div>
+                        <h3 className="text-base sm:text-lg font-black text-[#0F2438] leading-snug mb-2">
+                          {program.title}
+                        </h3>
+
+                        {/* Clean unboxed Duration & Starting Price Row */}
+                        <div className="flex items-center justify-between gap-3 py-2.5 px-3 bg-[#F8FAFC] border border-slate-200/80 rounded-xl">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 tabular-nums">
+                            <CalendarDays className="w-4 h-4 text-[#0284C7] shrink-0" />
+                            <span>{program.durationDays}</span>
+                          </div>
+                          <div className="text-left">
+                            <span className="text-[11px] text-slate-500 font-semibold ml-1">
+                              يبدأ من
+                            </span>
+                            <span className="text-sm sm:text-base font-black text-[#0F2438] tabular-nums">
+                              {program.startingPrice}
+                            </span>
+                            <span className="text-xs font-bold text-[#9E7B33] mr-1">
+                              {program.currency}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Features Checklist */}
+                      <ul className="space-y-2">
+                        {program.features.map((feat, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-start gap-2 text-xs text-slate-600 leading-relaxed"
+                          >
+                            <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                            <span>{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Card Actions */}
+                  <div className="px-5 pb-5 pt-3 border-t border-slate-100 flex items-center gap-2">
+                    <button
+                      onClick={() => handleOpenModal(`${program.title} (${program.destination})`)}
+                      className="flex-1 min-h-[44px] py-2.5 px-4 bg-[#0F2438] hover:bg-[#163B65] text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 shadow-xs transition active:scale-[0.98] cursor-pointer whitespace-nowrap"
+                    >
+                      <span>احجز البرنامج الآن</span>
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        openWhatsApp(
+                          `السلام عليكم، أود الاستفسار وحجز "${program.title}"\n📍 الوجهة: ${program.destination}\n🗓️ المدة: ${program.durationDays}\n💰 السعر يبدأ من: ${program.startingPrice} ${program.currency}`
+                        )
+                      }
+                      className="min-w-[44px] min-h-[44px] p-2.5 bg-slate-100 hover:bg-[#25D366]/15 text-[#25D366] rounded-xl transition cursor-pointer active:scale-95 flex items-center justify-center"
+                      title="استفسار وحجز عبر واتساب"
+                      aria-label={`استفسار واتساب حول ${program.title}`}
+                    >
+                      <WhatsAppIcon className="w-5 h-5" variant="colored" />
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------------- */}
+        {/* 3. Interactive Guide ("محتار تبدأ منين؟") */}
         {/* ------------------------------------------------------------- */}
         <InteractiveGuide onRequestModal={handleOpenModal} />
 
         {/* ------------------------------------------------------------- */}
-        {/* 3. Service Cards Grid */}
+        {/* 4. Service Cards Grid */}
         {/* ------------------------------------------------------------- */}
         <section className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-200 pb-3">
@@ -235,7 +385,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </div>
             <button
               onClick={onNavigateToServices}
-              className="text-xs sm:text-sm font-bold text-[#0284C7] hover:text-[#0F2438] flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+              className="text-xs sm:text-sm font-bold text-[#0284C7] hover:text-[#0F2438] flex items-center gap-1 self-start sm:self-auto cursor-pointer whitespace-nowrap"
             >
               <span>عرض تفاصيل جميع الخدمات</span>
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -254,7 +404,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       {getServiceIcon(service.id)}
                     </div>
                     {service.badge && (
-                      <span className="text-[11px] font-bold text-[#C6A052] bg-[#C6A052]/10 px-2 py-0.5 rounded-md">
+                      <span className="text-[11px] font-bold text-[#9E7B33]">
                         {service.badge}
                       </span>
                     )}
@@ -277,7 +427,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
                   <button
                     onClick={() => handleOpenModal(service.title)}
-                    className="flex-1 py-2.5 px-3 bg-[#0F2438] hover:bg-[#163B65] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition active:scale-[0.98] cursor-pointer"
+                    className="flex-1 min-h-[44px] py-2.5 px-4 bg-[#0F2438] hover:bg-[#163B65] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition active:scale-[0.98] cursor-pointer whitespace-nowrap"
                   >
                     <span>اطلب الخدمة الآن</span>
                   </button>
@@ -288,8 +438,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         `السلام عليكم، أود الاستفسار وطلب خدمة: ${service.title} من وكالة مسارك للإنجاز السياحي.`
                       )
                     }
-                    className="p-2.5 bg-slate-100 hover:bg-[#25D366]/15 text-[#25D366] rounded-xl transition cursor-pointer active:scale-95"
+                    className="min-w-[44px] min-h-[44px] p-2.5 bg-slate-100 hover:bg-[#25D366]/15 text-[#25D366] rounded-xl transition cursor-pointer active:scale-95 flex items-center justify-center"
                     title="طلب مباشر عبر واتساب"
+                    aria-label={`طلب ${service.title} عبر واتساب`}
                   >
                     <WhatsAppIcon className="w-4 h-4" variant="colored" />
                   </button>
@@ -300,7 +451,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </section>
 
         {/* ------------------------------------------------------------- */}
-        {/* 4. Why Choose Us Section (لماذا يختارنا العملاء؟) */}
+        {/* 5. Why Choose Us Section (لماذا يختارنا العملاء؟) */}
         {/* ------------------------------------------------------------- */}
         <section className="space-y-4">
           <div className="text-center max-w-xl mx-auto">
@@ -335,12 +486,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </section>
 
         {/* ------------------------------------------------------------- */}
-        {/* 5. FAQ Accordion */}
+        {/* 6. FAQ Accordion */}
         {/* ------------------------------------------------------------- */}
         <FAQAccordion />
 
         {/* ------------------------------------------------------------- */}
-        {/* 6. Customer Reviews */}
+        {/* 7. Customer Reviews */}
         {/* ------------------------------------------------------------- */}
         <section className="space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-2">
@@ -377,7 +528,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     </div>
                   </div>
 
-                  <div className="text-[11px] text-slate-400 mb-2">
+                  <div className="text-[11px] text-slate-400 mb-2 tabular-nums">
                     <span>{rev.tripType}</span>
                     <span className="mx-1.5">·</span>
                     <span>عام {rev.year}</span>
@@ -393,7 +544,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </section>
 
         {/* ------------------------------------------------------------- */}
-        {/* 7. APK App Download & Update Banner */}
+        {/* 8. APK App Download & Update Banner */}
         {/* ------------------------------------------------------------- */}
         <div className="bg-gradient-to-r from-[#0F2438] to-[#163B65] text-white rounded-2xl p-4 sm:p-5 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 text-right">
           <div className="flex items-center gap-3.5">
@@ -412,7 +563,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           <a
             href={latestApkUrl}
-            className="w-full sm:w-auto bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] px-5 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-sm transition active:scale-95 text-center cursor-pointer shrink-0"
+            className="w-full sm:w-auto min-h-[44px] bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] px-5 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-sm transition active:scale-95 text-center cursor-pointer shrink-0 whitespace-nowrap"
           >
             <Download className="w-4 h-4 text-[#0A1926]" />
             <span>تحميل التحديث (APK)</span>
