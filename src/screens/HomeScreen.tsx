@@ -11,17 +11,13 @@ import {
   FileText,
   Smartphone,
   Download,
-  Zap,
   Lock,
   Building2,
   Clock,
   Laptop,
-  CheckCircle2,
   FileCheck2,
   ArrowLeft,
-  MapPin,
-  CalendarDays,
-  Compass,
+  Hotel,
 } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
 import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
@@ -31,9 +27,6 @@ import { FAQAccordion } from '../components/FAQAccordion';
 import { ServiceRequestModal } from '../components/ServiceRequestModal';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import masarikHeroBgImg from '../assets/images/masarik_hero_bg.jpg';
-import makkahProgramImg from '../assets/images/program_makkah_madinah_1794567628573.jpg';
-import riyadhProgramImg from '../assets/images/program_riyadh_skyline_1794567629576.jpg';
-import alulaProgramImg from '../assets/images/program_alula_redsea_1794567629723.jpg';
 import { useLatestApkUrl } from '../hooks/useLatestApkUrl';
 
 interface HomeScreenProps {
@@ -41,18 +34,11 @@ interface HomeScreenProps {
   onNavigateToContact: (serviceTitle?: string) => void;
 }
 
-const PROGRAM_IMAGES: Record<'makkah' | 'riyadh' | 'alula', string> = {
-  makkah: makkahProgramImg,
-  riyadh: riyadhProgramImg,
-  alula: alulaProgramImg,
-};
-
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToServices,
   onNavigateToContact,
 }) => {
   const [logoError, setLogoError] = useState(false);
-  const [failedProgramImages, setFailedProgramImages] = useState<Record<string, boolean>>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [modalServiceTitle, setModalServiceTitle] = useState<string | undefined>(undefined);
   const latestApkUrl = useLatestApkUrl();
@@ -60,10 +46,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const handleOpenModal = (serviceTitle?: string) => {
     setModalServiceTitle(serviceTitle);
     setModalOpen(true);
-  };
-
-  const handleProgramImageError = (id: string) => {
-    setFailedProgramImages((prev) => ({ ...prev, [id]: true }));
   };
 
   const getServiceIcon = (id: string) => {
@@ -74,8 +56,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         return <FileText className="w-5 h-5 text-[#C6A052]" />;
       case 'flight-booking':
         return <Plane className="w-5 h-5 text-[#0284C7]" />;
-      case 'passports-official':
-        return <ShieldCheck className="w-5 h-5 text-[#C6A052]" />;
+      case 'hotel-booking':
+        return <Hotel className="w-5 h-5 text-[#C6A052]" />;
       case 'attestation-translation':
         return <Award className="w-5 h-5 text-[#0284C7]" />;
       case 'enjaz-insurance':
@@ -102,14 +84,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24 md:pb-16 text-[#0F2438]">
       {/* ------------------------------------------------------------- */}
-      {/* 1. Mobile-First Hero Section */}
+      {/* 1. Mobile-First Hero Section (Services-Focused) */}
       {/* ------------------------------------------------------------- */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[#0F2438] via-[#163B65] to-[#0A1926] text-white border-b border-[#C6A052]/40">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-20 mix-blend-luminosity"
           style={{ backgroundImage: `url(${masarikHeroBgImg}), url('./images/masarik_hero_bg.jpg')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1926] via-[#0F2438]/60 to-black/35" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1926] via-[#0F2438]/65 to-black/35" />
 
         <div className="relative max-w-5xl mx-auto px-4 pt-10 pb-14 sm:py-14 md:py-20 text-center flex flex-col items-center">
           {/* Logo with verified seal */}
@@ -134,7 +116,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           {/* Subtitle kicker without pill box */}
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] sm:text-xs md:text-sm font-bold text-[#E5C887] mb-3 tracking-wide">
-            <span>شركة سياحية معتمدة</span>
+            <span>شركة معتمدة</span>
             <span aria-hidden="true">·</span>
             <span>سجل تجاري رقم {TravelRepository.COMMERCIAL_RECORD}</span>
             <span aria-hidden="true">·</span>
@@ -151,9 +133,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </span>
           </h1>
 
-          {/* Description */}
+          {/* Description focused strictly on services */}
           <p className="text-xs sm:text-sm md:text-base font-normal text-slate-200 max-w-2xl mx-auto mb-7 sm:mb-9 leading-relaxed px-2">
-            الخدمة المعتمدة والشاملة لحجز البرامج السياحية والعمرة، إنهاء كافة معاملات التأشيرات، حجز مواعيد تساهيل VFS، تسديد منصة إنجاز، وحجز تذاكر الطيران بأعلى سرعة وأمان.
+            بوابتك المتخصصة والموثوقة لإنجاز <strong className="text-white font-bold">خدمات التأشيرات (Visas)</strong>، <strong className="text-white font-bold">تخليص الإجراءات والأوراق الرسمية</strong>، <strong className="text-white font-bold">حجز تذاكر الطيران</strong>، و<strong className="text-white font-bold">حجز الفنادق المعتمدة</strong> بأسرع وقت وأنت في مكانك.
           </p>
 
           {/* Action Buttons: Mobile-first full-width 48px touch targets */}
@@ -162,7 +144,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onClick={() => handleOpenModal()}
               className="w-full sm:flex-1 min-h-[48px] px-6 bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] cursor-pointer whitespace-nowrap"
             >
-              <span>ابدأ طلبك الآن</span>
+              <span>اطلب خدمتك الآن</span>
               <ArrowLeft className="w-4 h-4 text-[#0A1926]" />
             </button>
 
@@ -176,23 +158,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </button>
           </div>
 
-          {/* 4 Quick Features Mini-Bar */}
-          <div className="w-full max-w-4xl bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-3 sm:p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          {/* 4 Core Service Pillars Mini-Bar */}
+          <div className="w-full max-w-4xl bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-3 sm:p-4 grid grid-cols-2 lg:grid-cols-4 gap-3 text-center">
             <div className="flex items-center justify-center gap-2 text-white">
-              <Zap className="w-4 h-4 text-[#E5C887] shrink-0" />
-              <span className="text-xs sm:text-sm font-bold">إنجاز سريع</span>
+              <FileText className="w-4 h-4 text-[#E5C887] shrink-0" />
+              <span className="text-xs sm:text-sm font-bold">خدمات التأشيرات</span>
             </div>
             <div className="flex items-center justify-center gap-2 text-white">
-              <Award className="w-4 h-4 text-[#E5C887] shrink-0" />
-              <span className="text-xs sm:text-sm font-bold">جودة عالية</span>
+              <FileCheck2 className="w-4 h-4 text-[#E5C887] shrink-0" />
+              <span className="text-xs sm:text-sm font-bold">تخليص الإجراءات والأوراق</span>
             </div>
             <div className="flex items-center justify-center gap-2 text-white">
-              <Lock className="w-4 h-4 text-[#E5C887] shrink-0" />
-              <span className="text-xs sm:text-sm font-bold">سرية تامة</span>
+              <Plane className="w-4 h-4 text-[#E5C887] shrink-0" />
+              <span className="text-xs sm:text-sm font-bold">حجز تذاكر الطيران</span>
             </div>
             <div className="flex items-center justify-center gap-2 text-white">
-              <CheckCircle2 className="w-4 h-4 text-[#E5C887] shrink-0" />
-              <span className="text-xs sm:text-sm font-bold">آمن وموثوق</span>
+              <Hotel className="w-4 h-4 text-[#E5C887] shrink-0" />
+              <span className="text-xs sm:text-sm font-bold">حجز الفنادق</span>
             </div>
           </div>
         </div>
@@ -234,160 +216,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         {/* ------------------------------------------------------------- */}
-        {/* 2. Featured Tourism Programs (بطاقات البرامج السياحية) */}
+        {/* 2. Prominent Core Services Section (الخدمات المعتمدة) */}
         {/* ------------------------------------------------------------- */}
-        <section className="space-y-5" aria-labelledby="tourism-programs-heading">
+        <section className="space-y-4" aria-labelledby="services-directory-heading">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-200 pb-3">
             <div>
-              <h2 id="tourism-programs-heading" className="text-lg sm:text-2xl font-black text-[#0F2438]">
-                البرامج السياحية والعمرة المختارة
+              <h2 id="services-directory-heading" className="text-lg sm:text-2xl font-black text-[#0F2438]">
+                خدماتنا المعتمدة والمتخصصة
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-                باقات سفر متكاملة تشمل التأشيرة، الإقامة الفندقية، والطيران بأسعار تنافسية واضحة
-              </p>
-            </div>
-            <button
-              onClick={() =>
-                openWhatsApp(
-                  'السلام عليكم، أود الاستفسار عن عروض البرامج السياحية المتاحة وتفاصيل الحجز.'
-                )
-              }
-              className="text-xs sm:text-sm font-bold text-[#0284C7] hover:text-[#0F2438] flex items-center gap-1 self-start sm:self-auto cursor-pointer whitespace-nowrap"
-            >
-              <span>طلب برنامج سياحي مخصص</span>
-              <ArrowLeft className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {TravelRepository.tourPrograms.map((program) => {
-              const imgFailed = failedProgramImages[program.id];
-              return (
-                <article
-                  key={program.id}
-                  className="bg-white border border-slate-200 hover:border-[#C6A052] rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
-                >
-                  <div>
-                    {/* Program Visual Header (4:3) with Destination Overlay */}
-                    <div className="relative aspect-[4/3] w-full bg-[#0F2438] overflow-hidden">
-                      {!imgFailed ? (
-                        <img
-                          src={PROGRAM_IMAGES[program.imageKey]}
-                          alt={`${program.title} - ${program.destination}`}
-                          referrerPolicy="no-referrer"
-                          onError={() => handleProgramImageError(program.id)}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#0F2438] via-[#163B65] to-[#0A1926] flex flex-col items-center justify-center gap-2 p-4 text-center">
-                          <Compass className="w-10 h-10 text-[#E5C887]" />
-                          <span className="text-xs font-bold text-white/90">{program.destination}</span>
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
-
-                      {/* Destination text anchored cleanly on bottom of image */}
-                      <div className="absolute bottom-3 right-3 left-3 flex items-center gap-1.5 text-white">
-                        <MapPin className="w-4 h-4 text-[#E5C887] shrink-0" />
-                        <span className="text-xs sm:text-sm font-bold truncate">
-                          {program.destination}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Card Content */}
-                    <div className="p-5 space-y-4">
-                      <div>
-                        <h3 className="text-base sm:text-lg font-black text-[#0F2438] leading-snug mb-2">
-                          {program.title}
-                        </h3>
-
-                        {/* Clean unboxed Duration & Starting Price Row */}
-                        <div className="flex items-center justify-between gap-3 py-2.5 px-3 bg-[#F8FAFC] border border-slate-200/80 rounded-xl">
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 tabular-nums">
-                            <CalendarDays className="w-4 h-4 text-[#0284C7] shrink-0" />
-                            <span>{program.durationDays}</span>
-                          </div>
-                          <div className="text-left">
-                            <span className="text-[11px] text-slate-500 font-semibold ml-1">
-                              يبدأ من
-                            </span>
-                            <span className="text-sm sm:text-base font-black text-[#0F2438] tabular-nums">
-                              {program.startingPrice}
-                            </span>
-                            <span className="text-xs font-bold text-[#9E7B33] mr-1">
-                              {program.currency}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Features Checklist */}
-                      <ul className="space-y-2">
-                        {program.features.map((feat, idx) => (
-                          <li
-                            key={idx}
-                            className="flex items-start gap-2 text-xs text-slate-600 leading-relaxed"
-                          >
-                            <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                            <span>{feat}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Card Actions */}
-                  <div className="px-5 pb-5 pt-3 border-t border-slate-100 flex items-center gap-2">
-                    <button
-                      onClick={() => handleOpenModal(`${program.title} (${program.destination})`)}
-                      className="flex-1 min-h-[44px] py-2.5 px-4 bg-[#0F2438] hover:bg-[#163B65] text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 shadow-xs transition active:scale-[0.98] cursor-pointer whitespace-nowrap"
-                    >
-                      <span>احجز البرنامج الآن</span>
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        openWhatsApp(
-                          `السلام عليكم، أود الاستفسار وحجز "${program.title}"\n📍 الوجهة: ${program.destination}\n🗓️ المدة: ${program.durationDays}\n💰 السعر يبدأ من: ${program.startingPrice} ${program.currency}`
-                        )
-                      }
-                      className="min-w-[44px] min-h-[44px] p-2.5 bg-slate-100 hover:bg-[#25D366]/15 text-[#25D366] rounded-xl transition cursor-pointer active:scale-95 flex items-center justify-center"
-                      title="استفسار وحجز عبر واتساب"
-                      aria-label={`استفسار واتساب حول ${program.title}`}
-                    >
-                      <WhatsAppIcon className="w-5 h-5" variant="colored" />
-                    </button>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ------------------------------------------------------------- */}
-        {/* 3. Interactive Guide ("محتار تبدأ منين؟") */}
-        {/* ------------------------------------------------------------- */}
-        <InteractiveGuide onRequestModal={handleOpenModal} />
-
-        {/* ------------------------------------------------------------- */}
-        {/* 4. Service Cards Grid */}
-        {/* ------------------------------------------------------------- */}
-        <section className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-200 pb-3">
-            <div>
-              <h2 className="text-lg sm:text-2xl font-black text-[#0F2438]">
-                دليل الخدمات المعتمدة
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-                اختر خدمتك المطلوبة وسنتولى كافة الإجراءات بأعلى دقة واحترافية
+                خدمات التأشيرات، تخليص الإجراءات والأوراق، حجز تذاكر الطيران والفنادق بأعلى دقة واحترافية
               </p>
             </div>
             <button
               onClick={onNavigateToServices}
               className="text-xs sm:text-sm font-bold text-[#0284C7] hover:text-[#0F2438] flex items-center gap-1 self-start sm:self-auto cursor-pointer whitespace-nowrap"
             >
-              <span>عرض تفاصيل جميع الخدمات</span>
+              <span>تصفح كافة الخدمات بالتفصيل</span>
               <ArrowLeft className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -400,7 +245,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-[#0284C7]/10 flex items-center justify-center transition-colors shrink-0">
+                    <div className="w-11 h-11 rounded-xl bg-slate-100 group-hover:bg-[#0284C7]/10 flex items-center justify-center transition-colors shrink-0">
                       {getServiceIcon(service.id)}
                     </div>
                     {service.badge && (
@@ -435,7 +280,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   <button
                     onClick={() =>
                       openWhatsApp(
-                        `السلام عليكم، أود الاستفسار وطلب خدمة: ${service.title} من وكالة مسارك للإنجاز السياحي.`
+                        `السلام عليكم، أود الاستفسار وطلب خدمة: ${service.title} من شركة مسارك للإنجاز السياحي.`
                       )
                     }
                     className="min-w-[44px] min-h-[44px] p-2.5 bg-slate-100 hover:bg-[#25D366]/15 text-[#25D366] rounded-xl transition cursor-pointer active:scale-95 flex items-center justify-center"
@@ -451,7 +296,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </section>
 
         {/* ------------------------------------------------------------- */}
-        {/* 5. Why Choose Us Section (لماذا يختارنا العملاء؟) */}
+        {/* 3. Interactive Guide ("محتار تبدأ منين؟") */}
+        {/* ------------------------------------------------------------- */}
+        <InteractiveGuide onRequestModal={handleOpenModal} />
+
+        {/* ------------------------------------------------------------- */}
+        {/* 4. Why Choose Us Section (لماذا يختارنا العملاء؟) */}
         {/* ------------------------------------------------------------- */}
         <section className="space-y-4">
           <div className="text-center max-w-xl mx-auto">
@@ -459,7 +309,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               لماذا يختارنا العملاء؟
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              أربع ركائز أساسية تضمن لك تجربة سفر ومعاملات حكومية موثوقة وخالية من المتاعب
+              أربع ركائز أساسية تضمن لك إنجاز التأشيرات وحجوزات السفر والمعاملات الرسمية بسهولة وأمان
             </p>
           </div>
 
@@ -486,12 +336,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </section>
 
         {/* ------------------------------------------------------------- */}
-        {/* 6. FAQ Accordion */}
+        {/* 5. FAQ Accordion */}
         {/* ------------------------------------------------------------- */}
         <FAQAccordion />
 
         {/* ------------------------------------------------------------- */}
-        {/* 7. Customer Reviews */}
+        {/* 6. Customer Reviews */}
         {/* ------------------------------------------------------------- */}
         <section className="space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-2">
@@ -544,7 +394,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </section>
 
         {/* ------------------------------------------------------------- */}
-        {/* 8. APK App Download & Update Banner */}
+        {/* 7. APK App Download & Update Banner */}
         {/* ------------------------------------------------------------- */}
         <div className="bg-gradient-to-r from-[#0F2438] to-[#163B65] text-white rounded-2xl p-4 sm:p-5 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 text-right">
           <div className="flex items-center gap-3.5">
