@@ -1,25 +1,20 @@
 package com.masarik.tourism
 
 import android.annotation.SuppressLint
-import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.Settings
 import android.view.ViewGroup
-import android.webkit.CookieManager
-import android.webkit.URLUtil
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -105,9 +100,9 @@ private fun getInstalledVersionName(context: Context): String {
             @Suppress("DEPRECATION")
             context.packageManager.getPackageInfo(context.packageName, 0)
         }
-        pInfo.versionName ?: "3.3.4"
+        pInfo.versionName ?: "1.0.0"
     } catch (_: Exception) {
-        "3.3.4"
+        "1.0.0"
     }
 }
 
@@ -126,82 +121,12 @@ private fun isRemoteVersionNewer(remoteTag: String, localVersion: String): Boole
     return false
 }
 
-private fun enqueueDownloadWithManager(
-    context: Context,
-    url: String,
-    userAgent: String? = null,
-    contentDisposition: String? = null,
-    mimeType: String? = null
-): Boolean {
-    return try {
-        val lowerUrl = url.lowercase()
-        val isApk = lowerUrl.endsWith(".apk") ||
-            lowerUrl.contains(".apk?") ||
-            lowerUrl.contains("/releases/latest/download/") ||
-            lowerUrl.contains("/releases/download/") ||
-            mimeType.equals("application/vnd.android.package-archive", ignoreCase = true)
-
-        val effectiveMimeType = if (isApk) {
-            "application/vnd.android.package-archive"
-        } else {
-            mimeType ?: "application/octet-stream"
-        }
-
-        var fileName = URLUtil.guessFileName(url, contentDisposition, effectiveMimeType)
-        if (isApk && !fileName.endsWith(".apk", ignoreCase = true)) {
-            fileName = "Masarik-Tourism.apk"
-        }
-
-        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
-        fun buildRequest(usePublicDir: Boolean): DownloadManager.Request {
-            return DownloadManager.Request(Uri.parse(url)).apply {
-                setMimeType(effectiveMimeType)
-                if (!userAgent.isNullOrBlank()) {
-                    addRequestHeader("User-Agent", userAgent)
-                }
-                val cookies = CookieManager.getInstance().getCookie(url)
-                if (!cookies.isNullOrBlank()) {
-                    addRequestHeader("Cookie", cookies)
-                }
-                setTitle("مسارك للإنجاز السياحي - تحميل التحديث")
-                setDescription("جاري تحميل $fileName")
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                setAllowedOverMetered(true)
-                setAllowedOverRoaming(true)
-                if (usePublicDir) {
-                    setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
-                } else {
-                    setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, fileName)
-                }
-            }
-        }
-
-        try {
-            downloadManager.enqueue(buildRequest(usePublicDir = true))
-        } catch (_: SecurityException) {
-            downloadManager.enqueue(buildRequest(usePublicDir = false))
-        }
-
-        Toast.makeText(
-            context,
-            "بدأ تحميل $fileName — تابع التقدم في شريط الإشعارات",
-            Toast.LENGTH_LONG
-        ).show()
-        true
-    } catch (_: Exception) {
-        false
-    }
-}
-
-private fun openInExternalBrowser(context: Context, url: String) {
+private fun openExternalBrowser(context: Context, url: String) {
     try {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     } catch (_: Exception) {
-        Toast.makeText(context, "تعذر فتح رابط التحميل", Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -336,14 +261,11 @@ fun MainWebViewScreen(
     var availableUpdate by remember { mutableStateOf<AppReleaseUpdate?>(null) }
     var isDownloadingUpdate by remember { mutableStateOf(false) }
     var downloadProgress by remember { mutableFloatStateOf(0f) }
-    var updateErrorMsg by remember { mutableStateOf<String?>(null) }
 
-    // Check GitHub Releases automatically on app startup
     LaunchedEffect(Unit) {
         availableUpdate = checkLatestGitHubRelease(installedVersion)
     }
 
-    // Navigate back in web history if possible, else finish activity
     BackHandler {
         if (webViewInstance?.canGoBack() == true) {
             webViewInstance?.goBack()
@@ -381,18 +303,11 @@ fun MainWebViewScreen(
                         userAgentString = "$userAgentString MasarikApp/$installedVersion"
                     }
 
-                    // Handle all file/APK downloads triggered inside WebView via DownloadManager
-                    setDownloadListener { url, userAgent, contentDisposition, mimeType, _ ->
-                        val started = enqueueDownloadWithManager(
-                            context = ctx,
-                            url = url,
-                            userAgent = userAgent,
-                            contentDisposition = contentDisposition,
-                            mimeType = mimeType
-                        )
-                        if (!started) {
-                            openInExternalBrowser(ctx, url)
-                        }
+                    // Force external browser for ALL downloads triggered in WebView
+                    setDownloadListener { url, _, _, _, _ ->
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        ctx.startActivity(intent)
                     }
 
                     webViewClient = object : WebViewClient() {
@@ -401,36 +316,21 @@ fun MainWebViewScreen(
                             request: WebResourceRequest?
                         ): Boolean {
                             val url = request?.url?.toString() ?: return false
-                            val lowerUrl = url.lowercase()
 
-                            // 1. Intercept direct APK download links or GitHub release asset links
-                            val isDirectApkLink =
-                                lowerUrl.endsWith(".apk") ||
-                                    lowerUrl.contains(".apk?") ||
-                                    lowerUrl.contains("/releases/latest/download/") ||
-                                    lowerUrl.contains("/releases/download/") ||
-                                    lowerUrl.contains("objects.githubusercontent.com")
-
-                            if (isDirectApkLink) {
-                                val started = enqueueDownloadWithManager(
-                                    context = ctx,
-                                    url = url,
-                                    userAgent = view?.settings?.userAgentString,
-                                    mimeType = "application/vnd.android.package-archive"
-                                )
-                                if (!started) {
-                                    openInExternalBrowser(ctx, url)
-                                }
+                            // Check at the very top: force external browser for ALL .apk and GitHub release links
+                            if (url.endsWith(".apk", ignoreCase = true) ||
+                                url.contains(".apk?", ignoreCase = true) ||
+                                url.contains("/releases/download/", ignoreCase = true) ||
+                                url.contains("/releases/latest/download/", ignoreCase = true) ||
+                                url.contains("://github.com", ignoreCase = true)
+                            ) {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                ctx.startActivity(intent)
                                 return true
                             }
 
-                            // 2. Open any other github.com links in the external browser
-                            if (lowerUrl.contains("://github.com")) {
-                                openInExternalBrowser(ctx, url)
-                                return true
-                            }
-
-                            // 3. Handle WhatsApp intents
+                            // Handle WhatsApp intents
                             if (url.startsWith("https://wa.me/") ||
                                 url.startsWith("whatsapp://") ||
                                 url.contains("api.whatsapp.com")
@@ -442,7 +342,7 @@ fun MainWebViewScreen(
                                 return true
                             }
 
-                            // 4. Handle Phone Call intents
+                            // Handle Phone Call intents
                             if (url.startsWith("tel:")) {
                                 try {
                                     ctx.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse(url)))
@@ -451,7 +351,7 @@ fun MainWebViewScreen(
                                 return true
                             }
 
-                            // 5. Handle Mail intents
+                            // Handle Mail intents
                             if (url.startsWith("mailto:")) {
                                 try {
                                     ctx.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(url)))
@@ -505,7 +405,6 @@ fun MainWebViewScreen(
             }
         )
 
-        // Slim Golden Progress Bar while loading
         AnimatedVisibility(
             visible = isLoading && progress < 1f,
             enter = fadeIn(),
@@ -524,7 +423,6 @@ fun MainWebViewScreen(
             )
         }
 
-        // Offline screen fallback if network is disconnected
         if (hasError) {
             Box(
                 modifier = Modifier
@@ -664,7 +562,6 @@ fun MainWebViewScreen(
             }
         }
 
-        // Native Auto-Update Dialog when a newer GitHub Release exists
         val updateInfo = availableUpdate
         if (updateInfo != null) {
             AlertDialog(
@@ -725,21 +622,12 @@ fun MainWebViewScreen(
                                 color = Color(0xFF0284C7)
                             )
                         }
-
-                        if (updateErrorMsg != null) {
-                            Text(
-                                text = updateErrorMsg ?: "",
-                                fontSize = 12.sp,
-                                color = Color(0xFFDC2626)
-                            )
-                        }
                     }
                 },
                 confirmButton = {
                     Button(
                         enabled = !isDownloadingUpdate,
                         onClick = {
-                            updateErrorMsg = null
                             isDownloadingUpdate = true
                             downloadProgress = 0f
                             coroutineScope.launch {
@@ -749,19 +637,11 @@ fun MainWebViewScreen(
                                     onProgress = { pct -> downloadProgress = pct }
                                 )
                                 isDownloadingUpdate = false
+                                availableUpdate = null
                                 if (apkFile != null) {
-                                    availableUpdate = null
                                     installApkFile(context, apkFile)
                                 } else {
-                                    availableUpdate = null
-                                    val started = enqueueDownloadWithManager(
-                                        context = context,
-                                        url = updateInfo.downloadUrl,
-                                        mimeType = "application/vnd.android.package-archive"
-                                    )
-                                    if (!started) {
-                                        openInExternalBrowser(context, updateInfo.downloadUrl)
-                                    }
+                                    openExternalBrowser(context, updateInfo.downloadUrl)
                                 }
                             }
                         },

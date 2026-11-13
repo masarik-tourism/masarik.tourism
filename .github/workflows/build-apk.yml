@@ -50,17 +50,13 @@ jobs:
           cp release.keystore debug.keystore
           ls -lh release.keystore
 
-      - name: Auto-Increment Version Code & Version Name
+      - name: Set Official Release Version 1.0.0
         run: |
-          RUN_NUM=${GITHUB_RUN_NUMBER:-1}
-          CALC_CODE=$((34 + RUN_NUM))
-          CALC_PATCH=$((4 + RUN_NUM))
-          CALC_NAME="3.3.${CALC_PATCH}"
-          echo "VERSION_CODE=${CALC_CODE}" > version.properties
-          echo "VERSION_NAME=${CALC_NAME}" >> version.properties
-          echo "VERSION_CODE=${CALC_CODE}" >> "$GITHUB_ENV"
-          echo "VERSION_NAME=${CALC_NAME}" >> "$GITHUB_ENV"
-          echo "Automated Version: v${CALC_NAME} (Code: ${CALC_CODE})"
+          echo "VERSION_CODE=1" > version.properties
+          echo "VERSION_NAME=1.0.0" >> version.properties
+          echo "VERSION_CODE=1" >> "$GITHUB_ENV"
+          echo "VERSION_NAME=1.0.0" >> "$GITHUB_ENV"
+          echo "Release Version: v1.0.0 (Code: 1)"
           cat version.properties
 
       - name: Setup Gradle
@@ -103,16 +99,15 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Publish Signed APK to GitHub Releases (latest)
+      - name: Publish Signed APK to GitHub Releases (v1.0.0)
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: "v${{ env.VERSION_NAME }}"
-          name: "مسارك للإنجاز السياحي v${{ env.VERSION_NAME }}"
+          tag_name: "v1.0.0"
+          name: "مسارك للإنجاز السياحي v1.0.0"
           body: |
-            إصدار رسمي موقّع من تطبيق **مسارك للإنجاز السياحي** (`v${{ env.VERSION_NAME }}` - Build `${{ env.VERSION_CODE }}`).
-            - موقّع بمفتاح ثابت لضمان التحديث السلس فوق الإصدارات السابقة دون حذف التطبيق.
-            - يدعم التحقق التلقائي من التحديثات فور تشغيل التطبيق.
+            الإصدار الرسمي الأول من تطبيق **مسارك للإنجاز السياحي** (`v1.0.0` - Build `1`).
+            - موقّع بمفتاح التوقيع الثابت لضمان التحديث السلس فوق الإصدارات الأخرى.
           draft: false
           prerelease: false
           make_latest: true

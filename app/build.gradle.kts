@@ -1,25 +1,9 @@
 import java.util.Base64
-import java.util.Properties
-import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
 }
-
-// ---------------------------------------------------------
-// Automated Versioning: reads version.properties or increments with GitHub Actions
-// ---------------------------------------------------------
-val versionPropsFile = file("${rootDir}/version.properties")
-val versionProps = Properties().apply {
-    if (versionPropsFile.exists()) {
-        FileInputStream(versionPropsFile).use { load(it) }
-    }
-}
-val propVersionCode = versionProps.getProperty("VERSION_CODE")?.toIntOrNull()
-val ciRunNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0
-val autoVersionCode = propVersionCode ?: (34 + ciRunNumber)
-val autoVersionName = versionProps.getProperty("VERSION_NAME") ?: "3.3.4"
 
 android {
     namespace = "com.masarik.tourism"
@@ -29,8 +13,8 @@ android {
         applicationId = "com.masarik.tourism"
         minSdk = 26
         targetSdk = 35
-        versionCode = autoVersionCode
-        versionName = autoVersionName
+        versionCode = 1
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

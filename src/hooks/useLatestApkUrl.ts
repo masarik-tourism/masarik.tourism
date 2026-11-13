@@ -14,7 +14,7 @@ export interface LatestApkInfo {
 export const useLatestApkInfo = (): LatestApkInfo => {
   const [info, setInfo] = useState<LatestApkInfo>({
     downloadUrl: DEFAULT_LATEST_DOWNLOAD_URL,
-    version: 'v3.3.4',
+    version: 'v1.0.0',
     sizeLabel: null,
     isLoading: true,
   });
