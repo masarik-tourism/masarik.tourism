@@ -678,4 +678,3 @@ fun MainWebViewScreen(
         }
     }
 }
-```
