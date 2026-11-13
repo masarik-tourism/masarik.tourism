@@ -427,7 +427,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           <div className="flex flex-col items-center md:items-end gap-1.5 w-full md:w-auto shrink-0">
             <a
-              href={apkInfo.downloadUrl}
+              id="apk-download-btn"
+              href={apkInfo.downloadUrl || 'https://github.com/masarik-tourism/masarik.tourism/releases/latest/download/Masarik-Tourism.apk'}
               className="w-full md:w-auto min-h-[44px] bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] px-5 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-sm transition active:scale-95 text-center cursor-pointer whitespace-nowrap"
             >
               <Download className="w-4 h-4 text-[#0A1926]" />

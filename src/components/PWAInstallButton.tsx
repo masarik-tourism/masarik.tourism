@@ -219,7 +219,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
 
                 <div className="flex flex-col gap-2 pt-1">
                   <a
-                    href={apkInfo.downloadUrl}
+                    href={apkInfo.downloadUrl || 'https://github.com/masarik-tourism/masarik.tourism/releases/latest/download/Masarik-Tourism.apk'}
                     className="w-full bg-[#C6A052] hover:bg-[#d4b063] text-[#0F2438] py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-center cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
@@ -231,8 +231,6 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
 
                   <a
                     href={TravelRepository.APK_RELEASES_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="w-full bg-white hover:bg-gray-50 text-[#17344F] border border-[#E2DAC8] py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 text-center cursor-pointer"
                   >
                     <ExternalLink className="w-3.5 h-3.5 text-[#2A7688]" />
