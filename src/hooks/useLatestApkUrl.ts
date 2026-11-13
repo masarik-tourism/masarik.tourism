@@ -2,7 +2,8 @@ import { useState, useEffect, type MouseEvent } from 'react';
 
 const REPO_OWNER = 'masarik-tourism';
 const REPO_NAME = 'masarik.tourism';
-export const FAST_CDN_APK_URL = `https://${REPO_OWNER}.github.io/${REPO_NAME}/downloads/Masarik-Tourism.apk`;
+export const FALLBACK_PAGES_APK_URL = `https://${REPO_OWNER}.github.io/${REPO_NAME}/downloads/Masarik-Tourism.apk`;
+export const FAST_CDN_APK_URL = `https://cdn.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@gh-pages/downloads/Masarik-Tourism.apk`;
 
 export interface LatestApkInfo {
   downloadUrl: string;
@@ -38,7 +39,7 @@ export function handleApkDownload(
 export const useLatestApkInfo = (): LatestApkInfo => {
   const [info, setInfo] = useState<LatestApkInfo>({
     downloadUrl: FAST_CDN_APK_URL,
-    version: 'v1.0.1',
+    version: 'v1.0.0',
     sizeLabel: null,
     isLoading: true,
   });
@@ -69,19 +70,16 @@ export const useLatestApkInfo = (): LatestApkInfo => {
           const tagName =
             typeof data.tag_name === 'string' && data.tag_name.trim()
               ? data.tag_name.trim()
-              : 'v1.0.1';
+              : 'v1.0.0';
 
           const sizeLabel =
             typeof apkAsset?.size === 'number' && apkAsset.size > 0
               ? `${(apkAsset.size / (1024 * 1024)).toFixed(1)} MB`
               : null;
 
-          // Use Fastly GitHub Pages CDN URL with version query parameter for maximum speed in Egypt
-          const cdnUrlWithVersion = `${FAST_CDN_APK_URL}?v=${encodeURIComponent(tagName)}`;
-
           if (isMounted) {
             setInfo({
-              downloadUrl: cdnUrlWithVersion,
+              downloadUrl: FAST_CDN_APK_URL,
               version: tagName,
               sizeLabel,
               isLoading: false,

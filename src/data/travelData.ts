@@ -13,7 +13,7 @@ export const TravelRepository = {
   INSTAPAY_URL: 'https://ipn.eg/S/lonely/instapay/0Dq6BN',
   INSTAPAY_CODE: '0Dq6BN',
   INSTAPAY_ACCOUNT: 'lonely',
-  APK_DOWNLOAD_URL: 'https://masarik-tourism.github.io/masarik.tourism/downloads/Masarik-Tourism.apk',
+  APK_DOWNLOAD_URL: 'https://cdn.jsdelivr.net/gh/masarik-tourism/masarik.tourism@gh-pages/downloads/Masarik-Tourism.apk',
   APK_LOCAL_URL: './downloads/masarik-tourism.apk',
   APK_RELEASES_URL: 'https://github.com/masarik-tourism/masarik.tourism/releases',
   APK_VERSION: 'أحدث إصدار',

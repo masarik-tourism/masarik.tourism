@@ -57,6 +57,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection
@@ -114,9 +115,9 @@ private fun getInstalledVersionName(context: Context): String {
             @Suppress("DEPRECATION")
             context.packageManager.getPackageInfo(context.packageName, 0)
         }
-        pInfo.versionName ?: "1.0.1"
+        pInfo.versionName ?: "1.0.0"
     } catch (_: Exception) {
-        "1.0.1"
+        "1.0.0"
     }
 }
 
@@ -164,11 +165,11 @@ private suspend fun checkLatestGitHubRelease(installedVersion: String): AppRelea
                 val json = JSONObject(body)
                 val tagName = json.optString("tag_name", "").trim()
                 if (tagName.isNotEmpty() && isRemoteVersionNewer(tagName, installedVersion)) {
-                    val fastCdnUrl =
-                        "https://masarik-tourism.github.io/masarik.tourism/downloads/Masarik-Tourism.apk?v=$tagName"
+                    val fastMultiCdnUrl =
+                        "https://cdn.jsdelivr.net/gh/masarik-tourism/masarik.tourism@gh-pages/downloads/Masarik-Tourism.apk"
                     return@withContext AppReleaseUpdate(
                         latestVersion = tagName,
-                        downloadUrl = fastCdnUrl,
+                        downloadUrl = fastMultiCdnUrl,
                         releaseNotes = json.optString("body", "")
                     )
                 }
@@ -183,43 +184,54 @@ private suspend fun downloadAndInstallApk(
     apkUrl: String,
     onProgress: (Float) -> Unit
 ): File? = withContext(Dispatchers.IO) {
-    try {
-        val conn = (URL(apkUrl).openConnection() as HttpURLConnection).apply {
-            instanceFollowRedirects = true
-            connectTimeout = 15000
-            readTimeout = 30000
-            useCaches = false
-        }
-        conn.connect()
+    val candidateUrls = listOf(
+        apkUrl,
+        "https://masarik-tourism.github.io/masarik.tourism/downloads/Masarik-Tourism.apk"
+    ).distinct()
 
-        if (conn.responseCode !in 200..299) return@withContext null
-
-        val totalBytes = conn.contentLength.toLong()
-        val outputDir = context.externalCacheDir ?: context.cacheDir
-        val apkFile = File(outputDir, "Masarik-Tourism-update.apk")
-        if (apkFile.exists()) apkFile.delete()
-
-        conn.inputStream.use { input ->
-            FileOutputStream(apkFile).use { output ->
-                val buffer = ByteArray(8192)
-                var downloaded = 0L
-                var read: Int
-                while (input.read(buffer).also { read = it } != -1) {
-                    output.write(buffer, 0, read)
-                    downloaded += read
-                    if (totalBytes > 0) {
-                        val pct = (downloaded.toFloat() / totalBytes.toFloat()).coerceIn(0f, 1f)
-                        withContext(Dispatchers.Main) { onProgress(pct) }
-                    }
-                }
-                output.flush()
+    for (candidateUrl in candidateUrls) {
+        try {
+            val conn = (URL(candidateUrl).openConnection() as HttpURLConnection).apply {
+                instanceFollowRedirects = true
+                connectTimeout = 15000
+                readTimeout = 30000
+                useCaches = false
             }
-        }
+            conn.connect()
 
-        if (apkFile.exists() && apkFile.length() > 0) apkFile else null
-    } catch (_: Exception) {
-        null
+            if (conn.responseCode !in 200..299) {
+                conn.disconnect()
+                continue
+            }
+
+            val totalBytes = conn.contentLength.toLong()
+            val outputDir = context.externalCacheDir ?: context.cacheDir
+            val apkFile = File(outputDir, "Masarik-Tourism-update.apk")
+            if (apkFile.exists()) apkFile.delete()
+
+            conn.inputStream.use { input ->
+                BufferedOutputStream(FileOutputStream(apkFile), 65536).use { output ->
+                    val buffer = ByteArray(65536)
+                    var downloaded = 0L
+                    var read: Int
+                    while (input.read(buffer).also { read = it } != -1) {
+                        output.write(buffer, 0, read)
+                        downloaded += read
+                        if (totalBytes > 0) {
+                            val pct = (downloaded.toFloat() / totalBytes.toFloat()).coerceIn(0f, 1f)
+                            withContext(Dispatchers.Main) { onProgress(pct) }
+                        }
+                    }
+                    output.flush()
+                }
+            }
+            conn.disconnect()
+
+            if (apkFile.exists() && apkFile.length() > 0) return@withContext apkFile
+        } catch (_: Exception) {
+        }
     }
+    null
 }
 
 private fun installApkFile(context: Context, apkFile: File) {

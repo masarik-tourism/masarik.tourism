@@ -50,13 +50,13 @@ jobs:
           cp release.keystore debug.keystore
           ls -lh release.keystore
 
-      - name: Set Official Release Version 1.0.1
+      - name: Set Official Release Version 1.0.0
         run: |
-          echo "VERSION_CODE=2" > version.properties
-          echo "VERSION_NAME=1.0.1" >> version.properties
-          echo "VERSION_CODE=2" >> "$GITHUB_ENV"
-          echo "VERSION_NAME=1.0.1" >> "$GITHUB_ENV"
-          echo "Release Version: v1.0.1 (Code: 2)"
+          echo "VERSION_CODE=1" > version.properties
+          echo "VERSION_NAME=1.0.0" >> version.properties
+          echo "VERSION_CODE=1" >> "$GITHUB_ENV"
+          echo "VERSION_NAME=1.0.0" >> "$GITHUB_ENV"
+          echo "Release Version: v1.0.0 (Code: 1)"
           cat version.properties
 
       - name: Setup Gradle
@@ -111,17 +111,25 @@ jobs:
           target-folder: downloads
           clean: true
 
-      - name: Publish Signed APK to GitHub Releases (v1.0.1)
+      - name: Purge & Pre-warm Global Multi-CDN Cache (jsDelivr / Cloudflare)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          sleep 3
+          curl -fsSL "https://purge.jsdelivr.net/gh/masarik-tourism/masarik.tourism@gh-pages/downloads/Masarik-Tourism.apk" || true
+          sleep 2
+          curl -fsSL -o /dev/null "https://cdn.jsdelivr.net/gh/masarik-tourism/masarik.tourism@gh-pages/downloads/Masarik-Tourism.apk" || true
+
+      - name: Publish Signed APK to GitHub Releases (v1.0.0)
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: "v1.0.1"
-          name: "مسارك للإنجاز السياحي v1.0.1"
+          tag_name: "v1.0.0"
+          name: "مسارك للإنجاز السياحي v1.0.0"
           body: |
-            الإصدار الرسمي المحدّث من تطبيق **مسارك للإنجاز السياحي** (`v1.0.1` - Build `2`).
+            الإصدار الرسمي الأول من تطبيق **مسارك للإنجاز السياحي** (`v1.0.0` - Build `1`).
             - تقليص حجم التطبيق عبر R8 + shrinkResources لسرعة تحميل فائقة.
             - دعم مباشر لجسر `AndroidBridge` لفتح رابط التحميل فوراً من داخل التطبيق.
-            - استضافة مباشرة على شبكة GitHub Pages Fastly CDN عبر `/downloads/Masarik-Tourism.apk`.
+            - استضافة مباشرة على شبكة Multi-CDN عبر jsDelivr (Cloudflare + Fastly) للتحميل السريع.
           draft: false
           prerelease: false
           make_latest: true
