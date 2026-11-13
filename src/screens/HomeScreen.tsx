@@ -27,7 +27,7 @@ import { FAQAccordion } from '../components/FAQAccordion';
 import { ServiceRequestModal } from '../components/ServiceRequestModal';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import masarikHeroBgImg from '../assets/images/masarik_hero_bg.jpg';
-import { useLatestApkUrl } from '../hooks/useLatestApkUrl';
+import { useLatestApkInfo } from '../hooks/useLatestApkUrl';
 
 interface HomeScreenProps {
   onNavigateToServices: () => void;
@@ -41,7 +41,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [logoError, setLogoError] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalServiceTitle, setModalServiceTitle] = useState<string | undefined>(undefined);
-  const latestApkUrl = useLatestApkUrl();
+  const apkInfo = useLatestApkInfo();
 
   const handleOpenModal = (serviceTitle?: string) => {
     setModalServiceTitle(serviceTitle);
@@ -248,11 +248,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     <div className="w-11 h-11 rounded-xl bg-slate-100 group-hover:bg-[#0284C7]/10 flex items-center justify-center transition-colors shrink-0">
                       {getServiceIcon(service.id)}
                     </div>
-                    {service.badge && (
-                      <span className="text-[11px] font-bold text-[#9E7B33]">
-                        {service.badge}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                      {service.speedBadge && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md">
+                          <Clock className="w-3 h-3 shrink-0" />
+                          <span>{service.speedBadge}</span>
+                        </span>
+                      )}
+                      {service.badge && (
+                        <span className="text-[11px] font-bold text-[#9E7B33]">
+                          {service.badge}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <h3 className="text-sm sm:text-base font-bold text-[#0F2438] mb-2 leading-snug">
@@ -283,11 +291,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         `السلام عليكم، أود الاستفسار وطلب خدمة: ${service.title} من شركة مسارك للإنجاز السياحي.`
                       )
                     }
-                    className="min-w-[44px] min-h-[44px] p-2.5 bg-slate-100 hover:bg-[#25D366]/15 text-[#25D366] rounded-xl transition cursor-pointer active:scale-95 flex items-center justify-center"
+                    className="min-w-[44px] min-h-[44px] p-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl shadow-xs transition cursor-pointer active:scale-95 flex items-center justify-center shrink-0"
                     title="طلب مباشر عبر واتساب"
                     aria-label={`طلب ${service.title} عبر واتساب`}
                   >
-                    <WhatsAppIcon className="w-4 h-4" variant="colored" />
+                    <WhatsAppIcon className="w-5 h-5" variant="white" />
                   </button>
                 </div>
               </div>
@@ -396,28 +404,40 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* ------------------------------------------------------------- */}
         {/* 7. APK App Download & Update Banner */}
         {/* ------------------------------------------------------------- */}
-        <div className="bg-gradient-to-r from-[#0F2438] to-[#163B65] text-white rounded-2xl p-4 sm:p-5 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 text-right">
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-white/10 text-[#E5C887] flex items-center justify-center shrink-0">
+        <div className="bg-gradient-to-r from-[#0F2438] to-[#163B65] text-white rounded-2xl p-5 shadow-md flex flex-col md:flex-row items-center justify-between gap-4 text-right border border-[#C6A052]/40">
+          <div className="flex items-center gap-3.5 w-full md:w-auto">
+            <div className="w-12 h-12 rounded-xl bg-white/10 text-[#E5C887] flex items-center justify-center shrink-0">
               <Smartphone className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-xs sm:text-sm font-bold text-white">
-                تطبيق مسارك للأندرويد (تثبيت وتحديث مباشر)
-              </h3>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-xs sm:text-sm font-bold text-white">
+                  تطبيق مسارك للإنجاز السياحي للأندرويد (تثبيت وتحديث مباشر)
+                </h3>
+                <span className="text-[11px] font-black text-[#0A1926] bg-[#E5C887] px-2 py-0.5 rounded-md tabular-nums">
+                  {apkInfo.version}
+                  {apkInfo.sizeLabel ? ` • ${apkInfo.sizeLabel}` : ''}
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
                 احصل على أحدث إصدار رسمي وموقّع من التطبيق للوصول السريع إلى خدماتك في أي وقت وتلقي التحديثات تلقائياً.
               </p>
             </div>
           </div>
 
-          <a
-            href={latestApkUrl}
-            className="w-full sm:w-auto min-h-[44px] bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] px-5 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-sm transition active:scale-95 text-center cursor-pointer shrink-0 whitespace-nowrap"
-          >
-            <Download className="w-4 h-4 text-[#0A1926]" />
-            <span>تحميل التحديث (APK)</span>
-          </a>
+          <div className="flex flex-col items-center md:items-end gap-1.5 w-full md:w-auto shrink-0">
+            <a
+              href={apkInfo.downloadUrl}
+              className="w-full md:w-auto min-h-[44px] bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] px-5 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-sm transition active:scale-95 text-center cursor-pointer whitespace-nowrap"
+            >
+              <Download className="w-4 h-4 text-[#0A1926]" />
+              <span>تحميل التحديث (APK) • {apkInfo.version}</span>
+            </a>
+            <p className="text-[11px] text-[#E5C887] font-semibold flex items-center gap-1 text-center md:text-right">
+              <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+              <span>ملف رسمي آمن ومفحوص 100% وخالٍ من أي برمجيات ضارة.</span>
+            </p>
+          </div>
         </div>
       </div>
 

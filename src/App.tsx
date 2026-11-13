@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { BottomNav } from './components/BottomNav';
-import { DualFloatingButtons } from './components/DualFloatingButtons';
 import { HomeScreen } from './screens/HomeScreen';
 import { ServicesScreen } from './screens/ServicesScreen';
 import { PaymentScreen } from './screens/PaymentScreen';
@@ -10,6 +9,7 @@ import { TravelRepository } from './data/travelData';
 import { dialPhoneNumber, openWhatsApp } from './utils/communication';
 import { Phone, Mail, MapPin, Clock, ShieldCheck, ArrowUpRight } from 'lucide-react';
 import { OfflineIndicator } from './components/OfflineIndicator';
+import { SiteUpdateBanner } from './components/SiteUpdateBanner';
 import { FacebookIcon } from './components/FacebookIcon';
 import { WhatsAppIcon } from './components/WhatsAppIcon';
 
@@ -189,8 +189,8 @@ export const App: React.FC = () => {
         </div>
       </footer>
 
-      {/* Floating Call & WhatsApp Buttons */}
-      <DualFloatingButtons />
+      {/* Self-Updating Website Notification Banner */}
+      <SiteUpdateBanner />
 
       {/* Offline Mode Alert */}
       <OfflineIndicator />

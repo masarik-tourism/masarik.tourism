@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Download, Smartphone, X, Share, ExternalLink } from 'lucide-react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
-import { useLatestApkUrl } from '../hooks/useLatestApkUrl';
+import { useLatestApkInfo } from '../hooks/useLatestApkUrl';
 import { TravelRepository } from '../data/travelData';
 
 interface PWAInstallButtonProps {
@@ -16,7 +16,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
-  const latestApkUrl = useLatestApkUrl();
+  const apkInfo = useLatestApkInfo();
 
   // If already installed as standalone PWA, suppress in-app prompt
   if (isInstalled) {
@@ -219,12 +219,15 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
 
                 <div className="flex flex-col gap-2 pt-1">
                   <a
-                    href={latestApkUrl}
+                    href={apkInfo.downloadUrl}
                     className="w-full bg-[#C6A052] hover:bg-[#d4b063] text-[#0F2438] py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-center cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
-                    <span>تحميل ملف APK المباشر (أحدث إصدار)</span>
+                    <span>تحميل ملف APK المباشر ({apkInfo.version})</span>
                   </a>
+                  <p className="text-[11px] text-[#0F2438] font-semibold text-center">
+                    ملف رسمي آمن ومفحوص 100% وخالٍ من أي برمجيات ضارة.
+                  </p>
 
                   <a
                     href={TravelRepository.APK_RELEASES_URL}

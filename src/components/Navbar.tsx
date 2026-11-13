@@ -6,7 +6,7 @@ import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import { FacebookIcon } from './FacebookIcon';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { isRunningInApp } from '../utils/appEnvironment';
-import { useLatestApkUrl } from '../hooks/useLatestApkUrl';
+import { useLatestApkInfo } from '../hooks/useLatestApkUrl';
 
 interface NavbarProps {
   currentTab: number;
@@ -22,7 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showRefreshToast, setShowRefreshToast] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const latestApkUrl = useLatestApkUrl();
+  const apkInfo = useLatestApkInfo();
 
   const handleHardRefresh = () => {
     if (isRefreshing) return;
@@ -30,6 +30,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
     setShowRefreshToast(true);
 
     // Clear caches in ServiceWorker / CacheStorage if supported
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      try {
+        navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ALL_CACHES' });
+      } catch {}
+    }
     if ('caches' in window) {
       try {
         caches.keys().then((names) => {
@@ -201,12 +206,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {!isApp && (
             <a
-              href={latestApkUrl}
+              href={apkInfo.downloadUrl}
               className="hidden sm:flex bg-[#0F2438] hover:bg-[#163B65] text-[#E5C887] font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full items-center gap-1 sm:gap-1.5 shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap border border-[#C6A052]/40"
-              title="تحميل وتحديث تطبيق مسارك الرسمي (APK)"
+              title={`تحميل وتحديث تطبيق مسارك للإنجاز السياحي (${apkInfo.version})`}
             >
               <Download className="w-3.5 h-3.5 text-[#E5C887]" />
-              <span>تطبيق أندرويد</span>
+              <span>تطبيق أندرويد ({apkInfo.version})</span>
             </a>
           )}
 

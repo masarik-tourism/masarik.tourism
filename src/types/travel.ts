@@ -8,6 +8,7 @@ export interface TravelService {
   categoryId: string;
   title: string;
   badge?: string;
+  speedBadge?: string;
   features: string[];
 }
 
