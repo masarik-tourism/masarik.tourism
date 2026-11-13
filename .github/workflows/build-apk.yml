@@ -78,20 +78,21 @@ jobs:
 
       - name: Prepare Output APK (Masarik-Tourism.apk)
         run: |
-          mkdir -p app/build/outputs/apk/release
-          mkdir -p gh-pages-apk
-          cd app/build/outputs/apk/release
-          if [ ! -f "Masarik-Tourism.apk" ]; then
-            APK_FILE=$(find . -maxdepth 2 -name "*.apk" | head -n 1)
-            if [ -n "$APK_FILE" ]; then
-              cp "$APK_FILE" ./Masarik-Tourism.apk
-            else
-              echo "Error: No APK file generated!"
-              exit 1
-            fi
+          mkdir -p app/build/outputs/apk/release gh-pages-apk
+          APK_FILE=$(find app/build/outputs/apk/release -maxdepth 3 -type f -name "*.apk" | head -n 1)
+          if [ -z "$APK_FILE" ]; then
+            APK_FILE=$(find app/build -type f -name "*.apk" | head -n 1)
           fi
-          ls -lh Masarik-Tourism.apk
-          cp Masarik-Tourism.apk ../../../../gh-pages-apk/Masarik-Tourism.apk
+          if [ -z "$APK_FILE" ]; then
+            echo "Error: No APK file generated!"
+            exit 1
+          fi
+          echo "Found APK: $APK_FILE"
+          if [ "$APK_FILE" != "app/build/outputs/apk/release/Masarik-Tourism.apk" ]; then
+            cp "$APK_FILE" app/build/outputs/apk/release/Masarik-Tourism.apk
+          fi
+          cp app/build/outputs/apk/release/Masarik-Tourism.apk gh-pages-apk/Masarik-Tourism.apk
+          ls -lh app/build/outputs/apk/release/Masarik-Tourism.apk gh-pages-apk/Masarik-Tourism.apk
 
       - name: Upload APK Workflow Artifact
         uses: actions/upload-artifact@v4
