@@ -27,7 +27,7 @@ import { FAQAccordion } from '../components/FAQAccordion';
 import { ServiceRequestModal } from '../components/ServiceRequestModal';
 import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import masarikHeroBgImg from '../assets/images/masarik_hero_bg.jpg';
-import { useLatestApkInfo } from '../hooks/useLatestApkUrl';
+import { useLatestApkInfo, handleApkDownload, FAST_CDN_APK_URL } from '../hooks/useLatestApkUrl';
 
 interface HomeScreenProps {
   onNavigateToServices: () => void;
@@ -428,7 +428,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <div className="flex flex-col items-center md:items-end gap-1.5 w-full md:w-auto shrink-0">
             <a
               id="apk-download-btn"
-              href={apkInfo.downloadUrl || 'https://github.com/masarik-tourism/masarik.tourism/releases/latest/download/Masarik-Tourism.apk'}
+              href={apkInfo.downloadUrl || FAST_CDN_APK_URL}
+              onClick={(e) => handleApkDownload(apkInfo.downloadUrl, e)}
               className="w-full md:w-auto min-h-[44px] bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] px-5 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 shadow-sm transition active:scale-95 text-center cursor-pointer whitespace-nowrap"
             >
               <Download className="w-4 h-4 text-[#0A1926]" />

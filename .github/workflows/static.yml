@@ -30,3 +30,6 @@ jobs:
       with:
         folder: dist # المجلد الذي يخرجه نظام Vite للتصفح
         branch: gh-pages
+        clean-exclude: |
+          downloads
+          downloads/**

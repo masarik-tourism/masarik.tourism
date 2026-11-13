@@ -2,6 +2,14 @@
 
 declare const __APP_BUILD_VERSION__: string;
 
+interface AndroidBridgeInterface {
+  openExternalUrl: (url: string) => void;
+}
+
+interface Window {
+  AndroidBridge?: AndroidBridgeInterface;
+}
+
 declare module '*.jpg' {
   const content: string;
   export default content;

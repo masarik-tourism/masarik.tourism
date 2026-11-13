@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Download, Smartphone, X, Share, ExternalLink } from 'lucide-react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
-import { useLatestApkInfo } from '../hooks/useLatestApkUrl';
+import { useLatestApkInfo, handleApkDownload, FAST_CDN_APK_URL } from '../hooks/useLatestApkUrl';
 import { TravelRepository } from '../data/travelData';
 
 interface PWAInstallButtonProps {
@@ -219,7 +219,8 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
 
                 <div className="flex flex-col gap-2 pt-1">
                   <a
-                    href={apkInfo.downloadUrl || 'https://github.com/masarik-tourism/masarik.tourism/releases/latest/download/Masarik-Tourism.apk'}
+                    href={apkInfo.downloadUrl || FAST_CDN_APK_URL}
+                    onClick={(e) => handleApkDownload(apkInfo.downloadUrl, e)}
                     className="w-full bg-[#C6A052] hover:bg-[#d4b063] text-[#0F2438] py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-center cursor-pointer"
                   >
                     <Download className="w-4 h-4" />

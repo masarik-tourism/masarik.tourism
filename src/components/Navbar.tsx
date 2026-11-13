@@ -6,7 +6,7 @@ import masarikLogoImg from '../assets/images/masarik_logo.jpg';
 import { FacebookIcon } from './FacebookIcon';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { isRunningInApp } from '../utils/appEnvironment';
-import { useLatestApkInfo } from '../hooks/useLatestApkUrl';
+import { useLatestApkInfo, handleApkDownload, FAST_CDN_APK_URL } from '../hooks/useLatestApkUrl';
 
 interface NavbarProps {
   currentTab: number;
@@ -206,7 +206,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {!isApp && (
             <a
-              href={apkInfo.downloadUrl}
+              href={apkInfo.downloadUrl || FAST_CDN_APK_URL}
+              onClick={(e) => handleApkDownload(apkInfo.downloadUrl, e)}
               className="hidden sm:flex bg-[#0F2438] hover:bg-[#163B65] text-[#E5C887] font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full items-center gap-1 sm:gap-1.5 shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap border border-[#C6A052]/40"
               title={`تحميل وتحديث تطبيق مسارك للإنجاز السياحي (${apkInfo.version})`}
             >

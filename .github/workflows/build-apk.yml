@@ -50,13 +50,13 @@ jobs:
           cp release.keystore debug.keystore
           ls -lh release.keystore
 
-      - name: Set Official Release Version 1.0.0
+      - name: Set Official Release Version 1.0.1
         run: |
-          echo "VERSION_CODE=1" > version.properties
-          echo "VERSION_NAME=1.0.0" >> version.properties
-          echo "VERSION_CODE=1" >> "$GITHUB_ENV"
-          echo "VERSION_NAME=1.0.0" >> "$GITHUB_ENV"
-          echo "Release Version: v1.0.0 (Code: 1)"
+          echo "VERSION_CODE=2" > version.properties
+          echo "VERSION_NAME=1.0.1" >> version.properties
+          echo "VERSION_CODE=2" >> "$GITHUB_ENV"
+          echo "VERSION_NAME=1.0.1" >> "$GITHUB_ENV"
+          echo "Release Version: v1.0.1 (Code: 2)"
           cat version.properties
 
       - name: Setup Gradle
@@ -67,7 +67,7 @@ jobs:
       - name: Make Gradle Wrapper Executable
         run: chmod +x ./gradlew
 
-      - name: Build Signed Release APK
+      - name: Build Minified & Signed Release APK
         env:
           RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -79,6 +79,7 @@ jobs:
       - name: Prepare Output APK (Masarik-Tourism.apk)
         run: |
           mkdir -p app/build/outputs/apk/release
+          mkdir -p gh-pages-apk
           cd app/build/outputs/apk/release
           if [ ! -f "Masarik-Tourism.apk" ]; then
             APK_FILE=$(find . -maxdepth 2 -name "*.apk" | head -n 1)
@@ -90,6 +91,7 @@ jobs:
             fi
           fi
           ls -lh Masarik-Tourism.apk
+          cp Masarik-Tourism.apk ../../../../gh-pages-apk/Masarik-Tourism.apk
 
       - name: Upload APK Workflow Artifact
         uses: actions/upload-artifact@v4
@@ -99,15 +101,26 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Publish Signed APK to GitHub Releases (v1.0.0)
+      - name: Publish Signed APK to GitHub Pages CDN (/downloads/Masarik-Tourism.apk)
+        uses: JamesIves/github-pages-deploy-action@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          branch: gh-pages
+          folder: gh-pages-apk
+          target-folder: downloads
+          clean: true
+
+      - name: Publish Signed APK to GitHub Releases (v1.0.1)
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: "v1.0.0"
-          name: "مسارك للإنجاز السياحي v1.0.0"
+          tag_name: "v1.0.1"
+          name: "مسارك للإنجاز السياحي v1.0.1"
           body: |
-            الإصدار الرسمي الأول من تطبيق **مسارك للإنجاز السياحي** (`v1.0.0` - Build `1`).
-            - موقّع بمفتاح التوقيع الثابت لضمان التحديث السلس فوق الإصدارات الأخرى.
+            الإصدار الرسمي المحدّث من تطبيق **مسارك للإنجاز السياحي** (`v1.0.1` - Build `2`).
+            - تقليص حجم التطبيق عبر R8 + shrinkResources لسرعة تحميل فائقة.
+            - دعم مباشر لجسر `AndroidBridge` لفتح رابط التحميل فوراً من داخل التطبيق.
+            - استضافة مباشرة على شبكة GitHub Pages Fastly CDN عبر `/downloads/Masarik-Tourism.apk`.
           draft: false
           prerelease: false
           make_latest: true

@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.ViewGroup
+import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -61,6 +62,19 @@ import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
+class AndroidBridge(private val context: Context) {
+    @JavascriptInterface
+    fun openExternalUrl(url: String) {
+        if (url.isBlank()) return
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        } catch (_: Exception) {
+        }
+    }
+}
+
 data class AppReleaseUpdate(
     val latestVersion: String,
     val downloadUrl: String,
@@ -100,9 +114,9 @@ private fun getInstalledVersionName(context: Context): String {
             @Suppress("DEPRECATION")
             context.packageManager.getPackageInfo(context.packageName, 0)
         }
-        pInfo.versionName ?: "1.0.0"
+        pInfo.versionName ?: "1.0.1"
     } catch (_: Exception) {
-        "1.0.0"
+        "1.0.1"
     }
 }
 
@@ -150,22 +164,11 @@ private suspend fun checkLatestGitHubRelease(installedVersion: String): AppRelea
                 val json = JSONObject(body)
                 val tagName = json.optString("tag_name", "").trim()
                 if (tagName.isNotEmpty() && isRemoteVersionNewer(tagName, installedVersion)) {
-                    var apkUrl =
-                        "https://github.com/masarik-tourism/masarik.tourism/releases/latest/download/Masarik-Tourism.apk"
-                    val assets = json.optJSONArray("assets")
-                    if (assets != null) {
-                        for (i in 0 until assets.length()) {
-                            val asset = assets.getJSONObject(i)
-                            val name = asset.optString("name", "")
-                            if (name.endsWith(".apk", ignoreCase = true)) {
-                                apkUrl = asset.optString("browser_download_url", apkUrl)
-                                break
-                            }
-                        }
-                    }
+                    val fastCdnUrl =
+                        "https://masarik-tourism.github.io/masarik.tourism/downloads/Masarik-Tourism.apk?v=$tagName"
                     return@withContext AppReleaseUpdate(
                         latestVersion = tagName,
-                        downloadUrl = apkUrl,
+                        downloadUrl = fastCdnUrl,
                         releaseNotes = json.optString("body", "")
                     )
                 }
@@ -243,7 +246,7 @@ private fun installApkFile(context: Context, apkFile: File) {
     context.startActivity(installIntent)
 }
 
-@SuppressLint("SetJavaScriptEnabled")
+@SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
 @Composable
 fun MainWebViewScreen(
     targetUrl: String,
@@ -303,7 +306,10 @@ fun MainWebViewScreen(
                         userAgentString = "$userAgentString MasarikApp/$installedVersion"
                     }
 
-                    // Force external browser for ALL downloads triggered in WebView
+                    // Register direct JS-to-Android bridge for instant external browser launch
+                    addJavascriptInterface(AndroidBridge(ctx), "AndroidBridge")
+
+                    // Secondary fallback: open external browser for all WebView download events
                     setDownloadListener { url, _, _, _, _ ->
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -317,7 +323,7 @@ fun MainWebViewScreen(
                         ): Boolean {
                             val url = request?.url?.toString() ?: return false
 
-                            // Check at the very top: force external browser for ALL .apk and GitHub release links
+                            // Secondary fallback: intercept .apk or GitHub download links
                             if (url.endsWith(".apk", ignoreCase = true) ||
                                 url.contains(".apk?", ignoreCase = true) ||
                                 url.contains("/releases/download/", ignoreCase = true) ||
@@ -672,3 +678,4 @@ fun MainWebViewScreen(
         }
     }
 }
+```
