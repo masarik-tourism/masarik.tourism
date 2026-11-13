@@ -1,1 +1,98 @@
-if(!self.define){let e,a={};const i=(i,s)=>(i=new URL(i+".js",s).href,a[i]||new Promise(a=>{if("document"in self){const e=document.createElement("script");e.src=i,e.onload=a,document.head.appendChild(e)}else e=i,importScripts(i),a()}).then(()=>{let e=a[i];if(!e)throw new Error(`Module ${i} didn’t register its module`);return e}));self.define=(s,r)=>{const n=e||("document"in self?document.currentScript.src:"")||location.href;if(a[n])return;let o={};const c=e=>i(e,n),f={module:{uri:n},exports:o,require:c};a[n]=Promise.all(s.map(e=>f[e]||c(e))).then(e=>(r(...e),o))}}define(["./workbox-835c8c05"],function(e){"use strict";self.skipWaiting(),e.clientsClaim(),e.precacheAndRoute([{url:"registerSW.js",revision:"402b66900e731ca748771b6fc5e7a068"},{url:"pwa-maskable-512x512.png",revision:"3e7de995e35652f66e14c8cc23ae9d30"},{url:"pwa-512x512.png",revision:"1193f272b33b0e544d874f182a4372c4"},{url:"pwa-192x192.png",revision:"09fd4737ccf7feff4f7c586081a06eac"},{url:"index.html",revision:"ac922a771be854860e12c9b3336ab593"},{url:"googlebfac36bf9e2005c3.html",revision:"addf6eaf2033d5e9c2af2a2b93dbe03a"},{url:"favicon.svg",revision:"3fd03ee0ae59a1a96fc2665c53d530f2"},{url:"apple-touch-icon.png",revision:"661d237edd473f32bdf1de8d16e17021"},{url:"images/masarik_logo.jpg",revision:"9a2a079e769e9bda708f14e0b2f704d2"},{url:"images/masarik_hero_bg.jpg",revision:"39b23c4b7c5f08b182bd1d0ce3192aa5"},{url:"images/logo.jpg",revision:"2f8f828ac76d0cdee3776e79ac34e66a"},{url:"images/logo.html",revision:"539d2b9657e23896c8f2352cd32cd789"},{url:"images/hero-bg.jpg",revision:"d2cf930b7a4ab371a64485956fa0715a"},{url:"images/client3.jpg",revision:"7f8892b2bcd9e64725dbeda46e6bf0a6"},{url:"images/client2.jpg",revision:"a31e37d63448e66ecf455a279787166d"},{url:"images/client1.jpg",revision:"f45775722a3461ddb6eda34c2092a254"},{url:"images/about-us.jpg",revision:"d2cf930b7a4ab371a64485956fa0715a"},{url:"assets/masarik_logo-DgYIDczZ.jpg",revision:null},{url:"assets/masarik_hero_bg-DXajA6y7.jpg",revision:null},{url:"assets/index-DAyPzMje.js",revision:null},{url:"assets/index-BhEppXZf.css",revision:null},{url:"apple-touch-icon.png",revision:"661d237edd473f32bdf1de8d16e17021"},{url:"favicon.svg",revision:"3fd03ee0ae59a1a96fc2665c53d530f2"},{url:"pwa-192x192.png",revision:"09fd4737ccf7feff4f7c586081a06eac"},{url:"pwa-512x512.png",revision:"1193f272b33b0e544d874f182a4372c4"},{url:"pwa-maskable-512x512.png",revision:"3e7de995e35652f66e14c8cc23ae9d30"},{url:"images/masarik_hero_bg.jpg",revision:"39b23c4b7c5f08b182bd1d0ce3192aa5"},{url:"images/masarik_logo.jpg",revision:"9a2a079e769e9bda708f14e0b2f704d2"},{url:"manifest.webmanifest",revision:"82197bdb2e0ace4a6b6d61bff473fdc5"}],{}),e.cleanupOutdatedCaches(),e.registerRoute(new e.NavigationRoute(e.createHandlerBoundToURL("index.html"))),e.registerRoute(/^https:\/\/fonts\.googleapis\.com\/.*/i,new e.CacheFirst({cacheName:"google-fonts-cache",plugins:[new e.ExpirationPlugin({maxEntries:10,maxAgeSeconds:31536e3}),new e.CacheableResponsePlugin({statuses:[0,200]})]}),"GET"),e.registerRoute(/^https:\/\/fonts\.gstatic\.com\/.*/i,new e.CacheFirst({cacheName:"gstatic-fonts-cache",plugins:[new e.ExpirationPlugin({maxEntries:10,maxAgeSeconds:31536e3}),new e.CacheableResponsePlugin({statuses:[0,200]})]}),"GET")});
+const CACHE_VERSION = 'masarik-cache-52-mwf9tuxx';
+const PRECACHE_URLS = [
+  './',
+  './index.html',
+  './manifest.json',
+  './favicon.svg',
+  './pwa-192x192.png',
+  './pwa-512x512.png',
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_VERSION).then((cache) => cache.addAll(PRECACHE_URLS).catch(() => {}))
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((cacheNames) =>
+        Promise.all(
+          cacheNames
+            .filter((name) => name !== CACHE_VERSION)
+            .map((oldName) => caches.delete(oldName))
+        )
+      )
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  if (event.data && event.data.type === 'CLEAR_ALL_CACHES') {
+    event.waitUntil(
+      caches
+        .keys()
+        .then((names) => Promise.all(names.map((name) => caches.delete(name))))
+        .then(() => self.skipWaiting())
+    );
+  }
+});
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+
+  // Never intercept or cache GitHub API, version check files, or sw.js itself
+  if (
+    url.hostname.includes('github.com') ||
+    url.hostname.includes('githubusercontent.com') ||
+    url.pathname.endsWith('version.json') ||
+    url.pathname.endsWith('sw.js')
+  ) {
+    return;
+  }
+
+  // Only handle same-origin requests
+  if (url.origin !== self.location.origin) return;
+
+  // Network-First strategy for HTML navigations so new deployments load immediately
+  if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(new Request(request, { cache: 'no-store' }))
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.ok) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match('./index.html').then((cached) => cached || caches.match(request)))
+    );
+    return;
+  }
+
+  // Stale-While-Revalidate for static assets
+  event.respondWith(
+    caches.match(request).then((cachedResponse) => {
+      const fetchPromise = fetch(request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => cachedResponse);
+
+      return cachedResponse || fetchPromise;
+    })
+  );
+});
