@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'masarik-cache-52-mwf9tuxx';
+const CACHE_VERSION = 'masarik-cache-53-mwfakov0';
 const PRECACHE_URLS = [
   './',
   './index.html',
@@ -50,10 +50,11 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
-  // Never intercept or cache GitHub API, version check files, or sw.js itself
+  // Never intercept or cache GitHub API, .apk files, version check files, or sw.js itself
   if (
     url.hostname.includes('github.com') ||
     url.hostname.includes('githubusercontent.com') ||
+    url.pathname.toLowerCase().endsWith('.apk') ||
     url.pathname.endsWith('version.json') ||
     url.pathname.endsWith('sw.js')
   ) {
