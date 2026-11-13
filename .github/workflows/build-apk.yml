@@ -127,13 +127,14 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           tag_name: "v1.0.0"
-          name: "مسارك للإنجاز السياحي v1.0.0"
+          name: "مسارك للسياحة v1.0.0"
           body: |
-            الإصدار الرسمي الأول من تطبيق **مسارك للإنجاز السياحي** (`v1.0.0` - Build `1`).
+            الإصدار الرسمي الأول من تطبيق **مسارك للسياحة** (`v1.0.0` - Build `1`).
             - تقليص حجم التطبيق عبر R8 + shrinkResources لسرعة تحميل فائقة.
             - دعم مباشر لجسر `AndroidBridge` لفتح رابط التحميل فوراً من داخل التطبيق.
             - استضافة مباشرة على شبكة Multi-CDN عبر jsDelivr (Cloudflare + Fastly) للتحميل السريع.
           draft: false
           prerelease: false
           make_latest: true
+          fail_on_unmatched_files: true
           files: app/build/outputs/apk/release/Masarik-Tourism.apk

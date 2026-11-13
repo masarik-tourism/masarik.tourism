@@ -209,7 +209,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onSelec
               href={apkInfo.downloadUrl || FAST_CDN_APK_URL}
               onClick={(e) => handleApkDownload(apkInfo.downloadUrl, e)}
               className="hidden sm:flex bg-[#0F2438] hover:bg-[#163B65] text-[#E5C887] font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-full items-center gap-1 sm:gap-1.5 shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap border border-[#C6A052]/40"
-              title={`تحميل وتحديث تطبيق مسارك للإنجاز السياحي (${apkInfo.version})`}
+              title={`تحميل وتحديث تطبيق مسارك للسياحة (${apkInfo.version})`}
             >
               <Download className="w-3.5 h-3.5 text-[#E5C887]" />
               <span>تطبيق أندرويد ({apkInfo.version})</span>

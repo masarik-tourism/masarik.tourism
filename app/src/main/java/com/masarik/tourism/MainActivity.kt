@@ -632,7 +632,7 @@ fun MainWebViewScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "تم إصدار نسخة جديدة (${updateInfo.latestVersion}) من تطبيق مسارك للإنجاز السياحي مقارنةً بنسختك الحالية ($installedVersion).",
+                            text = "تم إصدار نسخة جديدة (${updateInfo.latestVersion}) من تطبيق مسارك للسياحة مقارنةً بنسختك الحالية ($installedVersion).",
                             fontSize = 13.sp,
                             color = Color(0xFF334155)
                         )

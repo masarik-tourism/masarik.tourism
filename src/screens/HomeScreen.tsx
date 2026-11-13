@@ -412,7 +412,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="text-xs sm:text-sm font-bold text-white">
-                  تطبيق مسارك للإنجاز السياحي للأندرويد (تثبيت وتحديث مباشر)
+                  تطبيق مسارك للسياحة للأندرويد
                 </h3>
                 <span className="text-[11px] font-black text-[#0A1926] bg-[#E5C887] px-2 py-0.5 rounded-md tabular-nums">
                   {apkInfo.version}
