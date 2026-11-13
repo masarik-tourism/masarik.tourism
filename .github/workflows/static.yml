@@ -30,7 +30,7 @@ jobs:
     - name: Build Project
       run: |
         npm run build
-        rm -rf dist/assets/aistudio
+        rm -rf dist/assets/aistudio dist/downloads
 
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4

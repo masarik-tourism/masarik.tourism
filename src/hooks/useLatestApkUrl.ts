@@ -63,7 +63,7 @@ export const useLatestApkInfo = (): LatestApkInfo => {
           requestInit
         ),
         fetch(
-          `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits/gh-pages?t=${timestamp}`,
+          `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits/apk-cdn?t=${timestamp}`,
           requestInit
         ),
       ]);
@@ -96,7 +96,7 @@ export const useLatestApkInfo = (): LatestApkInfo => {
         if (commitResult.status === 'fulfilled' && commitResult.value.ok) {
           const commitData = await commitResult.value.json();
           const sha = typeof commitData.sha === 'string' ? commitData.sha.trim() : '';
-          // Pin to exact immutable gh-pages commit SHA so jsDelivr never serves a stale branch-cached APK
+          // Pin to exact immutable apk-cdn commit SHA so jsDelivr never serves a stale APK
           if (/^[a-f0-9]{40}$/i.test(sha)) {
             resolvedDownloadUrl = `https://cdn.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@${sha}/downloads/Masarik-Tourism.apk`;
           }

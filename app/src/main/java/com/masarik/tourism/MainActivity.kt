@@ -169,7 +169,7 @@ private suspend fun checkLatestGitHubRelease(installedVersion: String): AppRelea
                         "https://masarik-tourism.github.io/masarik.tourism/downloads/Masarik-Tourism.apk"
                     try {
                         val commitUrl =
-                            "https://api.github.com/repos/masarik-tourism/masarik.tourism/commits/gh-pages?t=${System.currentTimeMillis()}"
+                            "https://api.github.com/repos/masarik-tourism/masarik.tourism/commits/apk-cdn?t=${System.currentTimeMillis()}"
                         val commitConn = (URL(commitUrl).openConnection() as HttpURLConnection).apply {
                             requestMethod = "GET"
                             connectTimeout = 8000
