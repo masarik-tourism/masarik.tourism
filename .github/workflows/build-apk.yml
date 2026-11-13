@@ -116,8 +116,11 @@ jobs:
         run: |
           sleep 3
           curl -fsSL "https://purge.jsdelivr.net/gh/masarik-tourism/masarik.tourism@gh-pages/downloads/Masarik-Tourism.apk" || true
-          sleep 2
-          curl -fsSL -o /dev/null "https://cdn.jsdelivr.net/gh/masarik-tourism/masarik.tourism@gh-pages/downloads/Masarik-Tourism.apk" || true
+          GH_PAGES_SHA=$(git ls-remote origin refs/heads/gh-pages | awk '{print $1}')
+          if [ -n "$GH_PAGES_SHA" ]; then
+            echo "Pre-warming immutable jsDelivr URL for gh-pages commit: $GH_PAGES_SHA"
+            curl -fsSL -o /dev/null "https://cdn.jsdelivr.net/gh/masarik-tourism/masarik.tourism@${GH_PAGES_SHA}/downloads/Masarik-Tourism.apk" || true
+          fi
 
       - name: Publish Signed APK to GitHub Releases (v1.0.0)
         uses: softprops/action-gh-release@v2

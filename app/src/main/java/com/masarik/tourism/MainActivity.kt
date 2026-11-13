@@ -165,11 +165,32 @@ private suspend fun checkLatestGitHubRelease(installedVersion: String): AppRelea
                 val json = JSONObject(body)
                 val tagName = json.optString("tag_name", "").trim()
                 if (tagName.isNotEmpty() && isRemoteVersionNewer(tagName, installedVersion)) {
-                    val fastMultiCdnUrl =
-                        "https://cdn.jsdelivr.net/gh/masarik-tourism/masarik.tourism@gh-pages/downloads/Masarik-Tourism.apk"
+                    var resolvedUrl =
+                        "https://masarik-tourism.github.io/masarik.tourism/downloads/Masarik-Tourism.apk"
+                    try {
+                        val commitUrl =
+                            "https://api.github.com/repos/masarik-tourism/masarik.tourism/commits/gh-pages?t=${System.currentTimeMillis()}"
+                        val commitConn = (URL(commitUrl).openConnection() as HttpURLConnection).apply {
+                            requestMethod = "GET"
+                            connectTimeout = 8000
+                            readTimeout = 8000
+                            useCaches = false
+                            setRequestProperty("Accept", "application/vnd.github.v3+json")
+                        }
+                        if (commitConn.responseCode == HttpURLConnection.HTTP_OK) {
+                            val commitBody = commitConn.inputStream.bufferedReader().use { it.readText() }
+                            val sha = JSONObject(commitBody).optString("sha", "").trim()
+                            if (sha.length == 40) {
+                                resolvedUrl =
+                                    "https://cdn.jsdelivr.net/gh/masarik-tourism/masarik.tourism@$sha/downloads/Masarik-Tourism.apk"
+                            }
+                        }
+                        commitConn.disconnect()
+                    } catch (_: Exception) {
+                    }
                     return@withContext AppReleaseUpdate(
                         latestVersion = tagName,
-                        downloadUrl = fastMultiCdnUrl,
+                        downloadUrl = resolvedUrl,
                         releaseNotes = json.optString("body", "")
                     )
                 }
