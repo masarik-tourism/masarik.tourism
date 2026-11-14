@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   ShieldCheck,
-  Phone,
   Check,
   Star,
   Fingerprint,
@@ -20,7 +19,7 @@ import {
   Hotel,
 } from 'lucide-react';
 import { TravelRepository } from '../data/travelData';
-import { dialPhoneNumber, openWhatsApp } from '../utils/communication';
+import { openWhatsApp } from '../utils/communication';
 import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import { InteractiveGuide } from '../components/InteractiveGuide';
 import { FAQAccordion } from '../components/FAQAccordion';
@@ -36,7 +35,6 @@ interface HomeScreenProps {
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToServices,
-  onNavigateToContact,
 }) => {
   const [logoError, setLogoError] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -117,15 +115,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </div>
           </div>
 
-          {/* Subtitle kicker without pill box */}
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] sm:text-xs md:text-sm font-bold text-[#E5C887] mb-3 tracking-wide">
-            <span>شركة معتمدة</span>
-            <span aria-hidden="true">·</span>
-            <span>سجل تجاري رقم {TravelRepository.COMMERCIAL_RECORD}</span>
-            <span aria-hidden="true">·</span>
-            <span>خبرة منذ عام {TravelRepository.FOUNDING_YEAR}</span>
-          </div>
-
           {/* Main Title: 2 lines with clear typographic scale */}
           <h1 className="flex flex-col items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto mb-4 text-center text-balance">
             <span className="block text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
@@ -136,9 +125,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </span>
           </h1>
 
-          {/* Description focused strictly on services */}
-          <p className="text-xs sm:text-sm md:text-base font-normal text-slate-200 max-w-2xl mx-auto mb-7 sm:mb-9 leading-relaxed px-2">
-            بوابتك المتخصصة والموثوقة لإنجاز <strong className="text-white font-bold">خدمات التأشيرات (Visas)</strong>، <strong className="text-white font-bold">تخليص الإجراءات والأوراق الرسمية</strong>، <strong className="text-white font-bold">حجز تذاكر الطيران</strong>، و<strong className="text-white font-bold">حجز الفنادق المعتمدة</strong> بأسرع وقت وأنت في مكانك.
+          {/* Concise two-line description */}
+          <p className="text-xs sm:text-sm md:text-base font-normal text-slate-200 max-w-xl mx-auto mb-7 sm:mb-9 leading-relaxed px-2">
+            شريكك الموثوق لإنجاز معاملات السفر والتأشيرات وحجوزات الطيران والفنادق بكل سهولة واحترافية أينما كنت.
           </p>
 
           {/* Action Buttons: Mobile-first full-width 48px touch targets */}
@@ -185,37 +174,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
       {/* Main Content Body */}
       <div className="max-w-5xl mx-auto px-4 -mt-5 relative z-10 space-y-11">
-        {/* Commercial Registration Trust Card */}
-        <div className="bg-white border border-[#C6A052]/60 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3 text-right w-full sm:w-auto">
-            <div className="w-12 h-12 rounded-xl bg-[#C6A052]/15 text-[#C6A052] flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-7 h-7" />
-            </div>
-            <div>
-              <h2 className="text-sm sm:text-base font-black text-[#0F2438]">
-                {TravelRepository.CERTIFICATION_TITLE}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-0.5 tabular-nums">
-                {TravelRepository.COMMERCIAL_RECORD_STATEMENT} • خدمة عملاء متواصلة طوال الأسبوع
-              </p>
-            </div>
+        {/* Commercial Registration Compact Trust Card */}
+        <div className="bg-white border border-[#C6A052]/60 rounded-2xl px-4 py-3.5 sm:px-6 sm:py-4 shadow-sm flex items-center justify-center gap-3 text-center">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#C6A052]/15 text-[#C6A052] flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
-
-          <div className="flex items-center gap-2 self-stretch sm:self-auto shrink-0">
-            <button
-              onClick={() => onNavigateToContact()}
-              className="flex-1 sm:flex-none min-h-[44px] py-2 px-4 bg-[#0F2438] hover:bg-[#163B65] text-white rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap"
-            >
-              <span>مقر الشركة ومراسلتنا</span>
-            </button>
-            <button
-              onClick={() => dialPhoneNumber()}
-              className="flex-1 sm:flex-none min-h-[44px] py-2 px-4 bg-slate-100 hover:bg-slate-200 text-[#0F2438] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer tabular-nums whitespace-nowrap"
-            >
-              <Phone className="w-3.5 h-3.5" />
-              <span>{TravelRepository.PHONE_NUMBER}</span>
-            </button>
-          </div>
+          <h2 className="text-sm sm:text-base font-black text-[#0F2438]">
+            {TravelRepository.CERTIFICATION_TITLE}
+          </h2>
         </div>
 
         {/* ------------------------------------------------------------- */}
