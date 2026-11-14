@@ -1,11 +1,11 @@
 const CACHE_VERSION = 'masarik-cache-v1';
 const PRECACHE_URLS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './favicon.svg',
-  './pwa-192x192.png',
-  './pwa-512x512.png',
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/favicon.svg',
+  '/pwa-192x192.png',
+  '/pwa-512x512.png',
 ];
 
 self.addEventListener('install', (event) => {
@@ -75,7 +75,7 @@ self.addEventListener('fetch', (event) => {
           }
           return networkResponse;
         })
-        .catch(() => caches.match('./index.html').then((cached) => cached || caches.match(request)))
+        .catch(() => caches.match('/index.html').then((cached) => cached || caches.match(request)))
     );
     return;
   }

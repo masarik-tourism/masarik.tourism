@@ -1,8 +1,8 @@
 import { useState, useEffect, type MouseEvent } from 'react';
 
 const REPO_OWNER = 'masarik-tourism';
-const REPO_NAME = 'masarik.tourism';
-export const FALLBACK_PAGES_APK_URL = `https://${REPO_OWNER}.github.io/${REPO_NAME}/downloads/Masarik-Tourism.apk`;
+const REPO_NAME = 'masarik-tourism.github.io';
+export const FALLBACK_PAGES_APK_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/latest/download/Masarik-Tourism.apk`;
 export const FAST_CDN_APK_URL = FALLBACK_PAGES_APK_URL;
 
 export interface LatestApkInfo {

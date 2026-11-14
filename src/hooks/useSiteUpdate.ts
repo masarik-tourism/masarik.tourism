@@ -21,7 +21,7 @@ export function useSiteUpdate() {
 
   const checkForSiteVersionChange = useCallback(async () => {
     try {
-      const response = await fetch(`./version.json?t=${Date.now()}`, {
+      const response = await fetch(`/version.json?t=${Date.now()}`, {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -58,7 +58,7 @@ export function useSiteUpdate() {
       navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
 
       navigator.serviceWorker
-        .register('./sw.js', { updateViaCache: 'none' })
+        .register('/sw.js', { updateViaCache: 'none' })
         .then((registration) => {
           registrationRef = registration;
 

@@ -55,7 +55,7 @@ function masarikAutoUpdatePlugin(): Plugin {
 
 // https://vitejs.dev
 export default defineConfig({
-  base: './',
+  base: '/',
   define: {
     __APP_BUILD_VERSION__: JSON.stringify(BUILD_VERSION),
   },

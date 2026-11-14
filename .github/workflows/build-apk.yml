@@ -124,11 +124,11 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           sleep 3
-          curl -fsSL "https://purge.jsdelivr.net/gh/masarik-tourism/masarik.tourism@apk-cdn/downloads/Masarik-Tourism.apk" || true
+          curl -fsSL "https://purge.jsdelivr.net/gh/${{ github.repository }}@apk-cdn/downloads/Masarik-Tourism.apk" || true
           APK_CDN_SHA=$(git ls-remote origin refs/heads/apk-cdn | awk '{print $1}')
           if [ -n "$APK_CDN_SHA" ]; then
             echo "Pre-warming immutable jsDelivr URL for apk-cdn commit: $APK_CDN_SHA"
-            curl -fsSL -o /dev/null "https://cdn.jsdelivr.net/gh/masarik-tourism/masarik.tourism@${APK_CDN_SHA}/downloads/Masarik-Tourism.apk" || true
+            curl -fsSL -o /dev/null "https://cdn.jsdelivr.net/gh/${{ github.repository }}@${APK_CDN_SHA}/downloads/Masarik-Tourism.apk" || true
           fi
 
       - name: Publish Signed APK to GitHub Releases (v1.0.0)

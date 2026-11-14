@@ -149,7 +149,7 @@ private suspend fun checkLatestGitHubRelease(installedVersion: String): AppRelea
     withContext(Dispatchers.IO) {
         try {
             val apiUrl =
-                "https://api.github.com/repos/masarik-tourism/masarik.tourism/releases/latest?t=${System.currentTimeMillis()}"
+                "https://api.github.com/repos/masarik-tourism/masarik-tourism.github.io/releases/latest?t=${System.currentTimeMillis()}"
             val conn = (URL(apiUrl).openConnection() as HttpURLConnection).apply {
                 requestMethod = "GET"
                 connectTimeout = 10000
@@ -166,10 +166,10 @@ private suspend fun checkLatestGitHubRelease(installedVersion: String): AppRelea
                 val tagName = json.optString("tag_name", "").trim()
                 if (tagName.isNotEmpty() && isRemoteVersionNewer(tagName, installedVersion)) {
                     var resolvedUrl =
-                        "https://masarik-tourism.github.io/masarik.tourism/downloads/Masarik-Tourism.apk"
+                        "https://github.com/masarik-tourism/masarik-tourism.github.io/releases/latest/download/Masarik-Tourism.apk"
                     try {
                         val commitUrl =
-                            "https://api.github.com/repos/masarik-tourism/masarik.tourism/commits/apk-cdn?t=${System.currentTimeMillis()}"
+                            "https://api.github.com/repos/masarik-tourism/masarik-tourism.github.io/commits/apk-cdn?t=${System.currentTimeMillis()}"
                         val commitConn = (URL(commitUrl).openConnection() as HttpURLConnection).apply {
                             requestMethod = "GET"
                             connectTimeout = 8000
@@ -182,7 +182,7 @@ private suspend fun checkLatestGitHubRelease(installedVersion: String): AppRelea
                             val sha = JSONObject(commitBody).optString("sha", "").trim()
                             if (sha.length == 40) {
                                 resolvedUrl =
-                                    "https://cdn.jsdelivr.net/gh/masarik-tourism/masarik.tourism@$sha/downloads/Masarik-Tourism.apk"
+                                    "https://cdn.jsdelivr.net/gh/masarik-tourism/masarik-tourism.github.io@$sha/downloads/Masarik-Tourism.apk"
                             }
                         }
                         commitConn.disconnect()
@@ -207,7 +207,7 @@ private suspend fun downloadAndInstallApk(
 ): File? = withContext(Dispatchers.IO) {
     val candidateUrls = listOf(
         apkUrl,
-        "https://masarik-tourism.github.io/masarik.tourism/downloads/Masarik-Tourism.apk"
+        "https://github.com/masarik-tourism/masarik-tourism.github.io/releases/latest/download/Masarik-Tourism.apk"
     ).distinct()
 
     for (candidateUrl in candidateUrls) {
@@ -354,18 +354,18 @@ fun MainWebViewScreen(
                             view: WebView?,
                             request: WebResourceRequest?
                         ): Boolean {
-                            val url = request?.url?.toString() ?: return false
+                            val requestUri = request?.url ?: return false
+                            val url = requestUri.toString()
+                            val host = requestUri.host?.lowercase() ?: ""
 
-                            // Secondary fallback: intercept .apk or GitHub download links
+                            // Open .apk or GitHub download links in external browser
                             if (url.endsWith(".apk", ignoreCase = true) ||
                                 url.contains(".apk?", ignoreCase = true) ||
                                 url.contains("/releases/download/", ignoreCase = true) ||
                                 url.contains("/releases/latest/download/", ignoreCase = true) ||
                                 url.contains("://github.com", ignoreCase = true)
                             ) {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                ctx.startActivity(intent)
+                                openExternalBrowser(ctx, url)
                                 return true
                             }
 
@@ -375,7 +375,7 @@ fun MainWebViewScreen(
                                 url.contains("api.whatsapp.com")
                             ) {
                                 try {
-                                    ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                                    ctx.startActivity(Intent(Intent.ACTION_VIEW, requestUri))
                                 } catch (_: Exception) {
                                 }
                                 return true
@@ -384,7 +384,7 @@ fun MainWebViewScreen(
                             // Handle Phone Call intents
                             if (url.startsWith("tel:")) {
                                 try {
-                                    ctx.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse(url)))
+                                    ctx.startActivity(Intent(Intent.ACTION_DIAL, requestUri))
                                 } catch (_: Exception) {
                                 }
                                 return true
@@ -393,10 +393,15 @@ fun MainWebViewScreen(
                             // Handle Mail intents
                             if (url.startsWith("mailto:")) {
                                 try {
-                                    ctx.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(url)))
+                                    ctx.startActivity(Intent(Intent.ACTION_SENDTO, requestUri))
                                 } catch (_: Exception) {
                                 }
                                 return true
+                            }
+
+                            // Allow internal navigation within masarik-tourism.github.io
+                            if (host == "masarik-tourism.github.io") {
+                                return false
                             }
 
                             return false
