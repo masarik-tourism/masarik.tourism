@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://masarik-tourism.github.io/masarik.tourism/sitemap.xml
+Sitemap: https://masarik-tourism.github.io/sitemap.xml
