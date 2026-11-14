@@ -46,6 +46,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     setModalOpen(true);
   };
 
+  const scrollToServiceCard = (serviceId: string) => {
+    const target = document.getElementById(`service-${serviceId}`);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const quickServices = [
+    { id: 'tourist-visas', label: 'خدمات التأشيرات', icon: FileText },
+    { id: 'attestation-translation', label: 'تخليص الإجراءات والأوراق', icon: FileCheck2 },
+    { id: 'flight-booking', label: 'حجز تذاكر الطيران', icon: Plane },
+    { id: 'hotel-booking', label: 'حجز الفنادق', icon: Hotel },
+  ];
+
   const getServiceIcon = (id: string) => {
     switch (id) {
       case 'tasheer-vfs':
@@ -91,9 +105,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A1926] via-[#0F2438]/65 to-black/35" />
 
-        <div className="relative max-w-5xl mx-auto px-4 pt-10 pb-14 sm:py-14 md:py-20 text-center flex flex-col items-center">
+        <div className="relative max-w-5xl mx-auto px-4 pt-8 pb-12 sm:pt-12 sm:pb-16 text-center flex flex-col items-center">
           {/* Logo with verified seal */}
-          <div className="relative mb-5">
+          <div className="relative mb-4">
             {!logoError ? (
               <img
                 src={masarikLogoImg}
@@ -116,7 +130,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
 
           {/* Main Title: 2 lines with clear typographic scale */}
-          <h1 className="flex flex-col items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto mb-4 text-center text-balance">
+          <h1 className="flex flex-col items-center justify-center gap-1.5 sm:gap-2.5 max-w-4xl mx-auto mb-3 text-center text-balance">
             <span className="block text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
               مسارك للإنجاز السياحي
             </span>
@@ -126,12 +140,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </h1>
 
           {/* Concise two-line description */}
-          <p className="text-xs sm:text-sm md:text-base font-normal text-slate-200 max-w-xl mx-auto mb-7 sm:mb-9 leading-relaxed px-2">
+          <p className="text-xs sm:text-sm md:text-base font-normal text-slate-200 max-w-xl mx-auto mb-5 sm:mb-6 leading-relaxed px-2">
             شريكك الموثوق لإنجاز معاملات السفر والتأشيرات وحجوزات الطيران والفنادق بكل سهولة واحترافية أينما كنت.
           </p>
 
           {/* Action Buttons: Mobile-first full-width 48px touch targets */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full max-w-md mx-auto mb-9 sm:mb-11">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full max-w-md mx-auto mb-5 sm:mb-7">
             <button
               onClick={() => handleOpenModal()}
               className="w-full sm:flex-1 min-h-[48px] px-6 bg-[#C6A052] hover:bg-[#d4b063] text-[#0A1926] rounded-xl text-sm font-black flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all active:scale-[0.98] cursor-pointer whitespace-nowrap"
@@ -150,32 +164,38 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </button>
           </div>
 
-          {/* 4 Core Service Pillars Mini-Bar */}
-          <div className="w-full max-w-4xl bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-3 sm:p-4 grid grid-cols-2 lg:grid-cols-4 gap-3 text-center">
-            <div className="flex items-center justify-center gap-2 text-white">
-              <FileText className="w-4 h-4 text-[#E5C887] shrink-0" />
-              <span className="text-xs sm:text-sm font-bold">خدمات التأشيرات</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 text-white">
-              <FileCheck2 className="w-4 h-4 text-[#E5C887] shrink-0" />
-              <span className="text-xs sm:text-sm font-bold">تخليص الإجراءات والأوراق</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 text-white">
-              <Plane className="w-4 h-4 text-[#E5C887] shrink-0" />
-              <span className="text-xs sm:text-sm font-bold">حجز تذاكر الطيران</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 text-white">
-              <Hotel className="w-4 h-4 text-[#E5C887] shrink-0" />
-              <span className="text-xs sm:text-sm font-bold">حجز الفنادق</span>
-            </div>
+          {/* 4 Interactive Quick-Service Cards */}
+          <div className="w-full max-w-4xl bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-2.5 sm:p-3.5 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
+            {quickServices.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={item.id}
+                  href={`#service-${item.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToServiceCard(item.id);
+                  }}
+                  className="group flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/15 active:bg-white/20 border border-white/12 hover:border-[#C6A052]/60 text-white transition-all active:scale-[0.98] cursor-pointer text-right"
+                >
+                  <span className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <Icon className="w-4 h-4 text-[#E5C887] shrink-0" />
+                    <span className="text-[11px] sm:text-xs font-bold leading-snug">
+                      {item.label}
+                    </span>
+                  </span>
+                  <ArrowLeft className="w-3.5 h-3.5 text-[#E5C887]/80 group-hover:-translate-x-0.5 group-hover:text-[#E5C887] transition-transform shrink-0" />
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Main Content Body */}
-      <div className="max-w-5xl mx-auto px-4 -mt-5 relative z-10 space-y-11">
-        {/* Commercial Registration Compact Trust Card */}
-        <div className="bg-white border border-[#C6A052]/60 rounded-2xl px-4 py-3.5 sm:px-6 sm:py-4 shadow-sm flex items-center justify-center gap-3 text-center">
+      <div className="max-w-5xl mx-auto px-4 -mt-6 relative z-10 space-y-10">
+        {/* Commercial Registration Compact Overlapping Trust Card */}
+        <div className="bg-white border border-[#C6A052]/60 rounded-2xl px-4 py-3.5 sm:px-6 sm:py-4 shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex items-center justify-center gap-3 text-center">
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#C6A052]/15 text-[#C6A052] flex items-center justify-center shrink-0">
             <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
@@ -210,7 +230,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {TravelRepository.services.map((service) => (
               <div
                 key={service.id}
-                className="bg-white border border-slate-200 hover:border-[#0284C7]/60 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                id={`service-${service.id}`}
+                className="scroll-mt-24 bg-white border border-slate-200 hover:border-[#0284C7]/60 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
